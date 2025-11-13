@@ -1,3 +1,4 @@
+// ...existing code...
 <!DOCTYPE html>
 <html lang="de">
   <head>
@@ -83,7 +84,7 @@
       }
 
       .right{
-        width:260px;
+        width:300px;
         min-width:220px;
       }
 
@@ -137,6 +138,18 @@
         align-items:center;
         gap:10px;
       }
+
+      /* neue Listen für Klassenarbeiten & Abgabetermine */
+      .exam-list, .due-list{list-style:none;padding:0;margin:0}
+      .exam-list li, .due-list li{
+        padding:10px 12px;
+        border-radius:8px;
+        margin-bottom:10px;
+        background:linear-gradient(180deg,#ffffff,#f3f6ff);
+        border-left:4px solid var(--accent1);
+      }
+      .exam-date{font-weight:700;color:var(--accent2);font-size:0.95rem}
+      .due-item{display:flex;justify-content:space-between;align-items:center;gap:10px}
 
       .meta{font-size:0.9rem;color:var(--muted)}
 
@@ -222,18 +235,59 @@
             <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
               <a class="btn" href="Download.png" download>Logo herunterladen</a>
               <a class="btn" href="aufgaben.pdf" target="_blank" rel="noopener">Arbeitsblatt (PDF)</a>
-              <a class="btn" href="https://www.hrsaaf.de" target="_blank" rel="noopener">Iserv der schule </a>
+              <a class="btn" href="https://www.hrsaaf.de" target="_blank" rel="noopener">Schul Iserv</a>
             </div>
           </div>
         </section>
 
         <aside class="right">
           <div class="card">
+            <h4 style="margin-bottom:8px">📝 Anstehende Klassenarbeiten</h4>
+            <p class="small" style="margin-bottom:12px">Übersicht der nächsten Klassenarbeiten und wichtige Hinweise.</p>
+            <ul class="exam-list" aria-label="Klassenarbeiten">
+              <li>
+                <div><strong>kommt noch</strong></div>
+                <div class="exam-date">TERMIN</div>
+                <div class="meta" style="margin-top:6px">THEMA</div>
+              </li>
+              <li>
+                <div><strong>kommt noch </strong></div>
+                <div class="exam-date">TERMIN</div>
+                <div class="meta" style="margin-top:6px">THEMA</div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h4 style="margin-bottom:8px">📅 Abgabetermine</h4>
+            <p class="small" style="margin-bottom:12px">Offizielle Abgaben und Deadlines.</p>
+            <ul class="due-list" aria-label="Abgabetermine">
+              <li class="due-item">
+                <div>
+                  <strong>Wirtschaft — Gruppenbericht</strong>
+                  <div class="meta"></div>
+                </div>
+                <div class="exam-date">20.11.2025</div>
+              </li>
+              <li class="due-item">
+                <div>
+                  <strong>KOMMT NOCH</strong>
+                  <div class="meta"></div>
+                </div>
+                <div class="exam-date">DATUM</div>
+              </li>
+            </ul>
+            <div style="margin-top:10px">
+              <a class="btn" href="https://www.hrsaaf.de" target="_blank" rel="noopener">Alle Termine anzeigen</a>
+            </div>
+          </div>
+
+          <div class="card">
             <h4 style="margin-bottom:8px">🌐 Schnellzugriff</h4>
             <p class="small" style="margin-bottom:12px">Nützliche Seiten für die Klasse.</p>
             <div style="display:flex;flex-direction:column;gap:10px">
-              <a class="btn" href="https://www.schule-altes-amt-friedeburg.de" target="_blank" rel="noopener">Zur Schulwebsite</a>
-              <a class="btn" href="https://www.hrsaaf.de" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#06b6d4,#0ea5a4)">Zu iServ</a>
+              <a class="btn" href="https://www.hrsaaf.de" target="_blank" rel="noopener">Zur Schulwebsite</a>
+              <a class="btn" href="https://www.iserv.de" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#06b6d4,#0ea5a4)">Zu iServ</a>
             </div>
           </div>
 
@@ -251,7 +305,5 @@
       </footer>
     </div>
   </body>
-
 </html>
-
-
+// ...existing code...
