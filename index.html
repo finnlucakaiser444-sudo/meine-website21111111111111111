@@ -7,117 +7,146 @@
     <title>SAAF 7RB — Hausaufgaben</title>
     <style>
       :root{
-        --accent1:#667eea;
-        --accent2:#764ba2;
+        --bg1:#667eea;
+        --bg2:#764ba2;
         --card:#ffffff;
-        --muted:#666;
-        --glass: rgba(255,255,255,0.85);
+        --muted:#6b7280;
+        --glass: rgba(255,255,255,0.92);
+        --accent:#0ea5a4;
       }
+
       *{box-sizing:border-box;margin:0;padding:0}
       html,body{height:100%}
       body{
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg,var(--accent1) 0%,var(--accent2) 100%);
-        padding:24px;
+        background: linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 100%);
         display:flex;
         align-items:center;
         justify-content:center;
-        color:#1f2937;
+        padding:28px;
+        color:#0f172a;
       }
 
-      .wrap{
+      .site {
         width:100%;
-        max-width:880px;
-        background: linear-gradient(180deg,var(--glass), rgba(255,255,255,0.98));
-        border-radius:16px;
-        box-shadow:0 18px 50px rgba(12,12,30,0.45);
+        max-width:980px;
+        border-radius:14px;
         overflow:hidden;
+        background: linear-gradient(180deg,var(--glass), rgba(255,255,255,0.98));
+        box-shadow:0 18px 50px rgba(2,6,23,0.45);
       }
 
-      header{
-        background: linear-gradient(135deg,var(--accent1),var(--accent2));
-        color:white;
-        padding:32px;
+      header {
         display:flex;
         gap:20px;
         align-items:center;
+        padding:28px;
+        background: linear-gradient(135deg,var(--bg1),var(--bg2));
+        color:white;
       }
 
-      .logo{
-        width:120px;
-        height:120px;
+      .logo {
+        width:110px;
+        height:110px;
         border-radius:50%;
         background:white;
-        padding:10px;
         display:flex;
         align-items:center;
         justify-content:center;
-        box-shadow:0 6px 18px rgba(0,0,0,0.25);
+        padding:10px;
         flex-shrink:0;
+        box-shadow:0 8px 26px rgba(2,6,23,0.25);
       }
 
-      .logo img{
-        width:100%;
-        height:100%;
+      .logo img {
+        width:92%;
+        height:92%;
         object-fit:contain;
         display:block;
       }
 
-      .head-text h1{
-        font-size:1.6rem;
-        letter-spacing:0.2px;
+      .title h1 {
+        font-size:1.4rem;
         margin-bottom:6px;
       }
+      .title p {
+        opacity:0.95;
+        font-size:0.95rem;
+      }
 
-      .head-text p{opacity:0.9;font-size:0.95rem}
-
-      main{
+      main {
         display:flex;
-        gap:28px;
-        padding:28px;
-        align-items:flex-start;
+        gap:24px;
+        padding:26px;
         flex-wrap:wrap;
+        align-items:flex-start;
       }
 
-      .left{
-        flex:1 1 380px;
+      .col-left {
+        flex:1 1 540px;
+        min-width:260px;
       }
 
-      .right{
-        width:300px;
-        min-width:220px;
+      .col-right {
+        width:320px;
+        min-width:240px;
       }
 
-      .card{
+      .card {
         background:var(--card);
         border-radius:12px;
-        padding:18px;
-        box-shadow:0 8px 24px rgba(16,24,40,0.06);
-        margin-bottom:18px;
+        padding:16px;
+        box-shadow:0 8px 20px rgba(15,23,42,0.06);
+        margin-bottom:16px;
       }
 
-      .btn{
-        display:inline-block;
-        background:linear-gradient(135deg,var(--accent1),var(--accent2));
-        color:white;
-        padding:10px 18px;
-        border-radius:999px;
-        text-decoration:none;
-        font-weight:600;
-        box-shadow:0 6px 18px rgba(102,126,234,0.28);
+      .card h2 {
+        color:var(--bg1);
+        font-size:1.05rem;
+        margin-bottom:8px;
       }
 
-      .subject{
+      .task-list, .exam-list, .due-list {
+        list-style:none;
+        margin-top:10px;
+        padding:0;
+      }
+
+      .task-list li, .exam-list li, .due-list li {
         display:flex;
         justify-content:space-between;
         gap:12px;
-        align-items:flex-start;
+        padding:10px;
+        border-radius:8px;
+        background:linear-gradient(180deg,#fbfdff,#f6f9ff);
+        margin-bottom:8px;
+        align-items:center;
       }
 
-      .subject h3{color:var(--accent1);margin-bottom:8px}
-      .subject p{color:#374151;line-height:1.6}
+      .meta { font-size:0.9rem; color:var(--muted); }
 
-      .deadline{
+      .btn {
+        display:inline-block;
+        background:linear-gradient(135deg,var(--bg1),var(--bg2));
+        color:white;
+        padding:10px 14px;
+        border-radius:999px;
+        text-decoration:none;
+        font-weight:600;
+        box-shadow:0 8px 24px rgba(102,126,234,0.22);
+      }
+
+      .btn-ghost {
+        display:inline-block;
+        border-radius:8px;
+        padding:8px 10px;
+        background:#f3f6ff;
+        color:var(--bg2);
+        text-decoration:none;
+        font-weight:600;
+      }
+
+      .deadline {
         margin-top:12px;
         background:linear-gradient(180deg,#fff9e6,#fff5d6);
         border-left:4px solid #ffc107;
@@ -127,181 +156,120 @@
         color:#9b2c2c;
       }
 
-      ul.tasks{margin-top:12px;list-style: none; padding-left:0}
-      ul.tasks li{
-        padding:10px 12px;
-        border-radius:8px;
-        margin-bottom:8px;
-        background:linear-gradient(180deg,#fbfdff,#f6f9ff);
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        gap:10px;
-      }
-
-      /* neue Listen für Klassenarbeiten & Abgabetermine */
-      .exam-list, .due-list{list-style:none;padding:0;margin:0}
-      .exam-list li, .due-list li{
-        padding:10px 12px;
-        border-radius:8px;
-        margin-bottom:10px;
-        background:linear-gradient(180deg,#ffffff,#f3f6ff);
-        border-left:4px solid var(--accent1);
-      }
-      .exam-date{font-weight:700;color:var(--accent2);font-size:0.95rem}
-      .due-item{display:flex;justify-content:space-between;align-items:center;gap:10px}
-
-      .meta{font-size:0.9rem;color:var(--muted)}
-
-      footer{
-        background:#fafafa;
-        padding:18px 24px;
-        border-top:1px solid #eef2f7;
+      footer {
         display:flex;
         justify-content:space-between;
         align-items:center;
         gap:12px;
+        padding:14px 22px;
+        background:#fbfbfd;
+        border-top:1px solid #eef2f7;
+        font-size:0.92rem;
+        color:var(--muted);
       }
 
-      .brand{font-weight:700;color:var(--accent1)}
-      .small{font-size:0.9rem;color:var(--muted)}
+      .muted { color:var(--muted); font-size:0.9rem; }
 
-      /* responsive */
-      @media (max-width:820px){
-        main{padding:20px;gap:18px}
-        .right{width:100%}
-        header{flex-direction:column;align-items:center;text-align:center;gap:12px}
+      @media (max-width:880px){
+        .col-right { width:100%; }
+        header{flex-direction:column;align-items:center;text-align:center;padding:18px;gap:12px}
       }
     </style>
   </head>
   <body>
-    <div class="wrap" role="main">
+    <div class="site" role="main" aria-live="polite">
       <header>
         <div class="logo" aria-hidden="true">
           <img src="Download.png" alt="SAAF Logo">
         </div>
-        <div class="head-text">
-          <h1>📚 SAAF 7RB — Hausaufgaben & Infos</h1>
-          <p>Übersichtlich, mobilfreundlich und leicht zu nutzen.</p>
+        <div class="title">
+          <h1>📚 SAAF 7RB — Hausaufgaben & Termine</h1>
+          <p>Aktuelle Aufgaben, Materialien und kommende Termine — übersichtlich auf einen Blick.</p>
         </div>
       </header>
 
       <main>
-        <section class="left">
-          <div class="card">
-            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
-              <div>
-                <h2 style="margin:0 0 6px 0">📊 Wirtschaft</h2>
-                <p style="margin:0;color:#334155">Aufgaben aus dem Buch — für die nächste Stunde bearbeiten.</p>
-              </div>
-              <div style="text-align:right">
-                <div class="meta">Lehrkraft: herr aktan </div>
-                <div class="meta">Klasse: 7RB</div>
-              </div>
-            </div>
+        <section class="col-left" aria-label="Aufgabenbereich">
+          <article class="card" aria-labelledby="aufgaben-title">
+            <h2 id="aufgaben-title">Heute / Diese Woche — Aufgaben</h2>
 
-            <div style="margin-top:14px">
-              <ul class="tasks" aria-label="Aufgabenliste">
-                <li>
-                  <div>
-                    <strong>Seite 22 — Aufgabe 1</strong>
-                    <div class="meta">Kurze Textantwort</div>
-                  </div>
-                  <div class="meta">leicht</div>
-                </li>
-                <li>
-                  <div>
-                    <strong>Seite 22 — Aufgabe 2</strong>
-                    <div class="meta">Rechenaufgabe</div>
-                  </div>
-                  <div class="meta">mittel</div>
-                </li>
-                <li>
-                  <div>
-                    <strong>Seite 22 — Aufgabe 3-4</strong>
-                    <div class="meta">Gruppenarbeit / Notizen</div>
-                  </div>
-                  <div class="meta">mittel</div>
-                </li>
-              </ul>
-            </div>
+            <ul class="task-list" aria-label="Aufgabenliste">
+              <!-- Platzhalter: neue Aufgaben hier eintragen -->
+              <li>
+                <div>
+                  <strong>Seite 22 — Aufgabe 1</strong>
+                  <div class="meta">Kurze Textantwort</div>
+                </div>
+                <div class="meta">leicht</div>
+              </li>
+              <li>
+                <div>
+                  <strong>Seite 22 — Aufgabe 2</strong>
+                  <div class="meta">Rechenaufgabe</div>
+                </div>
+                <div class="meta">mittel</div>
+              </li>
+            </ul>
 
-            <div class="deadline" aria-live="polite">⏰ Abgabe: 20.11.2025</div>
-          </div>
-
-          <div class="card">
-            <h3 style="margin-bottom:8px;color:var(--accent2)">📎 Materialien</h3>
-            <p class="small">Hier findest du nützliche Links und herunterladbare Dateien.</p>
             <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
-              <a class="btn" href="Download.png" download>Logo herunterladen</a>
-              <a class="btn" href="aufgaben.pdf" target="_blank" rel="noopener">Arbeitsblatt (PDF)</a>
-              <a class="btn" href="https://www.hrsaaf.de" target="_blank" rel="noopener">Schul Iserv</a>
+              <a class="btn" href="aufgaben.pdf" target="_blank" rel="noopener">Arbeitsblatt öffnen</a>
+              <a class="btn-ghost" href="Download.png" download>Logo herunterladen</a>
+              <a class="btn-ghost" href="https://www.hrsaaf.de" target="_blank" rel="noopener">Schul-Website</a>
             </div>
-          </div>
+
+            <div class="deadline" aria-live="polite">⏰ Nächste Abgabe: 20.11.2025</div>
+          </article>
+
+          <article class="card" aria-labelledby="material-title">
+            <h2 id="material-title">Materialien & Links</h2>
+            <p class="muted">Sammlung wichtiger Dokumente und Links für die Klasse.</p>
+            <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+              <a class="btn-ghost" href="muster-antworten.pdf" target="_blank" rel="noopener">Muster-Antworten (PDF)</a>
+              <a class="btn-ghost" href="https://www.iserv.de" target="_blank" rel="noopener">iServ</a>
+            </div>
+          </article>
         </section>
 
-        <aside class="right">
-          <div class="card">
-            <h4 style="margin-bottom:8px">📝 Anstehende Klassenarbeiten</h4>
-            <p class="small" style="margin-bottom:12px">Übersicht der nächsten Klassenarbeiten und wichtige Hinweise.</p>
-            <ul class="exam-list" aria-label="Klassenarbeiten">
-              <li>
-                <div><strong>kommt noch</strong></div>
-                <div class="exam-date">TERMIN</div>
-                <div class="meta" style="margin-top:6px">THEMA</div>
-              </li>
-              <li>
-                <div><strong>kommt noch </strong></div>
-                <div class="exam-date">TERMIN</div>
-                <div class="meta" style="margin-top:6px">THEMA</div>
-              </li>
+        <aside class="col-right" aria-label="Termine & Schnellzugriff">
+          <div class="card" aria-labelledby="exams-title">
+            <h2 id="exams-title">📝 Anstehende Klassenarbeiten</h2>
+            <p class="muted" style="margin-bottom:8px">Derzeit keine eingetragenen Klassenarbeiten.</p>
+            <ul class="exam-list" aria-hidden="true">
+              <!-- leer wenn keine Einträge -->
             </ul>
           </div>
 
-          <div class="card">
-            <h4 style="margin-bottom:8px">📅 Abgabetermine</h4>
-            <p class="small" style="margin-bottom:12px">Offizielle Abgaben und Deadlines.</p>
+          <div class="card" aria-labelledby="due-title">
+            <h2 id="due-title">📅 Abgabetermine</h2>
+            <p class="muted" style="margin-bottom:8px">Offizielle Abgaben und Deadlines.</p>
             <ul class="due-list" aria-label="Abgabetermine">
-              <li class="due-item">
-                <div>
-                  <strong>Wirtschaft — Gruppenbericht</strong>
-                  <div class="meta"></div>
-                </div>
-                <div class="exam-date">20.11.2025</div>
-              </li>
-              <li class="due-item">
-                <div>
-                  <strong>KOMMT NOCH</strong>
-                  <div class="meta"></div>
-                </div>
-                <div class="exam-date">DATUM</div>
-              </li>
+              <!-- Beispiel-Element entfernt — Liste bleibt leer bis Einträge folgen -->
             </ul>
-            <div style="margin-top:10px">
+
+            <div style="margin-top:12px">
               <a class="btn" href="https://www.hrsaaf.de" target="_blank" rel="noopener">Alle Termine anzeigen</a>
             </div>
           </div>
 
           <div class="card">
-            <h4 style="margin-bottom:8px">🌐 Schnellzugriff</h4>
-            <p class="small" style="margin-bottom:12px">Nützliche Seiten für die Klasse.</p>
-            <div style="display:flex;flex-direction:column;gap:10px">
-              <a class="btn" href="https://www.hrsaaf.de" target="_blank" rel="noopener">Zur Schulwebsite</a>
-              <a class="btn" href="https://www.iserv.de" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#06b6d4,#0ea5a4)">Zu iServ</a>
+            <h2>🌐 Schnellzugriff</h2>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+              <a class="btn" href="https://www.hrsaaf.de" target="_blank" rel="noopener">Schul-Website</a>
+              <a class="btn" href="https://www.iserv.de" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#06b6d4,#0ea5a4)">iServ</a>
             </div>
           </div>
 
           <div class="card">
-            <h4 style="margin-bottom:8px">Kontakt</h4>
-            <p class="small">Bei Fragen: <strong>finn-luca.kaiser@hrsaaf.de</strong></p>
-            <p class="small" style="margin-top:6px">Erstellt von <span class="brand">Finn-Luca Kaiser</span></p>
+            <h2>Kontakt</h2>
+            <p class="muted">Bei Fragen: <strong>finn-luca.kaiser@hrsaaf.de</strong></p>
+            <p class="muted" style="margin-top:8px">Erstellt von <strong style="color:var(--bg1)">Finn-Luca Kaiser</strong></p>
           </div>
         </aside>
       </main>
 
       <footer>
-        <div class="small">SAAF 7RB • November 2025</div>
-        <div class="small">✨ Created by <span class="brand">Finn-Luca Kaiser</span></div>
+        <div class="muted">SAAF 7RB • November 2025</div>
+        <div class="muted">✨ Created by <strong style="color:var(--bg1)">Finn-Luca Kaiser</strong></div>
       </footer>
     </div>
   </body>
