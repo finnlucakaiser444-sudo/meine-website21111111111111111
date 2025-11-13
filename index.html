@@ -1,277 +1,354 @@
-// ...existing code...
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>SAAF 7RB — Hausaufgaben</title>
-    <style>
-      :root{
-        --bg1:#667eea;
-        --bg2:#764ba2;
-        --card:#ffffff;
-        --muted:#6b7280;
-        --glass: rgba(255,255,255,0.92);
-        --accent:#0ea5a4;
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAAF 7RB — Hausaufgaben</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #667eea;
+      --secondary: #764ba2;
+      --text: #0f172a;
+      --muted: #6b7280;
+      --bg: #f8fafc;
+      --card: #ffffff;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--text);
+      padding: 16px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 100%;
+      background: var(--card);
+      border-radius: 14px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 20px 16px;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .logo {
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      background: white;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .header-content h1 {
+      font-size: 1.15rem;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .header-content p {
+      font-size: 0.9rem;
+      opacity: 0.95;
+      margin: 4px 0 0 0;
+    }
+
+    main {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, #fafbff 0%, #f5f7ff 100%);
+      border: 1px solid #e0e7ff;
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .card h2 {
+      font-size: 1.02rem;
+      color: var(--primary);
+      margin: 0 0 12px 0;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 6px;
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .task-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: white;
+      border-left: 4px solid var(--primary);
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    .task-info {
+      flex: 1;
+    }
+
+    .task-name {
+      font-weight: 600;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .task-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin: 2px 0 0 0;
+    }
+
+    .task-level {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 500;
+      padding: 4px 8px;
+      background: #f0f4ff;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .deadline {
+      background: linear-gradient(135deg, #fff9e6, #fff5d6);
+      border-left: 4px solid #ffc107;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-top: 12px;
+      font-weight: 700;
+      color: #92400e;
+      font-size: 0.95rem;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 8px 12px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      text-decoration: none;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      flex: 1;
+      text-align: center;
+      min-width: 100px;
+      transition: transform 0.2s;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #06b6d4, #0ea5a4);
+    }
+
+    .empty-state {
+      color: var(--muted);
+      font-size: 0.95rem;
+      padding: 10px 0;
+    }
+
+    footer {
+      background: linear-gradient(180deg, #fbfbff, #f5f7ff);
+      border-top: 1px solid #e0e7ff;
+      padding: 12px 16px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .footer-text {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding: 28px;
       }
 
-      *{box-sizing:border-box;margin:0;padding:0}
-      html,body{height:100%}
-      body{
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 100%);
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        padding:28px;
-        color:#0f172a;
-      }
-
-      .site {
-        width:100%;
-        max-width:980px;
-        border-radius:14px;
-        overflow:hidden;
-        background: linear-gradient(180deg,var(--glass), rgba(255,255,255,0.98));
-        box-shadow:0 18px 50px rgba(2,6,23,0.45);
+      .wrapper {
+        max-width: 820px;
       }
 
       header {
-        display:flex;
-        gap:20px;
-        align-items:center;
-        padding:28px;
-        background: linear-gradient(135deg,var(--bg1),var(--bg2));
-        color:white;
+        padding: 24px;
+        gap: 18px;
       }
 
       .logo {
-        width:110px;
-        height:110px;
-        border-radius:50%;
-        background:white;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        padding:10px;
-        flex-shrink:0;
-        box-shadow:0 8px 26px rgba(2,6,23,0.25);
+        width: 92px;
+        height: 92px;
       }
 
-      .logo img {
-        width:92%;
-        height:92%;
-        object-fit:contain;
-        display:block;
+      .header-content h1 {
+        font-size: 1.35rem;
       }
 
-      .title h1 {
-        font-size:1.4rem;
-        margin-bottom:6px;
-      }
-      .title p {
-        opacity:0.95;
-        font-size:0.95rem;
+      .header-content p {
+        font-size: 1rem;
       }
 
       main {
-        display:flex;
-        gap:24px;
-        padding:26px;
-        flex-wrap:wrap;
-        align-items:flex-start;
-      }
-
-      .col-left {
-        flex:1 1 540px;
-        min-width:260px;
-      }
-
-      .col-right {
-        width:320px;
-        min-width:240px;
+        padding: 24px;
+        gap: 16px;
       }
 
       .card {
-        background:var(--card);
-        border-radius:12px;
-        padding:16px;
-        box-shadow:0 8px 20px rgba(15,23,42,0.06);
-        margin-bottom:16px;
+        padding: 16px;
       }
 
       .card h2 {
-        color:var(--bg1);
-        font-size:1.05rem;
-        margin-bottom:8px;
+        font-size: 1.1rem;
+        margin-bottom: 14px;
       }
 
-      .task-list, .exam-list, .due-list {
-        list-style:none;
-        margin-top:10px;
-        padding:0;
+      .task-item {
+        font-size: 1rem;
+        padding: 12px;
       }
-
-      .task-list li, .exam-list li, .due-list li {
-        display:flex;
-        justify-content:space-between;
-        gap:12px;
-        padding:10px;
-        border-radius:8px;
-        background:linear-gradient(180deg,#fbfdff,#f6f9ff);
-        margin-bottom:8px;
-        align-items:center;
-      }
-
-      .meta { font-size:0.9rem; color:var(--muted); }
 
       .btn {
-        display:inline-block;
-        background:linear-gradient(135deg,var(--bg1),var(--bg2));
-        color:white;
-        padding:10px 14px;
-        border-radius:999px;
-        text-decoration:none;
-        font-weight:600;
-        box-shadow:0 8px 24px rgba(102,126,234,0.22);
+        flex: none;
+        min-width: auto;
+        padding: 10px 16px;
       }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <div class="logo">
+        <img src="Download.png" alt="SAAF Logo" />
+      </div>
+      <div class="header-content">
+        <h1>📚 SAAF 7RB</h1>
+        <p>Hausaufgaben & Termine</p>
+      </div>
+    </header>
 
-      .btn-ghost {
-        display:inline-block;
-        border-radius:8px;
-        padding:8px 10px;
-        background:#f3f6ff;
-        color:var(--bg2);
-        text-decoration:none;
-        font-weight:600;
-      }
-
-      .deadline {
-        margin-top:12px;
-        background:linear-gradient(180deg,#fff9e6,#fff5d6);
-        border-left:4px solid #ffc107;
-        padding:10px 12px;
-        border-radius:8px;
-        font-weight:700;
-        color:#9b2c2c;
-      }
-
-      footer {
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        gap:12px;
-        padding:14px 22px;
-        background:#fbfbfd;
-        border-top:1px solid #eef2f7;
-        font-size:0.92rem;
-        color:var(--muted);
-      }
-
-      .muted { color:var(--muted); font-size:0.9rem; }
-
-      @media (max-width:880px){
-        .col-right { width:100%; }
-        header{flex-direction:column;align-items:center;text-align:center;padding:18px;gap:12px}
-      }
-    </style>
-  </head>
-  <body>
-    <div class="site" role="main" aria-live="polite">
-      <header>
-        <div class="logo" aria-hidden="true">
-          <img src="Download.png" alt="SAAF Logo">
+    <main>
+      <!-- Wirtschaft Aufgaben -->
+      <section class="card">
+        <h2>📊 Wirtschaft — Seite 24</h2>
+        <ul class="task-list">
+          <li class="task-item">
+            <div class="task-info">
+              <p class="task-name">Aufgabe 1</p>
+              <p class="task-desc">Kurze Textantwort</p>
+            </div>
+            <div class="task-level">leicht</div>
+          </li>
+          <li class="task-item">
+            <div class="task-info">
+              <p class="task-name">Aufgabe 2</p>
+              <p class="task-desc">Rechenaufgabe</p>
+            </div>
+            <div class="task-level">mittel</div>
+          </li>
+          <li class="task-item">
+            <div class="task-info">
+              <p class="task-name">Aufgabe 3</p>
+              <p class="task-desc">Analyse & Erklärung</p>
+            </div>
+            <div class="task-level">mittel</div>
+          </li>
+          <li class="task-item">
+            <div class="task-info">
+              <p class="task-name">Aufgabe 4</p>
+              <p class="task-desc">Gruppenarbeit</p>
+            </div>
+            <div class="task-level">schwer</div>
+          </li>
+        </ul>
+        <div class="deadline">⏰ Abgabe bis: 20.11.2025</div>
+        <div class="button-group">
+          <a class="btn" href="https://www.schule-altes-amt-friedeburg.de" target="_blank">Schul-Website</a>
+          <a class="btn btn-secondary" href="https://www.hrsaaf.de" target="_blank">iServ</a>
         </div>
-        <div class="title">
-          <h1>📚 SAAF 7RB — Hausaufgaben & Termine</h1>
-          <p>Aktuelle Aufgaben, Materialien und kommende Termine — übersichtlich auf einen Blick.</p>
+      </section>
+
+      <!-- Materialien -->
+      <section class="card">
+        <h2>📎 Materialien</h2>
+        <p class="empty-state">Wichtige Dokumente und Links</p>
+        <div class="button-group">
+          <a class="btn" href="Download.png" download>Logo herunterladen</a>
+          <a class="btn btn-secondary" href="aufgaben.pdf" target="_blank">Arbeitsblatt</a>
         </div>
-      </header>
+      </section>
 
-      <main>
-        <section class="col-left" aria-label="Aufgabenbereich">
-          <article class="card" aria-labelledby="aufgaben-title">
-            <h2 id="aufgaben-title">Heute / Diese Woche — Aufgaben</h2>
-
-            <ul class="task-list" aria-label="Aufgabenliste">
-              <!-- Platzhalter: neue Aufgaben hier eintragen -->
-              <li>
-                <div>
-                  <strong>Seite 22 — Aufgabe 1</strong>
-                  <div class="meta">Kurze Textantwort</div>
-                </div>
-                <div class="meta">leicht</div>
-              </li>
-              <li>
-                <div>
-                  <strong>Seite 22 — Aufgabe 2</strong>
-                  <div class="meta">Rechenaufgabe</div>
-                </div>
-                <div class="meta">mittel</div>
-              </li>
-            </ul>
-
-            <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
-              <a class="btn" href="aufgaben.pdf" target="_blank" rel="noopener">Arbeitsblatt öffnen</a>
-              <a class="btn-ghost" href="Download.png" download>Logo herunterladen</a>
-              <a class="btn-ghost" href="https://www.hrsaaf.de" target="_blank" rel="noopener">Schul-Website</a>
+      <!-- Abgabetermine -->
+      <section class="card">
+        <h2>📅 Abgabetermine</h2>
+        <ul class="task-list">
+          <li class="task-item">
+            <div class="task-info">
+              <p class="task-name">Wirtschaft — Gruppenbericht</p>
+              <p class="task-desc">wird im unterricht abgefragt</p>
             </div>
+            <div class="task-level">20.11.2025</div>
+          </li>
+        </ul>
+      </section>
 
-            <div class="deadline" aria-live="polite">⏰ Nächste Abgabe: 20.11.2025</div>
-          </article>
+      <!-- Klassenarbeiten -->
+      <section class="card">
+        <h2>📝 Klassenarbeiten</h2>
+        <p class="empty-state">Derzeit keine eingetragenen Klassenarbeiten.</p>
+      </section>
+    </main>
 
-          <article class="card" aria-labelledby="material-title">
-            <h2 id="material-title">Materialien & Links</h2>
-            <p class="muted">Sammlung wichtiger Dokumente und Links für die Klasse.</p>
-            <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
-              <a class="btn-ghost" href="muster-antworten.pdf" target="_blank" rel="noopener">Muster-Antworten (PDF)</a>
-              <a class="btn-ghost" href="https://www.iserv.de" target="_blank" rel="noopener">iServ</a>
-            </div>
-          </article>
-        </section>
-
-        <aside class="col-right" aria-label="Termine & Schnellzugriff">
-          <div class="card" aria-labelledby="exams-title">
-            <h2 id="exams-title">📝 Anstehende Klassenarbeiten</h2>
-            <p class="muted" style="margin-bottom:8px">Derzeit keine eingetragenen Klassenarbeiten.</p>
-            <ul class="exam-list" aria-hidden="true">
-              <!-- leer wenn keine Einträge -->
-            </ul>
-          </div>
-
-          <div class="card" aria-labelledby="due-title">
-            <h2 id="due-title">📅 Abgabetermine</h2>
-            <p class="muted" style="margin-bottom:8px">Offizielle Abgaben und Deadlines.</p>
-            <ul class="due-list" aria-label="Abgabetermine">
-              <!-- Beispiel-Element entfernt — Liste bleibt leer bis Einträge folgen -->
-            </ul>
-
-            <div style="margin-top:12px">
-              <a class="btn" href="https://www.hrsaaf.de" target="_blank" rel="noopener">Alle Termine anzeigen</a>
-            </div>
-          </div>
-
-          <div class="card">
-            <h2>🌐 Schnellzugriff</h2>
-            <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
-              <a class="btn" href="https://www.hrsaaf.de" target="_blank" rel="noopener">Schul-Website</a>
-              <a class="btn" href="https://www.iserv.de" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#06b6d4,#0ea5a4)">iServ</a>
-            </div>
-          </div>
-
-          <div class="card">
-            <h2>Kontakt</h2>
-            <p class="muted">Bei Fragen: <strong>finn-luca.kaiser@hrsaaf.de</strong></p>
-            <p class="muted" style="margin-top:8px">Erstellt von <strong style="color:var(--bg1)">Finn-Luca Kaiser</strong></p>
-          </div>
-        </aside>
-      </main>
-
-      <footer>
-        <div class="muted">SAAF 7RB • November 2025</div>
-        <div class="muted">✨ Created by <strong style="color:var(--bg1)">Finn-Luca Kaiser</strong></div>
-      </footer>
-    </div>
-  </body>
+    <footer>
+      <div>SAAF 7RB • November 2025</div>
+      <div style="margin-top: 6px;">✨ Created by <span class="footer-text">Finn-Luca Kaiser</span></div>
+    </footer>
+  </div>
+</body>
 </html>
-// ...existing code...
