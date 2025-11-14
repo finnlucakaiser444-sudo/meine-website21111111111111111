@@ -752,11 +752,12 @@
         
         const deadline = t.deadline ? new Date(t.deadline).toLocaleDateString('de-DE') : 'Kein Datum';
         const difficulty = t.level ? { leicht: '⭐', mittel: '⭐⭐', schwer: '⭐⭐⭐' }[t.level] : '';
+        const createdByText = t.createdBy ? `(von ${t.createdBy === 'teacher' ? 'Lehrer' : t.createdBy === 'admin' ? 'Admin' : 'Lehrer'})` : '';
         
         li.innerHTML = `
           <div class="item-content">
             <div class="title">${t.title}</div>
-            <p class="item-content meta">${t.subject || '−'} ${difficulty} • ${deadline}</p>
+            <p class="item-content meta">${t.subject || '−'} ${difficulty} • ${deadline} ${createdByText}</p>
           </div>
           <div class="item-actions">
             <button class="btn small ghost" onclick="toggleDone(${i})">${t.done ? '✅' : '⭕'}</button>
@@ -801,6 +802,7 @@
         level: document.getElementById('tLevel').value || '',
         deadline: deadline || '',
         done: false,
+        createdBy: currentRole,
         createdAt: new Date().toISOString()
       });
       
@@ -847,11 +849,12 @@
         const dateObj = new Date(e.date);
         const formattedDate = dateObj.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
         const extras = [e.time, e.location, e.taskNumber].filter(x => x).join(' • ');
+        const createdByText = e.createdBy ? `(von ${e.createdBy === 'teacher' ? 'Lehrer' : e.createdBy === 'admin' ? 'Admin' : 'Lehrer'})` : '';
         
         li.innerHTML = `
           <div class="item-content">
             <div class="title">${e.title}</div>
-            <p class="item-content meta">${formattedDate}${extras ? ' • ' + extras : ''}</p>
+            <p class="item-content meta">${formattedDate}${extras ? ' • ' + extras : ''} ${createdByText}</p>
           </div>
           <div class="item-actions">
             <button class="btn small ghost" onclick="delEvent(${i})">🗑️</button>
@@ -893,7 +896,9 @@
         date,
         time: document.getElementById('eTime').value.trim() || '',
         location: document.getElementById('eLocation').value.trim() || '',
-        taskNumber: document.getElementById('eTaskNumber').value.trim() || ''
+        taskNumber: document.getElementById('eTaskNumber').value.trim() || '',
+        createdBy: currentRole,
+        createdAt: new Date().toISOString()
       });
       
       saveData('events', events);
