@@ -455,6 +455,7 @@
       <div class="header-nav">
         <button class="btn small" onclick="window.open('https://www.hrsaaf.de/','_blank')">🏫 Schulseite</button>
         <button class="btn small" onclick="openChatModal()">💬 Chat</button>
+        <button class="btn small" onclick="openCloudModal()">☁️ Sync</button>
         <div id="roleBadge">👤 Gast</div>
         <button class="btn small" onclick="openLogin()">🔐 Anmelden</button>
       </div>
@@ -521,6 +522,50 @@
       </div>
       <button class="btn" onclick="joinChat()" style="width:100%;justify-content:center">🚀 Chat beitreten</button>
       <button class="btn ghost" onclick="closeChatModal()" style="width:100%;justify-content:center;margin-top:10px">Abbrechen</button>
+    </div>
+  </div>
+
+  <!-- Cloud Sync Modal -->
+  <div class="modal" id="cloudModal">
+    <div class="modal-card">
+      <h3>☁️ Cloud Sync</h3>
+      <p style="color:var(--muted);margin:8px 0">Füge hier deine Firebase-Web-Konfiguration ein, um Aufgaben/Termine/Notizen automatisch zwischen Geräten zu synchronisieren. Du kannst die Konfiguration auch später entfernen.</p>
+      <div class="form-group">
+        <label>Firebase Web-Konfiguration (JSON)</label>
+        <textarea id="firebaseConfigInput" placeholder='{"apiKey":"...","authDomain":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}'></textarea>
+      </div>
+      <div class="form-group" style="margin-top:6px">
+        <label>Anmelden / Konto</label>
+        <input id="cloudEmail" type="email" placeholder="deine-email@schule.de" />
+        <input id="cloudPw" type="password" placeholder="Passwort" style="margin-top:8px" />
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn small" onclick="signInEmail()">Anmelden</button>
+          <button class="btn small ghost" onclick="signUpEmail()">Konto erstellen</button>
+          <button class="btn small ghost" onclick="signOutCloud()">Abmelden</button>
+        </div>
+        <div id="cloudAuthStatus" style="margin-top:8px;color:var(--muted)"></div>
+      </div>
+      <div class="form-group" style="display:flex;gap:8px">
+        <button class="btn" onclick="saveCloudConfig()">✅ Aktivieren</button>
+        <button class="btn ghost" onclick="clearCloudConfig()">❌ Entfernen</button>
+      </div>
+      <div id="roleManager" style="margin-top:10px;display:none">
+        <div class="form-group">
+          <label>Rolle zuweisen (Admin)</label>
+          <input id="roleEmail" type="email" placeholder="email@schule.de" />
+          <select id="roleSelect" style="margin-top:8px">
+            <option value="student">Schüler</option>
+            <option value="teacher">Lehrer</option>
+            <option value="admin">Admin</option>
+          </select>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn" onclick="assignRole()">Zuweisen</button>
+          </div>
+        </div>
+        <div id="roleManagerStatus" style="color:var(--muted)"></div>
+      </div>
+      <div id="cloudStatus" style="margin-top:8px;color:var(--muted)"></div>
+      <button class="btn ghost" onclick="closeCloudModal()" style="width:100%;justify-content:center;margin-top:10px">Schließen</button>
     </div>
   </div>
 
@@ -617,8 +662,26 @@
       teacherPassword: 'HA113',
       adminPassword: 'ADMIN24',
       notificationHours: 5,
-      storagePrefix: 'saaf_'
+      storagePrefix: 'saaf_',
+      // Set this to your Firebase web config object to enable cloud sync.
+      // Example:
+      // firebaseConfig: {
+      //   apiKey: "...",
+      //   authDomain: "...",
+      //   projectId: "...",
+      //   storageBucket: "...",
+      //   messagingSenderId: "...",
+      //   appId: "..."
+      // }
+      firebaseConfig: null,
+      useFirestore: false
     };
+
+    // Firestore caches (used when CONFIG.useFirestore is true)
+    let db = null;
+    let tasksCache = [];
+    let eventsCache = [];
+    let notesCache = [];
 
     // State
     let currentRole = sessionStorage.getItem('role') || null;
@@ -627,12 +690,77 @@
 
     // Initialisierung
     function init() {
+      // Load saved firebaseConfig from localStorage if present
+      try {
+        const saved = localStorage.getItem(CONFIG.storagePrefix + 'firebaseConfig');
+        if (saved && !CONFIG.firebaseConfig) {
+          CONFIG.firebaseConfig = JSON.parse(saved);
+        }
+      } catch (e) {
+        console.warn('Invalid saved firebaseConfig', e);
+      }
+
+      initFirebase();
       updateRoleUI();
       renderTasks();
       renderEvents();
       renderNotes();
       setupNotifications();
       checkNotifications();
+    }
+
+    // ==================== Firebase / Firestore (optional) ====================
+    function initFirebase() {
+      if (!CONFIG.firebaseConfig) return;
+      try {
+        // Avoid double-initialization when re-saving config
+        if (!firebase.apps || firebase.apps.length === 0) {
+          firebase.initializeApp(CONFIG.firebaseConfig);
+        }
+        db = firebase.firestore();
+        CONFIG.useFirestore = true;
+
+        // Enable offline persistence where available
+        if (firebase && firebase.firestore && firebase.firestore().enablePersistence) {
+          firebase.firestore().enablePersistence().catch((err) => {
+            console.warn('Firestore persistence not enabled', err);
+          });
+        }
+
+        // Auth: keep a signed-in user; fallback to anonymous sign-in
+        if (firebase.auth) {
+          firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+              document.getElementById('cloudStatus') && (document.getElementById('cloudStatus').textContent = 'Verbunden als: ' + (user.isAnonymous ? 'Gast' : (user.email || user.uid)));
+              // resolve role from Firestore mapping (if exists)
+              resolveRoleForUser(user);
+              document.getElementById('cloudAuthStatus') && (document.getElementById('cloudAuthStatus').textContent = user.email ? ('Angemeldet: ' + user.email) : 'Angemeldet (anonym)');
+            } else {
+              // sign in anonymously so writes are authenticated
+              firebase.auth().signInAnonymously().catch(err => console.warn('Anonymous sign-in failed', err));
+            }
+          });
+        }
+
+        // Real-time listeners
+        db.collection('tasks').orderBy('createdAt', 'asc').onSnapshot(snap => {
+          tasksCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          renderTasks();
+        });
+
+        db.collection('events').orderBy('createdAt', 'asc').onSnapshot(snap => {
+          eventsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          renderEvents();
+        });
+
+        db.collection('notes').orderBy('createdAt', 'asc').onSnapshot(snap => {
+          notesCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          renderNotes();
+        });
+
+      } catch (e) {
+        console.warn('Firebase initialization error', e);
+      }
     }
 
     // Rolle UI aktualisieren
@@ -672,6 +800,109 @@
       const status = document.getElementById('chatStatus');
       status.innerHTML = `<div class="success-message">✅ Willkommen ${email.split('@')[0]}! Du bist dem Chat beigetreten.</div>`;
       setTimeout(() => closeChatModal(), 2000);
+    }
+
+    // ==================== Cloud Sync helpers ====================
+    function openCloudModal() {
+      document.getElementById('cloudModal').classList.add('show');
+      const saved = localStorage.getItem(CONFIG.storagePrefix + 'firebaseConfig');
+      document.getElementById('firebaseConfigInput').value = saved || '';
+      document.getElementById('cloudStatus').textContent = CONFIG.useFirestore ? 'Cloud-Sync aktiviert' : 'Cloud-Sync nicht aktiviert';
+    }
+
+    function closeCloudModal() {
+      document.getElementById('cloudModal').classList.remove('show');
+    }
+
+    function saveCloudConfig() {
+      const txt = document.getElementById('firebaseConfigInput').value.trim();
+      if (!txt) { alert('Bitte Firebase-Konfiguration einfügen'); return; }
+      try {
+        const cfg = JSON.parse(txt);
+        localStorage.setItem(CONFIG.storagePrefix + 'firebaseConfig', JSON.stringify(cfg));
+        CONFIG.firebaseConfig = cfg;
+        // re-init Firebase
+        initFirebase();
+        document.getElementById('cloudStatus').textContent = 'Cloud-Sync aktiviert';
+        setTimeout(() => closeCloudModal(), 800);
+      } catch (e) {
+        alert('Ungültiges JSON: ' + e.message);
+      }
+    }
+
+    function clearCloudConfig() {
+      if (!confirm('Cloud-Konfiguration entfernen?')) return;
+      localStorage.removeItem(CONFIG.storagePrefix + 'firebaseConfig');
+      CONFIG.firebaseConfig = null;
+      CONFIG.useFirestore = false;
+      db = null;
+      document.getElementById('cloudStatus').textContent = 'Cloud-Sync deaktiviert';
+      renderTasks(); renderEvents(); renderNotes();
+    }
+
+    // ==================== Auth helpers (email/password) ====================
+    function signUpEmail() {
+      if (!CONFIG.useFirestore) { alert('Cloud nicht aktiviert'); return; }
+      const email = document.getElementById('cloudEmail').value.trim();
+      const pw = document.getElementById('cloudPw').value;
+      if (!email || !pw) { alert('E-Mail und Passwort benötigt'); return; }
+      firebase.auth().createUserWithEmailAndPassword(email, pw)
+        .then(() => { document.getElementById('cloudAuthStatus').textContent = 'Konto erstellt und angemeldet'; })
+        .catch(err => { alert('Fehler beim Erstellen: ' + err.message); });
+    }
+
+    function signInEmail() {
+      if (!CONFIG.useFirestore) { alert('Cloud nicht aktiviert'); return; }
+      const email = document.getElementById('cloudEmail').value.trim();
+      const pw = document.getElementById('cloudPw').value;
+      if (!email || !pw) { alert('E-Mail und Passwort benötigt'); return; }
+      firebase.auth().signInWithEmailAndPassword(email, pw)
+        .then(() => { document.getElementById('cloudAuthStatus').textContent = 'Angemeldet'; })
+        .catch(err => { alert('Fehler beim Anmelden: ' + err.message); });
+    }
+
+    function signOutCloud() {
+      if (!CONFIG.useFirestore || !firebase.auth) return;
+      firebase.auth().signOut().then(() => {
+        document.getElementById('cloudAuthStatus').textContent = 'Abgemeldet';
+        // fallback to previous session role if any
+        currentRole = sessionStorage.getItem('role') || null;
+        updateRoleUI();
+      });
+    }
+
+    // Assign role in Firestore (admin-only)
+    function assignRole() {
+      if (!CONFIG.useFirestore || !db) { alert('Cloud nicht aktiviert'); return; }
+      const email = document.getElementById('roleEmail').value.trim();
+      const role = document.getElementById('roleSelect').value;
+      if (!email || !role) { alert('E-Mail und Rolle erforderlich'); return; }
+      db.collection('userRoles').doc(email).set({ email, role, updatedAt: new Date().toISOString() })
+        .then(() => { document.getElementById('roleManagerStatus').textContent = 'Rolle zugewiesen'; })
+        .catch(err => { alert('Fehler beim Zuweisen: ' + err.message); });
+    }
+
+    // Resolve role from Firestore userRoles collection
+    function resolveRoleForUser(user) {
+      if (!CONFIG.useFirestore || !db || !user) return;
+      const email = user.email;
+      if (!email) return;
+      db.collection('userRoles').doc(email).get().then(doc => {
+        if (doc.exists) {
+          const r = doc.data().role;
+          currentRole = r;
+          sessionStorage.setItem('role', currentRole);
+          updateRoleUI();
+          // If admin, show role manager
+          document.getElementById('roleManager').style.display = (currentRole === 'admin') ? 'block' : 'none';
+        } else {
+          // default to student
+          currentRole = 'student';
+          sessionStorage.setItem('role', currentRole);
+          updateRoleUI();
+          document.getElementById('roleManager').style.display = 'none';
+        }
+      }).catch(err => console.warn('Role lookup failed', err));
     }
 
     // ==================== Login ====================
@@ -727,10 +958,17 @@
 
     // ==================== Datenverwaltung ====================
     function loadData(key) {
+      if (CONFIG.useFirestore) {
+        if (key === 'tasks') return tasksCache || [];
+        if (key === 'events') return eventsCache || [];
+        if (key === 'notes') return notesCache || [];
+        return [];
+      }
       return JSON.parse(localStorage.getItem(CONFIG.storagePrefix + key) || '[]');
     }
 
     function saveData(key, arr) {
+      // Generic fallback to localStorage; Firestore writes are handled in the specific save functions.
       localStorage.setItem(CONFIG.storagePrefix + key, JSON.stringify(arr));
     }
 
@@ -739,40 +977,44 @@
       const list = document.getElementById('tasks');
       list.innerHTML = '';
       const tasks = loadData('tasks');
-      
+
       if (tasks.length === 0) {
         list.innerHTML = '<div class="empty-state">Keine Aufgaben eingetragen</div>';
         return;
       }
-      
+
       let hasVisibleTasks = false;
       tasks.forEach((t, i) => {
-        // Alle öffentlichen Aufgaben anzeigen (von Lehrern/Admins)
-        // Schüler können nur ihre eigenen sehen, aber alle von Lehrern/Admins
-        if (t.createdBy && (t.createdBy === 'teacher' || t.createdBy === 'admin')) {
-          hasVisibleTasks = true;
-          const li = document.createElement('li');
-          li.className = 'item';
-          li.style.opacity = t.done ? '0.6' : '1';
-          
-          const deadline = t.deadline ? new Date(t.deadline).toLocaleDateString('de-DE') : 'Kein Datum';
-          const difficulty = t.level ? { leicht: '⭐', mittel: '⭐⭐', schwer: '⭐⭐⭐' }[t.level] : '';
-          const createdByText = t.createdBy ? `(von ${t.createdBy === 'teacher' ? 'Lehrer' : 'Admin'})` : '';
-          
-          li.innerHTML = `
-            <div class="item-content">
-              <div class="title">${t.title}</div>
-              <p class="item-content meta">${t.subject || '−'} ${difficulty} • ${deadline} ${createdByText}</p>
-            </div>
-            <div class="item-actions">
-              <button class="btn small ghost" onclick="toggleDone(${i})">${t.done ? '✅' : '⭕'}</button>
-              <button class="btn small ghost" onclick="delTask(${i})" style="display:${(currentRole === 'teacher' || currentRole === 'admin') ? 'flex' : 'none'}">🗑️</button>
-            </div>
-          `;
-          list.appendChild(li);
-        }
+        // Show tasks if created by teacher/admin to everyone, or if no createdBy (legacy)
+        const isPublic = !t.createdBy || t.createdBy === 'teacher' || t.createdBy === 'admin';
+        const isOwner = t.createdBy && t.createdBy === currentRole;
+        if (!isPublic && !isOwner && currentRole === 'student') return; // students don't see private other-student tasks
+
+        hasVisibleTasks = true;
+        const li = document.createElement('li');
+        li.className = 'item';
+        li.style.opacity = t.done ? '0.6' : '1';
+
+        const deadline = t.deadline ? new Date(t.deadline).toLocaleDateString('de-DE') : 'Kein Datum';
+        const difficulty = t.level ? { leicht: '⭐', mittel: '⭐⭐', schwer: '⭐⭐⭐' }[t.level] : '';
+        const createdByText = t.createdBy ? `(von ${t.createdBy === 'teacher' ? 'Lehrer' : t.createdBy === 'admin' ? 'Admin' : 'Benutzer'})` : '';
+
+        // Determine action handlers depending on storage
+        const idOrIndex = t.id ? `'${t.id}'` : i;
+
+        li.innerHTML = `
+          <div class="item-content">
+            <div class="title">${t.title}</div>
+            <p class="item-content meta">${t.subject || '−'} ${difficulty} • ${deadline} ${createdByText}</p>
+          </div>
+          <div class="item-actions">
+            <button class="btn small ghost" onclick="toggleDone(${idOrIndex})">${t.done ? '✅' : '⭕'}</button>
+            <button class="btn small ghost" onclick="delTask(${idOrIndex})" style="display:${(currentRole === 'teacher' || currentRole === 'admin') ? 'flex' : 'none'}">🗑️</button>
+          </div>
+        `;
+        list.appendChild(li);
       });
-      
+
       if (!hasVisibleTasks) {
         list.innerHTML = '<div class="empty-state">Keine Aufgaben eingetragen</div>';
       }
@@ -803,9 +1045,7 @@
       }
       
       const deadline = document.getElementById('tDeadline').value;
-      const tasks = loadData('tasks');
-      
-      tasks.push({
+      const payload = {
         title,
         description: document.getElementById('tDesc').value || '',
         subject: document.getElementById('tSubject').value || '',
@@ -814,11 +1054,21 @@
         done: false,
         createdBy: currentRole,
         createdAt: new Date().toISOString()
-      });
-      
-      saveData('tasks', tasks);
+      };
+
+      if (CONFIG.useFirestore && db) {
+        db.collection('tasks').add(payload).catch(err => {
+          console.error('Fehler beim Speichern in Firestore', err);
+          alert('Speichern fehlgeschlagen. Verbindung prüfen.');
+        });
+      } else {
+        const tasks = loadData('tasks');
+        tasks.push(payload);
+        saveData('tasks', tasks);
+        renderTasks();
+      }
+
       closeTaskModal();
-      renderTasks();
       scheduleNotification(deadline, title);
       
       ['tName', 'tDesc', 'tSubject', 'tLevel', 'tDeadline'].forEach(id => {
@@ -826,15 +1076,29 @@
       });
     }
 
-    function delTask(i) {
+    function delTask(iOrId) {
       if (!confirm('❌ Aufgabe wirklich löschen?')) return;
+      if (CONFIG.useFirestore && typeof iOrId === 'string') {
+        db.collection('tasks').doc(iOrId).delete().catch(err => console.error(err));
+        return;
+      }
+      const i = Number(iOrId);
       const tasks = loadData('tasks');
       tasks.splice(i, 1);
       saveData('tasks', tasks);
       renderTasks();
     }
 
-    function toggleDone(i) {
+    function toggleDone(iOrId) {
+      if (CONFIG.useFirestore && typeof iOrId === 'string') {
+        const ref = db.collection('tasks').doc(iOrId);
+        ref.get().then(doc => {
+          if (!doc.exists) return;
+          ref.update({ done: !doc.data().done }).catch(err => console.error(err));
+        }).catch(err => console.error(err));
+        return;
+      }
+      const i = Number(iOrId);
       const tasks = loadData('tasks');
       tasks[i].done = !tasks[i].done;
       saveData('tasks', tasks);
@@ -854,28 +1118,31 @@
       
       let hasVisibleEvents = false;
       events.forEach((e, i) => {
-        // Alle öffentlichen Termine anzeigen (von Lehrern/Admins)
-        if (e.createdBy && (e.createdBy === 'teacher' || e.createdBy === 'admin')) {
-          hasVisibleEvents = true;
-          const li = document.createElement('li');
-          li.className = 'item';
-          
-          const dateObj = new Date(e.date);
-          const formattedDate = dateObj.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
-          const extras = [e.time, e.location, e.taskNumber].filter(x => x).join(' • ');
-          const createdByText = e.createdBy ? `(von ${e.createdBy === 'teacher' ? 'Lehrer' : 'Admin'})` : '';
-          
-          li.innerHTML = `
-            <div class="item-content">
-              <div class="title">${e.title}</div>
-              <p class="item-content meta">${formattedDate}${extras ? ' • ' + extras : ''} ${createdByText}</p>
-            </div>
-            <div class="item-actions">
-              <button class="btn small ghost" onclick="delEvent(${i})" style="display:${(currentRole === 'teacher' || currentRole === 'admin') ? 'flex' : 'none'}">🗑️</button>
-            </div>
-          `;
-          list.appendChild(li);
-        }
+        const isPublic = !e.createdBy || e.createdBy === 'teacher' || e.createdBy === 'admin';
+        const isOwner = e.createdBy && e.createdBy === currentRole;
+        if (!isPublic && !isOwner && currentRole === 'student') return;
+
+        hasVisibleEvents = true;
+        const li = document.createElement('li');
+        li.className = 'item';
+
+        const dateObj = new Date(e.date || e.deadline || '');
+        const formattedDate = isNaN(dateObj) ? (e.date || 'Datum') : dateObj.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
+        const extras = [e.time, e.location, e.taskNumber].filter(x => x).join(' • ');
+        const createdByText = e.createdBy ? `(von ${e.createdBy === 'teacher' ? 'Lehrer' : e.createdBy === 'admin' ? 'Admin' : 'Benutzer'})` : '';
+
+        const idOrIndex = e.id ? `'${e.id}'` : i;
+
+        li.innerHTML = `
+          <div class="item-content">
+            <div class="title">${e.title}</div>
+            <p class="item-content meta">${formattedDate}${extras ? ' • ' + extras : ''} ${createdByText}</p>
+          </div>
+          <div class="item-actions">
+            <button class="btn small ghost" onclick="delEvent(${idOrIndex})" style="display:${(currentRole === 'teacher' || currentRole === 'admin') ? 'flex' : 'none'}">🗑️</button>
+          </div>
+        `;
+        list.appendChild(li);
       });
       
       if (!hasVisibleEvents) {
@@ -909,8 +1176,7 @@
         return;
       }
       
-      const events = loadData('events');
-      events.push({
+      const payload = {
         title,
         date,
         time: document.getElementById('eTime').value.trim() || '',
@@ -918,11 +1184,21 @@
         taskNumber: document.getElementById('eTaskNumber').value.trim() || '',
         createdBy: currentRole,
         createdAt: new Date().toISOString()
-      });
-      
-      saveData('events', events);
+      };
+
+      if (CONFIG.useFirestore && db) {
+        db.collection('events').add(payload).catch(err => {
+          console.error('Fehler beim Speichern in Firestore', err);
+          alert('Speichern fehlgeschlagen. Verbindung prüfen.');
+        });
+      } else {
+        const events = loadData('events');
+        events.push(payload);
+        saveData('events', events);
+        renderEvents();
+      }
+
       closeEventModal();
-      renderEvents();
       scheduleNotification(date, title);
       
       ['eTitle', 'eDate', 'eTime', 'eLocation', 'eTaskNumber'].forEach(id => {
@@ -930,8 +1206,13 @@
       });
     }
 
-    function delEvent(i) {
+    function delEvent(iOrId) {
       if (!confirm('❌ Termin wirklich löschen?')) return;
+      if (CONFIG.useFirestore && typeof iOrId === 'string') {
+        db.collection('events').doc(iOrId).delete().catch(err => console.error(err));
+        return;
+      }
+      const i = Number(iOrId);
       const events = loadData('events');
       events.splice(i, 1);
       saveData('events', events);
@@ -942,15 +1223,15 @@
     function saveNote() {
       const text = document.getElementById('noteInput').value.trim();
       if (!text) return;
-      
-      const notes = loadData('notes');
-      notes.push({
-        text,
-        createdAt: new Date().toISOString()
-      });
-      
-      saveData('notes', notes);
-      renderNotes();
+      const payload = { text, createdAt: new Date().toISOString() };
+      if (CONFIG.useFirestore && db) {
+        db.collection('notes').add(payload).catch(err => console.error('Fehler beim Speichern der Notiz', err));
+      } else {
+        const notes = loadData('notes');
+        notes.push(payload);
+        saveData('notes', notes);
+        renderNotes();
+      }
       document.getElementById('noteInput').value = '';
     }
 
@@ -969,14 +1250,15 @@
         li.className = 'item';
         const date = new Date(note.createdAt);
         const timeStr = date.toLocaleString('de-DE', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
-        
+        const idOrIndex = note.id ? `'${note.id}'` : i;
+
         li.innerHTML = `
           <div class="item-content">
             <div class="title">${note.text}</div>
             <p class="item-content meta">${timeStr}</p>
           </div>
           <div class="item-actions">
-            <button class="btn small ghost" onclick="delNote(${i})">🗑️</button>
+            <button class="btn small ghost" onclick="delNote(${idOrIndex})">🗑️</button>
           </div>
         `;
         list.appendChild(li);
@@ -984,8 +1266,13 @@
     }
 
     function delNote(i) {
+      if (CONFIG.useFirestore && typeof i === 'string') {
+        db.collection('notes').doc(i).delete().catch(err => console.error(err));
+        return;
+      }
+      const idx = Number(i);
       const notes = loadData('notes');
-      notes.splice(i, 1);
+      notes.splice(idx, 1);
       saveData('notes', notes);
       renderNotes();
     }
@@ -1204,10 +1491,31 @@
           const dateStr = item.deadline || item.date;
           if (dateStr && !item.notified) {
             const deadline = new Date(dateStr);
+            if (isNaN(deadline)) return;
             const notificationTime = new Date(deadline.getTime() - CONFIG.notificationHours * 60 * 60 * 1000);
             const now = new Date();
             if (notificationTime <= now && deadline > now) {
+              // show notification
               scheduleNotification(dateStr, item.title);
+              // mark as notified and persist change
+              item.notified = true;
+              if (CONFIG.useFirestore && item.id && db) {
+                const collection = (item.date || item.time || item.location) ? 'events' : 'tasks';
+                db.collection(collection).doc(item.id).update({ notified: true }).catch(err => console.warn('Could not update notified flag', err));
+              } else {
+                // localStorage update: find and save
+                if (item.title) {
+                  if (item.date || item.time || item.location) {
+                    const evs = loadData('events');
+                    const idx = evs.findIndex(x => x.createdAt === item.createdAt && x.title === item.title);
+                    if (idx > -1) { evs[idx].notified = true; saveData('events', evs); }
+                  } else {
+                    const tks = loadData('tasks');
+                    const idx = tks.findIndex(x => x.createdAt === item.createdAt && x.title === item.title);
+                    if (idx > -1) { tks[idx].notified = true; saveData('tasks', tks); }
+                  }
+                }
+              }
             }
           }
         });
