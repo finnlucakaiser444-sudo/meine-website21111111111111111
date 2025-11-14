@@ -745,27 +745,37 @@
         return;
       }
       
+      let hasVisibleTasks = false;
       tasks.forEach((t, i) => {
-        const li = document.createElement('li');
-        li.className = 'item';
-        li.style.opacity = t.done ? '0.6' : '1';
-        
-        const deadline = t.deadline ? new Date(t.deadline).toLocaleDateString('de-DE') : 'Kein Datum';
-        const difficulty = t.level ? { leicht: '⭐', mittel: '⭐⭐', schwer: '⭐⭐⭐' }[t.level] : '';
-        const createdByText = t.createdBy ? `(von ${t.createdBy === 'teacher' ? 'Lehrer' : t.createdBy === 'admin' ? 'Admin' : 'Lehrer'})` : '';
-        
-        li.innerHTML = `
-          <div class="item-content">
-            <div class="title">${t.title}</div>
-            <p class="item-content meta">${t.subject || '−'} ${difficulty} • ${deadline} ${createdByText}</p>
-          </div>
-          <div class="item-actions">
-            <button class="btn small ghost" onclick="toggleDone(${i})">${t.done ? '✅' : '⭕'}</button>
-            <button class="btn small ghost" onclick="delTask(${i})">🗑️</button>
-          </div>
-        `;
-        list.appendChild(li);
+        // Alle öffentlichen Aufgaben anzeigen (von Lehrern/Admins)
+        // Schüler können nur ihre eigenen sehen, aber alle von Lehrern/Admins
+        if (t.createdBy && (t.createdBy === 'teacher' || t.createdBy === 'admin')) {
+          hasVisibleTasks = true;
+          const li = document.createElement('li');
+          li.className = 'item';
+          li.style.opacity = t.done ? '0.6' : '1';
+          
+          const deadline = t.deadline ? new Date(t.deadline).toLocaleDateString('de-DE') : 'Kein Datum';
+          const difficulty = t.level ? { leicht: '⭐', mittel: '⭐⭐', schwer: '⭐⭐⭐' }[t.level] : '';
+          const createdByText = t.createdBy ? `(von ${t.createdBy === 'teacher' ? 'Lehrer' : 'Admin'})` : '';
+          
+          li.innerHTML = `
+            <div class="item-content">
+              <div class="title">${t.title}</div>
+              <p class="item-content meta">${t.subject || '−'} ${difficulty} • ${deadline} ${createdByText}</p>
+            </div>
+            <div class="item-actions">
+              <button class="btn small ghost" onclick="toggleDone(${i})">${t.done ? '✅' : '⭕'}</button>
+              <button class="btn small ghost" onclick="delTask(${i})" style="display:${(currentRole === 'teacher' || currentRole === 'admin') ? 'flex' : 'none'}">🗑️</button>
+            </div>
+          `;
+          list.appendChild(li);
+        }
       });
+      
+      if (!hasVisibleTasks) {
+        list.innerHTML = '<div class="empty-state">Keine Aufgaben eingetragen</div>';
+      }
     }
 
     function openTaskModal() {
@@ -842,26 +852,35 @@
         return;
       }
       
+      let hasVisibleEvents = false;
       events.forEach((e, i) => {
-        const li = document.createElement('li');
-        li.className = 'item';
-        
-        const dateObj = new Date(e.date);
-        const formattedDate = dateObj.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
-        const extras = [e.time, e.location, e.taskNumber].filter(x => x).join(' • ');
-        const createdByText = e.createdBy ? `(von ${e.createdBy === 'teacher' ? 'Lehrer' : e.createdBy === 'admin' ? 'Admin' : 'Lehrer'})` : '';
-        
-        li.innerHTML = `
-          <div class="item-content">
-            <div class="title">${e.title}</div>
-            <p class="item-content meta">${formattedDate}${extras ? ' • ' + extras : ''} ${createdByText}</p>
-          </div>
-          <div class="item-actions">
-            <button class="btn small ghost" onclick="delEvent(${i})">🗑️</button>
-          </div>
-        `;
-        list.appendChild(li);
+        // Alle öffentlichen Termine anzeigen (von Lehrern/Admins)
+        if (e.createdBy && (e.createdBy === 'teacher' || e.createdBy === 'admin')) {
+          hasVisibleEvents = true;
+          const li = document.createElement('li');
+          li.className = 'item';
+          
+          const dateObj = new Date(e.date);
+          const formattedDate = dateObj.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
+          const extras = [e.time, e.location, e.taskNumber].filter(x => x).join(' • ');
+          const createdByText = e.createdBy ? `(von ${e.createdBy === 'teacher' ? 'Lehrer' : 'Admin'})` : '';
+          
+          li.innerHTML = `
+            <div class="item-content">
+              <div class="title">${e.title}</div>
+              <p class="item-content meta">${formattedDate}${extras ? ' • ' + extras : ''} ${createdByText}</p>
+            </div>
+            <div class="item-actions">
+              <button class="btn small ghost" onclick="delEvent(${i})" style="display:${(currentRole === 'teacher' || currentRole === 'admin') ? 'flex' : 'none'}">🗑️</button>
+            </div>
+          `;
+          list.appendChild(li);
+        }
       });
+      
+      if (!hasVisibleEvents) {
+        list.innerHTML = '<div class="empty-state">Keine Termine eingetragen</div>';
+      }
     }
 
     function openEventModal() {
