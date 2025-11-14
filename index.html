@@ -3,322 +3,1196 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SAAF 7RB — Neu</title>
+  <title>SAAF 7RB — Schülerverwaltung</title>
   <style>
-    :root{--p:#667eea;--s:#764ba2;--muted:#6b7280}
+    :root{
+      --primary:#667eea;
+      --secondary:#764ba2;
+      --muted:#6b7280;
+      --success:#10b981;
+      --warning:#f59e0b;
+      --danger:#ef4444;
+      --light:#f5f7ff;
+      --lighter:#fafbff
+    }
     *{box-sizing:border-box}
-    body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial; margin:16px;background:linear-gradient(135deg,var(--p),var(--s));color:#0f172a}
-    .wrap{max-width:980px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 12px 36px rgba(2,6,23,.18)}
-    header{display:flex;justify-content:space-between;align-items:center;padding:18px;background:linear-gradient(135deg,var(--p),var(--s));color:#fff}
-    .brand{display:flex;gap:12px;align-items:center}
-    .logo{width:56px;height:56px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center}
-    main{padding:18px;display:grid;gap:14px}
-    .card{background:linear-gradient(180deg,#fafbff,#f5f7ff);padding:14px;border-radius:10px;border:1px solid #e6ecff}
-    .card h2{margin:0 0 12px;color:var(--p);font-size:1.05rem}
-    .btn{background:linear-gradient(135deg,var(--p),var(--s));color:#fff;padding:10px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:700}
-    .btn.ghost{background:transparent;color:var(--p);border:1px solid #e6ecff}
-    .small{padding:8px 10px;font-size:.9rem}
-    .list{list-style:none;padding:0;margin:0;display:grid;gap:10px}
-    .item{background:#fff;padding:12px;border-radius:8px;border:1px solid #eef2ff;display:flex;justify-content:space-between;align-items:center}
-    .meta{font-size:.9rem;color:var(--muted)}
-    .admin-only{display:none}
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:1000}
+    html,body{margin:0;padding:0;height:100%}
+    body{
+      font-family:'Inter','Segoe UI','Roboto','Arial',sans-serif;
+      background:linear-gradient(135deg,var(--primary),var(--secondary));
+      color:#0f172a;
+      min-height:100vh;
+      padding:12px
+    }
+    .wrap{
+      max-width:1200px;
+      margin:0 auto;
+      background:#fff;
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 25px 60px rgba(2,6,23,.25)
+    }
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:20px;
+      background:linear-gradient(135deg,var(--primary),var(--secondary));
+      color:#fff;
+      flex-wrap:wrap;
+      gap:16px;
+      box-shadow:0 4px 12px rgba(0,0,0,.1)
+    }
+    .brand{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      flex:1;
+      min-width:220px
+    }
+    .logo{
+      width:56px;
+      height:56px;
+      border-radius:12px;
+      background:rgba(255,255,255,.2);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      font-size:28px;
+      font-weight:bold
+    }
+    .brand-text h1{
+      margin:0;
+      font-size:1.2rem;
+      font-weight:800;
+      letter-spacing:.5px
+    }
+    .brand-text p{
+      margin:4px 0 0 0;
+      font-size:.9rem;
+      opacity:.95;
+      font-weight:500
+    }
+    .header-nav{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end
+    }
+    #roleBadge{
+      background:rgba(255,255,255,.15);
+      padding:10px 16px;
+      border-radius:999px;
+      font-weight:700;
+      backdrop-filter:blur(10px);
+      font-size:.9rem
+    }
+    main{
+      padding:24px;
+      display:grid;
+      gap:20px;
+      animation:fadeIn .5s ease
+    }
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .card{
+      background:linear-gradient(180deg,var(--lighter),var(--light));
+      padding:20px;
+      border-radius:14px;
+      border:1.5px solid #e6ecff;
+      transition:all .3s cubic-bezier(.4,0,.2,1);
+      backdrop-filter:blur(10px)
+    }
+    .card:hover{
+      transform:translateY(-4px);
+      box-shadow:0 12px 30px rgba(102,126,234,.15);
+      border-color:var(--primary)
+    }
+    .card h2{
+      margin:0 0 16px 0;
+      color:var(--primary);
+      font-size:1.3rem;
+      font-weight:700;
+      display:flex;
+      align-items:center;
+      gap:8px
+    }
+    .btn{
+      background:linear-gradient(135deg,var(--primary),var(--secondary));
+      color:#fff;
+      padding:12px 20px;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
+      font-weight:600;
+      font-size:.95rem;
+      transition:all .3s;
+      white-space:nowrap;
+      box-shadow:0 4px 12px rgba(102,126,234,.2);
+      display:inline-flex;
+      align-items:center;
+      gap:6px
+    }
+    .btn:hover{
+      transform:translateY(-3px);
+      box-shadow:0 8px 20px rgba(102,126,234,.35)
+    }
+    .btn:active{transform:translateY(-1px)}
+    .btn.ghost{
+      background:transparent;
+      color:var(--primary);
+      border:2.5px solid var(--primary);
+      box-shadow:none
+    }
+    .btn.ghost:hover{
+      background:var(--primary);
+      color:#fff
+    }
+    .btn.secondary{
+      background:#f0f4ff;
+      color:var(--primary);
+      border:none;
+      box-shadow:none
+    }
+    .btn.secondary:hover{background:#e0ecff}
+    .btn.small{
+      padding:10px 14px;
+      font-size:.85rem
+    }
+    .btn-group{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px
+    }
+    .list{
+      list-style:none;
+      padding:0;
+      margin:0;
+      display:grid;
+      gap:12px
+    }
+    .item{
+      background:#fff;
+      padding:16px;
+      border-radius:12px;
+      border:1.5px solid #eef2ff;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:12px;
+      transition:all .3s;
+      cursor:pointer
+    }
+    .item:hover{
+      border-color:var(--primary);
+      box-shadow:0 6px 16px rgba(102,126,234,.12);
+      background:linear-gradient(135deg,#fff,#f8faff)
+    }
+    .item-content{flex:1;min-width:200px}
+    .item-content .title{
+      font-weight:700;
+      font-size:1rem;
+      color:#0f172a;
+      margin-bottom:4px
+    }
+    .item-content .meta{
+      font-size:.85rem;
+      color:var(--muted);
+      margin:0
+    }
+    .item-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center
+    }
+    .empty-state{
+      text-align:center;
+      padding:32px 16px;
+      color:var(--muted);
+      font-style:italic;
+      opacity:.7
+    }
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(0,0,0,.6);
+      backdrop-filter:blur(4px);
+      z-index:1000;
+      padding:16px;
+      animation:slideIn .3s ease
+    }
+    @keyframes slideIn{from{opacity:0}to{opacity:1}}
     .modal.show{display:flex}
-    .modal-card{background:#fff;padding:16px;border-radius:10px;max-width:480px;width:100%}
-    .roles{display:flex;gap:8px}
-    .role-btn{flex:1;padding:10px;border-radius:8px;border:2px solid #eee;background:#fff;cursor:pointer}
-    .role-btn.active{background:var(--p);color:#fff;border-color:var(--p)}
-    input,textarea,select{width:100%;padding:10px;border:1px solid #e6e9f2;border-radius:8px}
-    .collapse{border-radius:8px;overflow:hidden}
-    .collapse-header{display:flex;justify-content:space-between;align-items:center;padding:12px;background:linear-gradient(90deg,#eef2ff,#f7f7ff);cursor:pointer}
-    .collapse-body{display:none;padding:12px;background:#fff}
+    .modal-card{
+      background:#fff;
+      padding:28px;
+      border-radius:16px;
+      max-width:520px;
+      width:100%;
+      max-height:85vh;
+      overflow-y:auto;
+      box-shadow:0 25px 60px rgba(0,0,0,.3)
+    }
+    .modal-card h3{
+      margin:0 0 14px 0;
+      color:var(--primary);
+      font-size:1.3rem;
+      font-weight:700
+    }
+    .form-group{
+      margin-bottom:16px
+    }
+    .form-group label{
+      display:block;
+      font-weight:600;
+      margin-bottom:6px;
+      color:#0f172a;
+      font-size:.95rem
+    }
+    .roles{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+      gap:12px
+    }
+    .role-btn{
+      padding:14px;
+      border-radius:10px;
+      border:2.5px solid #e6ecff;
+      background:#fff;
+      cursor:pointer;
+      font-weight:700;
+      transition:all .3s;
+      font-size:.95rem
+    }
+    .role-btn:hover{
+      border-color:var(--primary);
+      background:#f0f4ff;
+      transform:translateY(-2px)
+    }
+    .role-btn.active{
+      background:linear-gradient(135deg,var(--primary),var(--secondary));
+      color:#fff;
+      border-color:var(--primary);
+      box-shadow:0 4px 12px rgba(102,126,234,.3)
+    }
+    input,textarea,select{
+      width:100%;
+      padding:14px;
+      border:1.5px solid #e6e9f2;
+      border-radius:10px;
+      font-family:inherit;
+      font-size:.95rem;
+      transition:all .3s;
+      background:#fafbff
+    }
+    input:focus,textarea:focus,select:focus{
+      outline:none;
+      border-color:var(--primary);
+      background:#fff;
+      box-shadow:0 0 0 4px rgba(102,126,234,.1)
+    }
+    textarea{resize:vertical;min-height:100px}
+    .collapse{
+      border-radius:14px;
+      overflow:hidden;
+      border:1.5px solid #e6ecff;
+      background:#fff
+    }
+    .collapse-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:16px;
+      background:linear-gradient(90deg,#eef2ff,#f7f7ff);
+      cursor:pointer;
+      font-weight:700;
+      transition:all .3s;
+      user-select:none
+    }
+    .collapse-header:hover{
+      background:linear-gradient(90deg,#e0e7ff,#f0f0ff);
+      transform:translateX(4px)
+    }
+    .collapse-body{
+      display:none;
+      padding:16px;
+      background:#fff
+    }
     .collapse-body.show{display:block}
-    canvas{width:100%;height:380px;background:#87ceeb;display:block;border-radius:8px}
-    @media(min-width:768px){canvas{height:480px}}
+    canvas{
+      width:100%;
+      height:320px;
+      background:linear-gradient(180deg,#87ceeb 0%,#e0f6ff 100%);
+      display:block;
+      border-radius:12px;
+      border:2px solid #cce5ff
+    }
+    .game-info{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:14px;
+      padding:12px;
+      background:linear-gradient(135deg,#f0f4ff,#f8faff);
+      border-radius:10px;
+      font-weight:600
+    }
+    .game-controls{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap
+    }
+    .game-hint{
+      margin-top:12px;
+      color:var(--muted);
+      font-size:.9rem;
+      font-style:italic;
+      padding:10px;
+      background:#f8faff;
+      border-left:3px solid var(--primary);
+      border-radius:4px
+    }
+    footer{
+      padding:20px;
+      text-align:center;
+      color:var(--muted);
+      background:linear-gradient(180deg,#fbfbff,#f5f7ff);
+      border-top:1.5px solid #e6ecff;
+      font-size:.9rem;
+      font-weight:500
+    }
+    .success-message{
+      background:linear-gradient(135deg,var(--success),#059669);
+      color:#fff;
+      padding:14px;
+      border-radius:10px;
+      margin-bottom:12px;
+      font-weight:600
+    }
+    .error-message{
+      background:linear-gradient(135deg,var(--danger),#dc2626);
+      color:#fff;
+      padding:14px;
+      border-radius:10px;
+      margin-bottom:12px;
+      font-weight:600
+    }
+    @media(max-width:768px){
+      header{
+        padding:14px;
+        flex-direction:column;
+        align-items:flex-start
+      }
+      .header-nav{
+        justify-content:flex-start;
+        width:100%
+      }
+      .brand{width:100%}
+      .brand-text h1{font-size:1.1rem}
+      .roles{grid-template-columns:1fr}
+      main{
+        padding:14px;
+        gap:14px
+      }
+      .card{padding:14px}
+      .card h2{font-size:1.1rem}
+      .item{
+        flex-direction:column;
+        align-items:flex-start
+      }
+      .item-actions{
+        width:100%;
+        justify-content:flex-start
+      }
+      .btn{
+        width:100%;
+        justify-content:center
+      }
+      .btn.small{padding:12px}
+      canvas{height:240px}
+      .modal-card{
+        padding:20px;
+        border-radius:14px
+      }
+      .game-info{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px
+      }
+    }
+    @media(max-width:480px){
+      body{padding:8px}
+      .wrap{border-radius:16px}
+      header{padding:12px}
+      .logo{width:44px;height:44px;font-size:22px}
+      .brand-text h1{font-size:1rem}
+      .brand-text p{font-size:.8rem}
+      main{padding:10px;gap:10px}
+      .card{padding:12px}
+      .card h2{font-size:1rem}
+      .btn{padding:10px 12px;font-size:.8rem}
+      .modal-card{padding:16px}
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
       <div class="brand">
-        <div class="logo"><img src="Download.png" alt="logo" style="width:100%;height:100%;object-fit:contain"></div>
-        <div>
-          <div style="font-weight:800">📚 SAAF 7RB</div>
-          <div style="font-size:.9rem;opacity:.95">Hausaufgaben, Termine & Spiele</div>
+        <div class="logo">📚</div>
+        <div class="brand-text">
+          <h1>SAAF 7RB</h1>
+          <p>Schülerverwaltung & Lernportal</p>
         </div>
       </div>
-      <div style="display:flex;gap:10px;align-items:center">
-        <div id="roleBadge" style="background:rgba(255,255,255,.12);padding:8px 12px;border-radius:999px;font-weight:700">👤 Gast</div>
+      <div class="header-nav">
+        <button class="btn small" onclick="window.open('https://www.hrsaaf.de/','_blank')">🏫 Schulseite</button>
+        <button class="btn small" onclick="openChatModal()">💬 Chat</button>
+        <div id="roleBadge">👤 Gast</div>
         <button class="btn small" onclick="openLogin()">🔐 Anmelden</button>
       </div>
     </header>
 
     <main>
       <section class="card">
-        <h2> 🗒️Termine</h2>
+        <h2>🗒️ Aufgaben & Termine</h2>
         <ul id="tasks" class="list"></ul>
-        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn small" onclick="openTaskModal()">➕ Termine hinzufügen</button>
-          <button class="btn small ghost admin-only" id="addEventBtn" onclick="openEventModal()">➕ Hausaufgaben hinzufügen</button>
+        <div class="btn-group">
+          <button class="btn small" onclick="openTaskModal()">➕ Neue Aufgabe</button>
+          <button class="btn small ghost admin-only" onclick="openEventModal()" style="display:none">➕ Termin eintragen</button>
         </div>
       </section>
       
       <section class="card">
-        <h2>🗒️ Hausaufgaben</h2>
+        <h2>📋 Hausaufgaben</h2>
         <ul id="events" class="list"></ul>
       </section>
 
       <section class="card">
-        <h2>🗒️ Notizen</h2>
-        <textarea id="noteInput" rows="3" style="margin-bottom:8px" placeholder="Notiz..."></textarea>
-        <div style="display:flex;gap:8px">
-          <button class="btn small" onclick="saveNote()">📌 Speichern</button>
-          <button class="btn small ghost" onclick="clearNotes()">🧹 Leeren</button>
+        <h2>📝 Notizen</h2>
+        <textarea id="noteInput" placeholder="Schreibe deine Notiz hier..."></textarea>
+        <div class="btn-group">
+          <button class="btn small" onclick="saveNote()">💾 Speichern</button>
+          <button class="btn small ghost" onclick="clearNotes()">🗑️ Löschen</button>
         </div>
-        <ul id="notes" class="list" style="margin-top:10px"></ul>
+        <ul id="notes" class="list" style="margin-top:16px"></ul>
       </section>
 
-      <section class="card collapse" id="gameSection">
+      <section class="card collapse">
         <div class="collapse-header" onclick="toggleGamePanel()">
-          <div style="font-weight:800">🎮 Flappy Person BETA  — Spiel</div>
-          <div id="gameToggleLabel" style="opacity:.85">Klicken um zu öffnen</div>
+          <div style="font-weight:800;font-size:1.1rem">🎮 Flappy Person — Spiel</div>
+          <div id="gameToggleLabel" style="opacity:.8;font-size:.9rem">Klick zum Öffnen</div>
         </div>
         <div class="collapse-body" id="gameBody">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <div>Score: <span id="gscore">0</span> — Best: <span id="gbest">0</span></div>
-            <div style="display:flex;gap:8px">
-              <button class="btn small" onclick="startGame()">▶ Start</button>
-              <button class="btn small ghost" onclick="stopGame()">⏹ Stop</button>
+          <div class="game-info">
+            <div>Score: <span id="gscore" style="color:var(--primary);font-size:1.2rem">0</span> | Best: <span id="gbest" style="color:var(--primary);font-size:1.2rem">0</span></div>
+            <div class="game-controls">
+              <button class="btn small" onclick="startGame()">▶️ Start</button>
+              <button class="btn small ghost" onclick="stopGame()">⏹️ Stop</button>
             </div>
           </div>
           <canvas id="gameCanvas"></canvas>
-          <div style="margin-top:8px;color:var(--muted)">Klick oder Leertaste zum Springen • ESC zum Beenden</div>
+          <div class="game-hint">⌨️ Click zum Springen • Leertaste • ESC zum Beenden</div>
         </div>
       </section>
     </main>
 
-    <footer style="padding:14px;text-align:center;color:var(--muted);background:linear-gradient(180deg,#fbfbff,#f5f7ff);border-top:1px solid #e6ecff">
-      <div>🏫 SAAF 7RB • November 2025 — Erstellt von Finn-Luca Kaiser</div>
+    <footer>
+      🏫 SAAF 7RB • Dezember 2025 — Schülerplattform der HRSAAF
     </footer>
   </div>
 
-  <!-- Modals -->
+  <!-- Chat Modal -->
+  <div class="modal" id="chatModal">
+    <div class="modal-card">
+      <h3>💬 Schulchat</h3>
+      <p style="color:var(--muted);margin:12px 0">Tritt dem Schulchat bei, um dich mit anderen Schülern und Lehrern auszutauschen.</p>
+      <div id="chatStatus" style="margin-bottom:14px"></div>
+      <div class="form-group">
+        <label>E-Mail-Adresse</label>
+        <input id="chatEmail" type="email" placeholder="deine-email@schule.de" />
+      </div>
+      <button class="btn" onclick="joinChat()" style="width:100%;justify-content:center">🚀 Chat beitreten</button>
+      <button class="btn ghost" onclick="closeChatModal()" style="width:100%;justify-content:center;margin-top:10px">Abbrechen</button>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
   <div class="modal" id="loginModal">
     <div class="modal-card">
-      <h3 style="margin:0 0 10px 0">🔓 Anmelden</h3>
-      <div id="loginMsg" style="margin-bottom:8px;color:#0f172a;font-weight:700"></div>
-      <div id="roleSelect" style="margin-bottom:8px">
-        <div style="margin-bottom:6px">Wähle Rolle:</div>
+      <h3>🔐 Anmelden</h3>
+      <div class="form-group" style="margin-top:14px">
+        <label>Wähle deine Rolle</label>
         <div class="roles">
           <button class="role-btn" onclick="pickRole('student', this)">👤 Schüler</button>
           <button class="role-btn" onclick="pickRole('teacher', this)">👨‍🏫 Lehrer</button>
           <button class="role-btn" onclick="pickRole('admin', this)">👨‍💼 Admin</button>
         </div>
       </div>
-      <div id="pwSection" style="display:none;margin-top:8px">
-        <div id="roleText" style="margin-bottom:8px;font-weight:700"></div>
-        <input id="pwInput" type="password" placeholder="Passwort" />
-        <div style="display:flex;gap:8px;margin-top:10px">
-          <button class="btn small" onclick="confirmLogin()">Bestätigen</button>
-          <button class="btn small ghost" onclick="closeLogin()">Abbrechen</button>
+      <div id="pwSection" style="display:none;margin-top:16px">
+        <div class="form-group">
+          <label id="roleText"></label>
+          <input id="pwInput" type="password" placeholder="Passwort eingeben" />
         </div>
-        <div id="loginError" style="color:#ef4444;margin-top:8px;display:none"></div>
+        <div id="loginError" class="error-message" style="display:none"></div>
+        <button class="btn" onclick="confirmLogin()" style="width:100%;justify-content:center">✓ Bestätigen</button>
       </div>
-      <div style="margin-top:10px"><button class="btn small ghost" onclick="closeLogin()">Schließen</button></div>
+      <button class="btn ghost" onclick="closeLogin()" style="width:100%;justify-content:center;margin-top:10px">Schließen</button>
     </div>
   </div>
 
+  <!-- Task Modal -->
   <div class="modal" id="taskModal">
     <div class="modal-card">
-      <h3 style="margin:0 0 8px 0">➕ Neue Aufgabe</h3>
-      <input id="tName" type="text" placeholder="Titel" style="margin-bottom:8px" />
-      <input id="tDesc" type="text" placeholder="Beschreibung" style="margin-bottom:8px" />
-      <div style="display:flex;gap:8px;margin-bottom:8px">
-        <input id="tSubject" type="text" placeholder="Fach" />
-        <select id="tLevel"><option value="leicht">leicht</option><option value="mittel">mittel</option><option value="schwer">schwer</option></select>
+      <h3>➕ Neue Aufgabe</h3>
+      <div class="form-group">
+        <label>Titel</label>
+        <input id="tName" type="text" placeholder="z.B. Mathe Hausaufgaben" />
       </div>
-      <div style="display:flex;gap:8px">
+      <div class="form-group">
+        <label>Beschreibung</label>
+        <input id="tDesc" type="text" placeholder="Optional" />
+      </div>
+      <div class="form-group">
+        <label>Fach</label>
+        <input id="tSubject" type="text" placeholder="z.B. Mathematik" />
+      </div>
+      <div class="form-group">
+        <label>Schwierigkeit</label>
+        <select id="tLevel">
+          <option value="">Wählen...</option>
+          <option value="leicht">⭐ Leicht</option>
+          <option value="mittel">⭐⭐ Mittel</option>
+          <option value="schwer">⭐⭐⭐ Schwer</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Abgabedatum</label>
         <input id="tDeadline" type="date" />
-        <button class="btn small" onclick="saveTask()">Speichern</button>
-        <button class="btn small ghost" onclick="closeTaskModal()">Abbrechen</button>
       </div>
+      <button class="btn" onclick="saveTask()" style="width:100%;justify-content:center">💾 Speichern</button>
+      <button class="btn ghost" onclick="closeTaskModal()" style="width:100%;justify-content:center;margin-top:10px">Abbrechen</button>
     </div>
   </div>
 
+  <!-- Event Modal -->
   <div class="modal" id="eventModal">
     <div class="modal-card">
-      <h3 style="margin:0 0 8px 0">➕ Neuer Termin</h3>
-      <input id="eTitle" type="text" placeholder="Titel" style="margin-bottom:8px" />
-      <input id="eDate" type="date" style="margin-bottom:8px" />
-      <input id="eTime" type="text" placeholder="Uhrzeit (z.B. 14:00)" style="margin-bottom:8px" />
-      <input id="eLocation" type="text" placeholder="Seite / Arbeitsblatt (z.B. Seite 24 oder Blatt A)" style="margin-bottom:8px" />
-      <input id="eTaskNumber" type="text" placeholder="Aufgaben-Nummer (z.B. Aufgabe 5 oder Nr. 3-4)" style="margin-bottom:8px" />
-      <div style="display:flex;gap:8px">
-        <button class="btn small" onclick="saveEvent()">Speichern</button>
-        <button class="btn small ghost" onclick="closeEventModal()">Abbrechen</button>
+      <h3>📅 Neuer Termin</h3>
+      <div class="form-group">
+        <label>Titel</label>
+        <input id="eTitle" type="text" placeholder="z.B. Klassenarbeit Englisch" />
       </div>
+      <div class="form-group">
+        <label>Datum</label>
+        <input id="eDate" type="date" />
+      </div>
+      <div class="form-group">
+        <label>Uhrzeit</label>
+        <input id="eTime" type="time" />
+      </div>
+      <div class="form-group">
+        <label>Seite / Arbeitsblatt</label>
+        <input id="eLocation" type="text" placeholder="z.B. Seite 42-45" />
+      </div>
+      <div class="form-group">
+        <label>Aufgaben-Nummer</label>
+        <input id="eTaskNumber" type="text" placeholder="z.B. Aufgabe 1-5" />
+      </div>
+      <button class="btn" onclick="saveEvent()" style="width:100%;justify-content:center">💾 Speichern</button>
+      <button class="btn ghost" onclick="closeEventModal()" style="width:100%;justify-content:center;margin-top:10px">Abbrechen</button>
     </div>
   </div>
 
   <script>
-    const TEACHER_PASSWORD = 'HA113';
-    const ADMIN_PASSWORD = 'ADMIN24';
+    // Konfiguration
+    const CONFIG = {
+      teacherPassword: 'HA113',
+      adminPassword: 'ADMIN24',
+      notificationHours: 5,
+      storagePrefix: 'saaf_'
+    };
+
+    // State
     let currentRole = sessionStorage.getItem('role') || null;
     let isAuthenticated = !!currentRole;
+    let notificationsEnabled = localStorage.getItem('notificationsEnabled') !== 'false';
 
-    function updateRoleUI(){
-      const badge = document.getElementById('roleBadge');
-      badge.textContent = currentRole === 'teacher' ? '👨‍🏫 Lehrer'
-                        : currentRole === 'admin' ? '👨‍💼 Admin'
-                        : currentRole === 'student' ? '👤 Schüler' : '👤 Gast';
-      document.querySelectorAll('.admin-only').forEach(el=>el.style.display = (currentRole==='teacher'||currentRole==='admin')?'inline-flex':'none');
+    // Initialisierung
+    function init() {
+      updateRoleUI();
+      renderTasks();
+      renderEvents();
+      renderNotes();
+      setupNotifications();
+      checkNotifications();
     }
-    updateRoleUI();
 
-    function openLogin(){ document.getElementById('loginModal').classList.add('show'); document.getElementById('pwSection').style.display='none'; document.getElementById('loginError').style.display='none'; }
-    function closeLogin(){ document.getElementById('loginModal').classList.remove('show'); document.getElementById('pwInput').value=''; }
+    // Rolle UI aktualisieren
+    function updateRoleUI() {
+      const badge = document.getElementById('roleBadge');
+      const roleTexts = {
+        'student': '👤 Schüler',
+        'teacher': '👨‍🏫 Lehrer',
+        'admin': '👨‍💼 Admin'
+      };
+      badge.textContent = roleTexts[currentRole] || '👤 Gast';
+      
+      const adminElements = document.querySelectorAll('.admin-only');
+      adminElements.forEach(el => {
+        el.style.display = (currentRole === 'teacher' || currentRole === 'admin') ? 'inline-flex' : 'none';
+      });
+    }
+
+    // ==================== Chat ====================
+    function openChatModal() {
+      document.getElementById('chatModal').classList.add('show');
+      document.getElementById('chatEmail').focus();
+    }
+
+    function closeChatModal() {
+      document.getElementById('chatModal').classList.remove('show');
+      document.getElementById('chatEmail').value = '';
+      document.getElementById('chatStatus').innerHTML = '';
+    }
+
+    function joinChat() {
+      const email = document.getElementById('chatEmail').value.trim();
+      if (!email || !email.includes('@')) {
+        alert('❌ Bitte gültige E-Mail-Adresse eingeben');
+        return;
+      }
+      const status = document.getElementById('chatStatus');
+      status.innerHTML = `<div class="success-message">✅ Willkommen ${email.split('@')[0]}! Du bist dem Chat beigetreten.</div>`;
+      setTimeout(() => closeChatModal(), 2000);
+    }
+
+    // ==================== Login ====================
+    function openLogin() {
+      document.getElementById('loginModal').classList.add('show');
+      document.getElementById('pwSection').style.display = 'none';
+      document.getElementById('loginError').style.display = 'none';
+    }
+
+    function closeLogin() {
+      document.getElementById('loginModal').classList.remove('show');
+      document.getElementById('pwInput').value = '';
+    }
 
     let chosenRole = null;
-    function pickRole(role, btn){
+
+    function pickRole(role, btn) {
       chosenRole = role;
-      document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      if(role === 'student'){
-        currentRole = 'student'; isAuthenticated = true; sessionStorage.setItem('role', currentRole); updateRoleUI(); closeLogin(); return;
+      
+      if (role === 'student') {
+        currentRole = 'student';
+        isAuthenticated = true;
+        sessionStorage.setItem('role', currentRole);
+        updateRoleUI();
+        closeLogin();
+        return;
       }
-      document.getElementById('roleText').textContent = role === 'teacher' ? '👨‍🏫 Lehrer-Passwort erforderlich' : '👨‍💼 Admin-Passwort erforderlich';
+      
+      document.getElementById('roleText').textContent = 
+        role === 'teacher' ? '👨‍🏫 Lehrer-Passwort' : '👨‍💼 Admin-Passwort';
       document.getElementById('pwSection').style.display = 'block';
       document.getElementById('pwInput').focus();
     }
 
-    function confirmLogin(){
+    function confirmLogin() {
       const pw = document.getElementById('pwInput').value || '';
-      const correct = chosenRole === 'teacher' ? TEACHER_PASSWORD : ADMIN_PASSWORD;
-      if(pw === correct){ currentRole = chosenRole; isAuthenticated = true; sessionStorage.setItem('role', currentRole); updateRoleUI(); closeLogin(); }
-      else { const e = document.getElementById('loginError'); e.style.display='block'; e.textContent='❌ Falsches Passwort'; }
+      const correct = chosenRole === 'teacher' ? CONFIG.teacherPassword : CONFIG.adminPassword;
+      
+      if (pw === correct) {
+        currentRole = chosenRole;
+        isAuthenticated = true;
+        sessionStorage.setItem('role', currentRole);
+        updateRoleUI();
+        closeLogin();
+      } else {
+        const error = document.getElementById('loginError');
+        error.style.display = 'block';
+        error.textContent = '❌ Falsches Passwort';
+      }
     }
 
-    function loadData(key){ return JSON.parse(localStorage.getItem(key) || '[]') }
-    function saveData(key, arr){ localStorage.setItem(key, JSON.stringify(arr)) }
+    // ==================== Datenverwaltung ====================
+    function loadData(key) {
+      return JSON.parse(localStorage.getItem(CONFIG.storagePrefix + key) || '[]');
+    }
 
-    function renderTasks(){
-      const list = document.getElementById('tasks'); list.innerHTML='';
+    function saveData(key, arr) {
+      localStorage.setItem(CONFIG.storagePrefix + key, JSON.stringify(arr));
+    }
+
+    // ==================== Aufgaben ====================
+    function renderTasks() {
+      const list = document.getElementById('tasks');
+      list.innerHTML = '';
       const tasks = loadData('tasks');
-      if(tasks.length===0){ list.innerHTML='<div class="meta">Keine Aufgaben eingetragen.</div>'; return; }
-      tasks.forEach((t,i)=>{
-        const li = document.createElement('li'); li.className='item';
-        li.innerHTML = `<div>
-          <div style="font-weight:800">${t.title}</div>
-          <div class="meta">${t.subject || '−'} • ${t.level || '−'} • ${t.deadline || 'kein Datum'}</div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button class="btn small ghost" onclick="toggleDone(${i})">${t.done?'✔':'⭕'}</button>
-          <button class="btn small ghost" onclick="delTask(${i})">🗑</button>
-        </div>`;
-        if(t.done) li.style.opacity=.6;
+      
+      if (tasks.length === 0) {
+        list.innerHTML = '<div class="empty-state">Keine Aufgaben eingetragen</div>';
+        return;
+      }
+      
+      tasks.forEach((t, i) => {
+        const li = document.createElement('li');
+        li.className = 'item';
+        li.style.opacity = t.done ? '0.6' : '1';
+        
+        const deadline = t.deadline ? new Date(t.deadline).toLocaleDateString('de-DE') : 'Kein Datum';
+        const difficulty = t.level ? { leicht: '⭐', mittel: '⭐⭐', schwer: '⭐⭐⭐' }[t.level] : '';
+        
+        li.innerHTML = `
+          <div class="item-content">
+            <div class="title">${t.title}</div>
+            <p class="item-content meta">${t.subject || '−'} ${difficulty} • ${deadline}</p>
+          </div>
+          <div class="item-actions">
+            <button class="btn small ghost" onclick="toggleDone(${i})">${t.done ? '✅' : '⭕'}</button>
+            <button class="btn small ghost" onclick="delTask(${i})">🗑️</button>
+          </div>
+        `;
         list.appendChild(li);
       });
     }
 
-    function renderEvents(){
-      const list = document.getElementById('events'); list.innerHTML='';
-      const ev = loadData('events');
-      if(ev.length===0){ list.innerHTML='<div class="meta">Keine Termine.</div>'; return; }
-      ev.forEach((e,i)=>{
-        const li=document.createElement('li'); li.className='item';
-        const extras = [];
-        if(e.time) extras.push(e.time);
-        if(e.location) extras.push(e.location);
-        if(e.taskNumber) extras.push(e.taskNumber);
-        const metaText = `${e.date}${ extras.length ? ' • ' + extras.join(' • ') : '' }`;
-        li.innerHTML = `<div>
-          <div style="font-weight:800">${e.title}</div>
-          <div class="meta">${metaText}</div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button class="btn small ghost" onclick="delEvent(${i})">🗑</button>
-        </div>`;
-        list.appendChild(li);
-      });
-    }
-
-    function openTaskModal(){
-      if(!(currentRole==='teacher' || currentRole==='admin')){ alert('Nur Lehrer und Admins dürfen Aufgaben hinzufügen'); return; }
+    function openTaskModal() {
+      if (!(currentRole === 'teacher' || currentRole === 'admin')) {
+        alert('❌ Nur Lehrer und Admins dürfen Aufgaben hinzufügen');
+        return;
+      }
       document.getElementById('taskModal').classList.add('show');
     }
-    function closeTaskModal(){ document.getElementById('taskModal').classList.remove('show'); }
-    function saveTask(){
-      if(!(currentRole==='teacher' || currentRole==='admin')){ alert('Keine Berechtigung'); closeTaskModal(); return; }
-      const title=document.getElementById('tName').value.trim(); if(!title){ alert('Titel benötigt'); return; }
+
+    function closeTaskModal() {
+      document.getElementById('taskModal').classList.remove('show');
+    }
+
+    function saveTask() {
+      if (!(currentRole === 'teacher' || currentRole === 'admin')) {
+        alert('❌ Keine Berechtigung');
+        return;
+      }
+      
+      const title = document.getElementById('tName').value.trim();
+      if (!title) {
+        alert('❌ Titel erforderlich');
+        return;
+      }
+      
+      const deadline = document.getElementById('tDeadline').value;
       const tasks = loadData('tasks');
-      tasks.push({ title, description:document.getElementById('tDesc').value||'', subject:document.getElementById('tSubject').value||'', level:document.getElementById('tLevel').value||'', deadline:document.getElementById('tDeadline').value||'', done:false });
-      saveData('tasks',tasks); closeTaskModal(); renderTasks();
-      ['tName','tDesc','tSubject','tDeadline'].forEach(id=>document.getElementById(id).value='');
+      
+      tasks.push({
+        title,
+        description: document.getElementById('tDesc').value || '',
+        subject: document.getElementById('tSubject').value || '',
+        level: document.getElementById('tLevel').value || '',
+        deadline: deadline || '',
+        done: false,
+        createdAt: new Date().toISOString()
+      });
+      
+      saveData('tasks', tasks);
+      closeTaskModal();
+      renderTasks();
+      scheduleNotification(deadline, title);
+      
+      ['tName', 'tDesc', 'tSubject', 'tLevel', 'tDeadline'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
     }
-    function delTask(i){ if(!confirm('Aufgabe löschen?')) return; const tasks=loadData('tasks'); tasks.splice(i,1); saveData('tasks',tasks); renderTasks(); }
-    function toggleDone(i){ const tasks=loadData('tasks'); tasks[i].done=!tasks[i].done; saveData('tasks',tasks); renderTasks(); }
 
-    function openEventModal(){ if(!(currentRole==='teacher'||currentRole==='admin')){ alert('Nur Lehrer und Admins dürfen Termine hinzufügen'); return; } document.getElementById('eventModal').classList.add('show'); }
-    function closeEventModal(){ document.getElementById('eventModal').classList.remove('show'); }
-    function saveEvent(){
-      if(!(currentRole==='teacher'||currentRole==='admin')){ alert('Keine Berechtigung'); closeEventModal(); return; }
-      const title=document.getElementById('eTitle').value.trim(); const date=document.getElementById('eDate').value;
-      if(!title || !date){ alert('Titel und Datum benötigt'); return; }
-      const time = document.getElementById('eTime').value.trim();
-      const location = document.getElementById('eLocation').value.trim();
-      const taskNumber = document.getElementById('eTaskNumber').value.trim();
-      const events = loadData('events'); events.push({ title, date, time: time || '', location: location || '', taskNumber: taskNumber || '' });
-      saveData('events',events); closeEventModal(); renderEvents();
-      ['eTitle','eDate','eTime','eLocation','eTaskNumber'].forEach(id=>document.getElementById(id).value='');
+    function delTask(i) {
+      if (!confirm('❌ Aufgabe wirklich löschen?')) return;
+      const tasks = loadData('tasks');
+      tasks.splice(i, 1);
+      saveData('tasks', tasks);
+      renderTasks();
     }
-    function delEvent(i){ if(!confirm('Termin löschen?')) return; const ev=loadData('events'); ev.splice(i,1); saveData('events',ev); renderEvents(); }
 
-    function saveNote(){ const v=document.getElementById('noteInput').value.trim(); if(!v) return; const n=loadData('notes'); n.push({text:v,at:new Date().toISOString()}); saveData('notes',n); renderNotes(); document.getElementById('noteInput').value=''; }
-    function renderNotes(){ const list=document.getElementById('notes'); list.innerHTML=''; const n=loadData('notes'); if(n.length===0){ list.innerHTML='<div class="meta">Keine Notizen.</div>'; return; } n.forEach((no,i)=>{ const li=document.createElement('li'); li.className='item'; li.innerHTML=`<div><div>${no.text}</div><div class="meta">${new Date(no.at).toLocaleString()}</div></div><div><button class="btn small ghost" onclick="delNote(${i})">🗑</button></div>`; list.appendChild(li); }) }
-    function delNote(i){ const n=loadData('notes'); n.splice(i,1); saveData('notes',n); renderNotes(); }
-    function clearNotes(){ if(!confirm('Alle Notizen löschen?')) return; saveData('notes',[]); renderNotes(); }
+    function toggleDone(i) {
+      const tasks = loadData('tasks');
+      tasks[i].done = !tasks[i].done;
+      saveData('tasks', tasks);
+      renderTasks();
+    }
 
-    function toggleGamePanel(){
+    // ==================== Events/Termine ====================
+    function renderEvents() {
+      const list = document.getElementById('events');
+      list.innerHTML = '';
+      const events = loadData('events');
+      
+      if (events.length === 0) {
+        list.innerHTML = '<div class="empty-state">Keine Termine eingetragen</div>';
+        return;
+      }
+      
+      events.forEach((e, i) => {
+        const li = document.createElement('li');
+        li.className = 'item';
+        
+        const dateObj = new Date(e.date);
+        const formattedDate = dateObj.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
+        const extras = [e.time, e.location, e.taskNumber].filter(x => x).join(' • ');
+        
+        li.innerHTML = `
+          <div class="item-content">
+            <div class="title">${e.title}</div>
+            <p class="item-content meta">${formattedDate}${extras ? ' • ' + extras : ''}</p>
+          </div>
+          <div class="item-actions">
+            <button class="btn small ghost" onclick="delEvent(${i})">🗑️</button>
+          </div>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    function openEventModal() {
+      if (!(currentRole === 'teacher' || currentRole === 'admin')) {
+        alert('❌ Nur Lehrer und Admins dürfen Termine eintragen');
+        return;
+      }
+      document.getElementById('eventModal').classList.add('show');
+    }
+
+    function closeEventModal() {
+      document.getElementById('eventModal').classList.remove('show');
+    }
+
+    function saveEvent() {
+      if (!(currentRole === 'teacher' || currentRole === 'admin')) {
+        alert('❌ Keine Berechtigung');
+        return;
+      }
+      
+      const title = document.getElementById('eTitle').value.trim();
+      const date = document.getElementById('eDate').value;
+      
+      if (!title || !date) {
+        alert('❌ Titel und Datum erforderlich');
+        return;
+      }
+      
+      const events = loadData('events');
+      events.push({
+        title,
+        date,
+        time: document.getElementById('eTime').value.trim() || '',
+        location: document.getElementById('eLocation').value.trim() || '',
+        taskNumber: document.getElementById('eTaskNumber').value.trim() || ''
+      });
+      
+      saveData('events', events);
+      closeEventModal();
+      renderEvents();
+      scheduleNotification(date, title);
+      
+      ['eTitle', 'eDate', 'eTime', 'eLocation', 'eTaskNumber'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+    }
+
+    function delEvent(i) {
+      if (!confirm('❌ Termin wirklich löschen?')) return;
+      const events = loadData('events');
+      events.splice(i, 1);
+      saveData('events', events);
+      renderEvents();
+    }
+
+    // ==================== Notizen ====================
+    function saveNote() {
+      const text = document.getElementById('noteInput').value.trim();
+      if (!text) return;
+      
+      const notes = loadData('notes');
+      notes.push({
+        text,
+        createdAt: new Date().toISOString()
+      });
+      
+      saveData('notes', notes);
+      renderNotes();
+      document.getElementById('noteInput').value = '';
+    }
+
+    function renderNotes() {
+      const list = document.getElementById('notes');
+      list.innerHTML = '';
+      const notes = loadData('notes');
+      
+      if (notes.length === 0) {
+        list.innerHTML = '<div class="empty-state">Noch keine Notizen</div>';
+        return;
+      }
+      
+      notes.forEach((note, i) => {
+        const li = document.createElement('li');
+        li.className = 'item';
+        const date = new Date(note.createdAt);
+        const timeStr = date.toLocaleString('de-DE', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+        
+        li.innerHTML = `
+          <div class="item-content">
+            <div class="title">${note.text}</div>
+            <p class="item-content meta">${timeStr}</p>
+          </div>
+          <div class="item-actions">
+            <button class="btn small ghost" onclick="delNote(${i})">🗑️</button>
+          </div>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    function delNote(i) {
+      const notes = loadData('notes');
+      notes.splice(i, 1);
+      saveData('notes', notes);
+      renderNotes();
+    }
+
+    function clearNotes() {
+      if (!confirm('❌ Alle Notizen wirklich löschen?')) return;
+      saveData('notes', []);
+      renderNotes();
+    }
+
+    // ==================== Spiel ====================
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    let W = 0, H = 0;
+
+    function resizeCanvas() {
+      W = canvas.width = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    let gameInterval = null, frame = 0, score = 0;
+    let best = parseInt(localStorage.getItem(CONFIG.storagePrefix + 'bestScore') || '0', 10);
+    document.getElementById('gbest').textContent = best;
+
+    let player = { x: 80, y: 150, w: 36, h: 36, vy: 0 };
+    const gravity = 0.6, jump = -11, gap = 140, pipeW = 70, speed = 3;
+    let pipes = [];
+
+    function toggleGamePanel() {
       const body = document.getElementById('gameBody');
       body.classList.toggle('show');
-      document.getElementById('gameToggleLabel').textContent = body.classList.contains('show') ? 'Geöffnet' : 'Klicken um zu öffnen';
+      document.getElementById('gameToggleLabel').textContent = 
+        body.classList.contains('show') ? 'Geöffnet' : 'Klick zum Öffnen';
     }
 
-    const canvas = document.getElementById('gameCanvas'); const ctx = canvas.getContext('2d');
-    let W=0,H=0; function resize(){ W=canvas.width=canvas.offsetWidth; H=canvas.height=canvas.offsetHeight; } window.addEventListener('resize',resize); resize();
-    let gameInterval=null, frame=0, score=0, best = parseInt(localStorage.getItem('flappyPersonBest')||'0',10); document.getElementById('gbest').textContent=best;
-    let player={x:80,y:150,w:36,h:36,vy:0}; const gravity=0.6, jump=-11, gap=140, pipeW=70, speed=3; let pipes=[];
-
-    function startGame(){
-      if(!isAuthenticated){ alert('❌ Bitte anmelden (Schüler, Lehrer oder Admin) um zu spielen'); return; }
-      resetGame(); if(gameInterval) cancelAnimationFrame(gameInterval); gameLoop();
-    }
-    function stopGame(){ if(gameInterval) cancelAnimationFrame(gameInterval); gameInterval=null; alert('Spiel gestoppt'); }
-    function resetGame(){ score=0; pipes=[]; frame=0; player.y=H/2; player.vy=0; document.getElementById('gscore').textContent=0; }
-    function spawnPipe(){ const top = Math.random()*(H-gap-120)+60; pipes.push({x:W,top}); }
-    function drawPerson(x,y,w,h){ ctx.fillStyle='#FFD59A'; ctx.fillRect(x+6,y+10,w-12,h-10); ctx.beginPath(); ctx.arc(x+w/2,y+8,8,0,Math.PI*2); ctx.fillStyle='#FFE0B2'; ctx.fill(); ctx.fillStyle='#000'; ctx.fillRect(x+w/2-6,y+6,3,3); ctx.fillRect(x+w/2+2,y+6,3,3); }
-
-    function gameLoop(){
-      resize(); ctx.fillStyle='#87ceeb'; ctx.fillRect(0,0,W,H);
-      if(frame%100===0) spawnPipe();
-      pipes.forEach((p,i)=>{ p.x -= speed; ctx.fillStyle='#2ea44f'; ctx.fillRect(p.x,0,pipeW,p.top); ctx.fillRect(p.x,p.top+gap,pipeW,H-p.top-gap); if(!p.passed && p.x+pipeW < player.x){ p.passed=true; score++; document.getElementById('gscore').textContent=score; } });
-      pipes = pipes.filter(p=>p.x+pipeW> -10);
-      player.vy += gravity; player.y += player.vy; drawPerson(player.x,player.y,player.w,player.h);
-      if(player.y+player.h >= H || player.y <= 0){ endGame(); return; }
-      for(const p of pipes){ if(player.x+player.w > p.x && player.x < p.x+pipeW){ if(player.y < p.top || player.y+player.h > p.top+gap){ endGame(); return; } } }
-      frame++; gameInterval = requestAnimationFrame(gameLoop);
+    function startGame() {
+      if (!isAuthenticated) {
+        alert('❌ Bitte melde dich an um zu spielen');
+        return;
+      }
+      resetGame();
+      if (gameInterval) cancelAnimationFrame(gameInterval);
+      gameLoop();
     }
 
-    function jumpPerson(){ if(!gameInterval) return; player.vy = jump; }
-    function endGame(){ if(gameInterval) cancelAnimationFrame(gameInterval); gameInterval=null; if(score>best){ best=score; localStorage.setItem('flappyPersonBest',best); document.getElementById('gbest').textContent=best; alert('🏆 Neuer Highscore: '+score); } else alert('💥 Game Over — Score: '+score); }
+    function stopGame() {
+      if (gameInterval) cancelAnimationFrame(gameInterval);
+      gameInterval = null;
+    }
 
-    canvas.addEventListener('click', ()=>{ if(!gameInterval) return; jumpPerson(); });
-    window.addEventListener('keydown', (e)=>{ if(e.code==='Space'){ e.preventDefault(); if(gameInterval) jumpPerson(); } if(e.code==='Escape'){ if(gameInterval) endGame(); document.getElementById('gameBody').classList.remove('show'); document.getElementById('gameToggleLabel').textContent='Klicken um zu öffnen'; } });
+    function resetGame() {
+      score = 0;
+      pipes = [];
+      frame = 0;
+      player.y = H / 2;
+      player.vy = 0;
+      document.getElementById('gscore').textContent = 0;
+    }
 
-    function init(){ renderTasks(); renderEvents(); renderNotes(); updateRoleUI(); document.querySelectorAll('.admin-only').forEach(el=>el.style.display=(currentRole==='teacher'||currentRole==='admin')?'inline-flex':'none'); }
+    function spawnPipe() {
+      const top = Math.random() * (H - gap - 120) + 60;
+      pipes.push({ x: W, top, passed: false });
+    }
+
+    function drawPerson(x, y, w, h) {
+      // Kopf
+      ctx.fillStyle = '#FFD59A';
+      ctx.beginPath();
+      ctx.arc(x + w / 2, y + 6, 6, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Augen
+      ctx.fillStyle = '#000';
+      ctx.fillRect(x + w / 2 - 7, y + 4, 2, 2);
+      ctx.fillRect(x + w / 2 + 4, y + 4, 2, 2);
+      
+      // Mund
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(x + w / 2, y + 8, 2, 0, Math.PI);
+      ctx.stroke();
+      
+      // Hemd (Rot)
+      ctx.fillStyle = '#FF6B6B';
+      ctx.fillRect(x + 4, y + 12, w - 8, 10);
+      
+      // Arme
+      ctx.fillStyle = '#FFD59A';
+      ctx.fillRect(x + 2, y + 14, 3, 8);
+      ctx.fillRect(x + w - 5, y + 14, 3, 8);
+      
+      // Hose (Dunkel)
+      ctx.fillStyle = '#2C3E50';
+      ctx.fillRect(x + 5, y + 22, w / 2 - 6, h - 22);
+      ctx.fillRect(x + w / 2 + 1, y + 22, w / 2 - 6, h - 22);
+      
+      // Schuhe
+      ctx.fillStyle = '#333';
+      ctx.fillRect(x + 5, y + h - 2, w / 2 - 6, 2);
+      ctx.fillRect(x + w / 2 + 1, y + h - 2, w / 2 - 6, 2);
+    }
+
+    function gameLoop() {
+      resizeCanvas();
+      ctx.fillStyle = '#87ceeb';
+      ctx.fillRect(0, 0, W, H);
+
+      if (frame % 100 === 0) spawnPipe();
+
+      pipes.forEach(p => {
+        p.x -= speed;
+        ctx.fillStyle = '#2ea44f';
+        ctx.fillRect(p.x, 0, pipeW, p.top);
+        ctx.fillRect(p.x, p.top + gap, pipeW, H - p.top - gap);
+        
+        if (!p.passed && p.x + pipeW < player.x) {
+          p.passed = true;
+          score++;
+          document.getElementById('gscore').textContent = score;
+        }
+      });
+
+      pipes = pipes.filter(p => p.x + pipeW > -10);
+
+      player.vy += gravity;
+      player.y += player.vy;
+      drawPerson(player.x, player.y, player.w, player.h);
+
+      if (player.y + player.h >= H || player.y <= 0) {
+        endGame();
+        return;
+      }
+
+      for (const p of pipes) {
+        if (player.x + player.w > p.x && player.x < p.x + pipeW) {
+          if (player.y < p.top || player.y + player.h > p.top + gap) {
+            endGame();
+            return;
+          }
+        }
+      }
+
+      frame++;
+      gameInterval = requestAnimationFrame(gameLoop);
+    }
+
+    function jumpPerson() {
+      if (!gameInterval) return;
+      player.vy = jump;
+    }
+
+    function endGame() {
+      if (gameInterval) cancelAnimationFrame(gameInterval);
+      gameInterval = null;
+      
+      if (score > best) {
+        best = score;
+        localStorage.setItem(CONFIG.storagePrefix + 'bestScore', best);
+        document.getElementById('gbest').textContent = best;
+        alert('🏆 Neuer Highscore: ' + score);
+      } else {
+        alert('💥 Game Over — Score: ' + score);
+      }
+    }
+
+    canvas.addEventListener('click', () => {
+      if (!gameInterval) return;
+      jumpPerson();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        if (gameInterval) jumpPerson();
+      }
+      if (e.code === 'Escape') {
+        if (gameInterval) endGame();
+        document.getElementById('gameBody').classList.remove('show');
+        document.getElementById('gameToggleLabel').textContent = 'Klick zum Öffnen';
+      }
+    });
+
+    // ==================== Benachrichtigungen ====================
+    function setupNotifications() {
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+    }
+
+    function scheduleNotification(dateStr, title) {
+      if (!dateStr) return;
+
+      const deadline = new Date(dateStr);
+      const notificationTime = new Date(deadline.getTime() - CONFIG.notificationHours * 60 * 60 * 1000);
+      const now = new Date();
+
+      if (notificationTime <= now && deadline > now) {
+        if (notificationsEnabled && 'Notification' in window && Notification.permission === 'granted') {
+          new Notification('⏰ Aufgabe fällig!', {
+            body: `${title} — in ${CONFIG.notificationHours} Stunden`,
+            icon: '📚',
+            badge: '🔔'
+          });
+        }
+      }
+    }
+
+    function checkNotifications() {
+      setInterval(() => {
+        const tasks = loadData('tasks');
+        const events = loadData('events');
+        [...tasks, ...events].forEach(item => {
+          const dateStr = item.deadline || item.date;
+          if (dateStr && !item.notified) {
+            const deadline = new Date(dateStr);
+            const notificationTime = new Date(deadline.getTime() - CONFIG.notificationHours * 60 * 60 * 1000);
+            const now = new Date();
+            if (notificationTime <= now && deadline > now) {
+              scheduleNotification(dateStr, item.title);
+            }
+          }
+        });
+      }, 60000);
+    }
+
+    // Start
     init();
   </script>
-  
-<save-data></save-data>
 
 </body>
+</html>
