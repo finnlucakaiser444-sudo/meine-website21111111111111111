@@ -1,354 +1,322 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SAAF 7RB — Hausaufgaben</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SAAF 7RB — Neu</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --primary: #667eea;
-      --secondary: #764ba2;
-      --text: #0f172a;
-      --muted: #6b7280;
-      --bg: #f8fafc;
-      --card: #ffffff;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: var(--text);
-      padding: 16px;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .wrapper {
-      width: 100%;
-      max-width: 100%;
-      background: var(--card);
-      border-radius: 14px;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-      overflow: hidden;
-    }
-
-    header {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      padding: 20px 16px;
-      display: flex;
-      gap: 14px;
-      align-items: center;
-    }
-
-    .logo {
-      width: 74px;
-      height: 74px;
-      border-radius: 50%;
-      background: white;
-      padding: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    .header-content h1 {
-      font-size: 1.15rem;
-      margin: 0;
-      font-weight: 700;
-    }
-
-    .header-content p {
-      font-size: 0.9rem;
-      opacity: 0.95;
-      margin: 4px 0 0 0;
-    }
-
-    main {
-      padding: 18px;
-      display: grid;
-      gap: 14px;
-    }
-
-    .card {
-      background: linear-gradient(180deg, #fafbff 0%, #f5f7ff 100%);
-      border: 1px solid #e0e7ff;
-      border-radius: 10px;
-      padding: 14px;
-    }
-
-    .card h2 {
-      font-size: 1.02rem;
-      color: var(--primary);
-      margin: 0 0 12px 0;
-      border-bottom: 2px solid var(--primary);
-      padding-bottom: 6px;
-    }
-
-    .task-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      list-style: none;
-    }
-
-    .task-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding: 10px;
-      background: white;
-      border-left: 4px solid var(--primary);
-      border-radius: 6px;
-      font-size: 0.95rem;
-    }
-
-    .task-info {
-      flex: 1;
-    }
-
-    .task-name {
-      font-weight: 600;
-      color: var(--text);
-      margin: 0;
-    }
-
-    .task-desc {
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin: 2px 0 0 0;
-    }
-
-    .task-level {
-      font-size: 0.85rem;
-      color: var(--muted);
-      font-weight: 500;
-      padding: 4px 8px;
-      background: #f0f4ff;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-
-    .deadline {
-      background: linear-gradient(135deg, #fff9e6, #fff5d6);
-      border-left: 4px solid #ffc107;
-      padding: 10px 12px;
-      border-radius: 8px;
-      margin-top: 12px;
-      font-weight: 700;
-      color: #92400e;
-      font-size: 0.95rem;
-    }
-
-    .button-group {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 8px 12px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      text-decoration: none;
-      border-radius: 999px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      flex: 1;
-      text-align: center;
-      min-width: 100px;
-      transition: transform 0.2s;
-    }
-
-    .btn:active {
-      transform: scale(0.98);
-    }
-
-    .btn-secondary {
-      background: linear-gradient(135deg, #06b6d4, #0ea5a4);
-    }
-
-    .empty-state {
-      color: var(--muted);
-      font-size: 0.95rem;
-      padding: 10px 0;
-    }
-
-    footer {
-      background: linear-gradient(180deg, #fbfbff, #f5f7ff);
-      border-top: 1px solid #e0e7ff;
-      padding: 12px 16px;
-      text-align: center;
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    .footer-text {
-      font-weight: 600;
-      color: var(--primary);
-    }
-
-    @media (min-width: 768px) {
-      body {
-        padding: 28px;
-      }
-
-      .wrapper {
-        max-width: 820px;
-      }
-
-      header {
-        padding: 24px;
-        gap: 18px;
-      }
-
-      .logo {
-        width: 92px;
-        height: 92px;
-      }
-
-      .header-content h1 {
-        font-size: 1.35rem;
-      }
-
-      .header-content p {
-        font-size: 1rem;
-      }
-
-      main {
-        padding: 24px;
-        gap: 16px;
-      }
-
-      .card {
-        padding: 16px;
-      }
-
-      .card h2 {
-        font-size: 1.1rem;
-        margin-bottom: 14px;
-      }
-
-      .task-item {
-        font-size: 1rem;
-        padding: 12px;
-      }
-
-      .btn {
-        flex: none;
-        min-width: auto;
-        padding: 10px 16px;
-      }
-    }
+    :root{--p:#667eea;--s:#764ba2;--muted:#6b7280}
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial; margin:16px;background:linear-gradient(135deg,var(--p),var(--s));color:#0f172a}
+    .wrap{max-width:980px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 12px 36px rgba(2,6,23,.18)}
+    header{display:flex;justify-content:space-between;align-items:center;padding:18px;background:linear-gradient(135deg,var(--p),var(--s));color:#fff}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:56px;height:56px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center}
+    main{padding:18px;display:grid;gap:14px}
+    .card{background:linear-gradient(180deg,#fafbff,#f5f7ff);padding:14px;border-radius:10px;border:1px solid #e6ecff}
+    .card h2{margin:0 0 12px;color:var(--p);font-size:1.05rem}
+    .btn{background:linear-gradient(135deg,var(--p),var(--s));color:#fff;padding:10px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:700}
+    .btn.ghost{background:transparent;color:var(--p);border:1px solid #e6ecff}
+    .small{padding:8px 10px;font-size:.9rem}
+    .list{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+    .item{background:#fff;padding:12px;border-radius:8px;border:1px solid #eef2ff;display:flex;justify-content:space-between;align-items:center}
+    .meta{font-size:.9rem;color:var(--muted)}
+    .admin-only{display:none}
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:1000}
+    .modal.show{display:flex}
+    .modal-card{background:#fff;padding:16px;border-radius:10px;max-width:480px;width:100%}
+    .roles{display:flex;gap:8px}
+    .role-btn{flex:1;padding:10px;border-radius:8px;border:2px solid #eee;background:#fff;cursor:pointer}
+    .role-btn.active{background:var(--p);color:#fff;border-color:var(--p)}
+    input,textarea,select{width:100%;padding:10px;border:1px solid #e6e9f2;border-radius:8px}
+    .collapse{border-radius:8px;overflow:hidden}
+    .collapse-header{display:flex;justify-content:space-between;align-items:center;padding:12px;background:linear-gradient(90deg,#eef2ff,#f7f7ff);cursor:pointer}
+    .collapse-body{display:none;padding:12px;background:#fff}
+    .collapse-body.show{display:block}
+    canvas{width:100%;height:380px;background:#87ceeb;display:block;border-radius:8px}
+    @media(min-width:768px){canvas{height:480px}}
   </style>
 </head>
 <body>
-  <div class="wrapper">
+  <div class="wrap">
     <header>
-      <div class="logo">
-        <img src="Download.png" alt="SAAF Logo" />
+      <div class="brand">
+        <div class="logo"><img src="Download.png" alt="logo" style="width:100%;height:100%;object-fit:contain"></div>
+        <div>
+          <div style="font-weight:800">📚 SAAF 7RB</div>
+          <div style="font-size:.9rem;opacity:.95">Hausaufgaben, Termine & Spiele</div>
+        </div>
       </div>
-      <div class="header-content">
-        <h1>📚 SAAF 7RB</h1>
-        <p>Hausaufgaben & Termine</p>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div id="roleBadge" style="background:rgba(255,255,255,.12);padding:8px 12px;border-radius:999px;font-weight:700">👤 Gast</div>
+        <button class="btn small" onclick="openLogin()">🔐 Anmelden</button>
       </div>
     </header>
 
     <main>
-      <!-- Wirtschaft Aufgaben -->
       <section class="card">
-        <h2>📊 Wirtschaft — Seite 24</h2>
-        <ul class="task-list">
-          <li class="task-item">
-            <div class="task-info">
-              <p class="task-name">Aufgabe 1</p>
-              <p class="task-desc">Kurze Textantwort</p>
-            </div>
-            <div class="task-level">leicht</div>
-          </li>
-          <li class="task-item">
-            <div class="task-info">
-              <p class="task-name">Aufgabe 2</p>
-              <p class="task-desc">Rechenaufgabe</p>
-            </div>
-            <div class="task-level">mittel</div>
-          </li>
-          <li class="task-item">
-            <div class="task-info">
-              <p class="task-name">Aufgabe 3</p>
-              <p class="task-desc">Analyse & Erklärung</p>
-            </div>
-            <div class="task-level">mittel</div>
-          </li>
-          <li class="task-item">
-            <div class="task-info">
-              <p class="task-name">Aufgabe 4</p>
-              <p class="task-desc">Gruppenarbeit</p>
-            </div>
-            <div class="task-level">schwer</div>
-          </li>
-        </ul>
-        <div class="deadline">⏰ Abgabe bis: 20.11.2025</div>
-        <div class="button-group">
-          <a class="btn" href="https://www.schule-altes-amt-friedeburg.de" target="_blank">Schul-Website</a>
-          <a class="btn btn-secondary" href="https://www.hrsaaf.de" target="_blank">iServ</a>
+        <h2>📝 Hausaufgaben</h2>
+        <ul id="tasks" class="list"></ul>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn small" onclick="openTaskModal()">➕ Aufgabe hinzufügen</button>
+          <button class="btn small ghost admin-only" id="addEventBtn" onclick="openEventModal()">➕ Termin hinzufügen</button>
         </div>
       </section>
 
-      <!-- Materialien -->
       <section class="card">
-        <h2>📎 Materialien</h2>
-        <p class="empty-state">Wichtige Dokumente und Links</p>
-        <div class="button-group">
-          <a class="btn" href="Download.png" download>Logo herunterladen</a>
-          <a class="btn btn-secondary" href="aufgaben.pdf" target="_blank">Arbeitsblatt</a>
+        <h2>📅 Termine</h2>
+        <ul id="events" class="list"></ul>
+      </section>
+
+      <section class="card">
+        <h2>🗒️ Notizen</h2>
+        <textarea id="noteInput" rows="3" style="margin-bottom:8px" placeholder="Notiz..."></textarea>
+        <div style="display:flex;gap:8px">
+          <button class="btn small" onclick="saveNote()">📌 Speichern</button>
+          <button class="btn small ghost" onclick="clearNotes()">🧹 Leeren</button>
         </div>
+        <ul id="notes" class="list" style="margin-top:10px"></ul>
       </section>
 
-      <!-- Abgabetermine -->
-      <section class="card">
-        <h2>📅 Abgabetermine</h2>
-        <ul class="task-list">
-          <li class="task-item">
-            <div class="task-info">
-              <p class="task-name">Wirtschaft — Gruppenbericht</p>
-              <p class="task-desc">wird im unterricht abgefragt</p>
+      <section class="card collapse" id="gameSection">
+        <div class="collapse-header" onclick="toggleGamePanel()">
+          <div style="font-weight:800">🎮 Flappy Person — Spiel</div>
+          <div id="gameToggleLabel" style="opacity:.85">Klicken um zu öffnen</div>
+        </div>
+        <div class="collapse-body" id="gameBody">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div>Score: <span id="gscore">0</span> — Best: <span id="gbest">0</span></div>
+            <div style="display:flex;gap:8px">
+              <button class="btn small" onclick="startGame()">▶ Start</button>
+              <button class="btn small ghost" onclick="stopGame()">⏹ Stop</button>
             </div>
-            <div class="task-level">20.11.2025</div>
-          </li>
-        </ul>
-      </section>
-
-      <!-- Klassenarbeiten -->
-      <section class="card">
-        <h2>📝 Klassenarbeiten</h2>
-        <p class="empty-state">Derzeit keine eingetragenen Klassenarbeiten.</p>
+          </div>
+          <canvas id="gameCanvas"></canvas>
+          <div style="margin-top:8px;color:var(--muted)">Klick oder Leertaste zum Springen • ESC zum Beenden</div>
+        </div>
       </section>
     </main>
 
-    <footer>
-      <div>SAAF 7RB • November 2025</div>
-      <div style="margin-top: 6px;">✨ Created by <span class="footer-text">Finn-Luca Kaiser</span></div>
+    <footer style="padding:14px;text-align:center;color:var(--muted);background:linear-gradient(180deg,#fbfbff,#f5f7ff);border-top:1px solid #e6ecff">
+      <div>🏫 SAAF 7RB • November 2025 — Erstellt von Finn-Luca Kaiser</div>
     </footer>
   </div>
+
+  <!-- Modals -->
+  <div class="modal" id="loginModal">
+    <div class="modal-card">
+      <h3 style="margin:0 0 10px 0">🔓 Anmelden</h3>
+      <div id="loginMsg" style="margin-bottom:8px;color:#0f172a;font-weight:700"></div>
+      <div id="roleSelect" style="margin-bottom:8px">
+        <div style="margin-bottom:6px">Wähle Rolle:</div>
+        <div class="roles">
+          <button class="role-btn" onclick="pickRole('student', this)">👤 Schüler</button>
+          <button class="role-btn" onclick="pickRole('teacher', this)">👨‍🏫 Lehrer</button>
+          <button class="role-btn" onclick="pickRole('admin', this)">👨‍💼 Admin</button>
+        </div>
+      </div>
+      <div id="pwSection" style="display:none;margin-top:8px">
+        <div id="roleText" style="margin-bottom:8px;font-weight:700"></div>
+        <input id="pwInput" type="password" placeholder="Passwort" />
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn small" onclick="confirmLogin()">Bestätigen</button>
+          <button class="btn small ghost" onclick="closeLogin()">Abbrechen</button>
+        </div>
+        <div id="loginError" style="color:#ef4444;margin-top:8px;display:none"></div>
+      </div>
+      <div style="margin-top:10px"><button class="btn small ghost" onclick="closeLogin()">Schließen</button></div>
+    </div>
+  </div>
+
+  <div class="modal" id="taskModal">
+    <div class="modal-card">
+      <h3 style="margin:0 0 8px 0">➕ Neue Aufgabe</h3>
+      <input id="tName" type="text" placeholder="Titel" style="margin-bottom:8px" />
+      <input id="tDesc" type="text" placeholder="Beschreibung" style="margin-bottom:8px" />
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <input id="tSubject" type="text" placeholder="Fach" />
+        <select id="tLevel"><option value="leicht">leicht</option><option value="mittel">mittel</option><option value="schwer">schwer</option></select>
+      </div>
+      <div style="display:flex;gap:8px">
+        <input id="tDeadline" type="date" />
+        <button class="btn small" onclick="saveTask()">Speichern</button>
+        <button class="btn small ghost" onclick="closeTaskModal()">Abbrechen</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="eventModal">
+    <div class="modal-card">
+      <h3 style="margin:0 0 8px 0">➕ Neuer Termin</h3>
+      <input id="eTitle" type="text" placeholder="Titel" style="margin-bottom:8px" />
+      <input id="eDate" type="date" style="margin-bottom:8px" />
+      <input id="eTime" type="text" placeholder="Uhrzeit (z.B. 14:00)" style="margin-bottom:8px" />
+      <input id="eLocation" type="text" placeholder="Seite / Arbeitsblatt (z.B. Seite 24 oder Blatt A)" style="margin-bottom:8px" />
+      <input id="eTaskNumber" type="text" placeholder="Aufgaben-Nummer (z.B. Aufgabe 5 oder Nr. 3-4)" style="margin-bottom:8px" />
+      <div style="display:flex;gap:8px">
+        <button class="btn small" onclick="saveEvent()">Speichern</button>
+        <button class="btn small ghost" onclick="closeEventModal()">Abbrechen</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TEACHER_PASSWORD = 'HA113';
+    const ADMIN_PASSWORD = 'ADMIN24';
+    let currentRole = sessionStorage.getItem('role') || null;
+    let isAuthenticated = !!currentRole;
+
+    function updateRoleUI(){
+      const badge = document.getElementById('roleBadge');
+      badge.textContent = currentRole === 'teacher' ? '👨‍🏫 Lehrer'
+                        : currentRole === 'admin' ? '👨‍💼 Admin'
+                        : currentRole === 'student' ? '👤 Schüler' : '👤 Gast';
+      document.querySelectorAll('.admin-only').forEach(el=>el.style.display = (currentRole==='teacher'||currentRole==='admin')?'inline-flex':'none');
+    }
+    updateRoleUI();
+
+    function openLogin(){ document.getElementById('loginModal').classList.add('show'); document.getElementById('pwSection').style.display='none'; document.getElementById('loginError').style.display='none'; }
+    function closeLogin(){ document.getElementById('loginModal').classList.remove('show'); document.getElementById('pwInput').value=''; }
+
+    let chosenRole = null;
+    function pickRole(role, btn){
+      chosenRole = role;
+      document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      if(role === 'student'){
+        currentRole = 'student'; isAuthenticated = true; sessionStorage.setItem('role', currentRole); updateRoleUI(); closeLogin(); return;
+      }
+      document.getElementById('roleText').textContent = role === 'teacher' ? '👨‍🏫 Lehrer-Passwort erforderlich' : '👨‍💼 Admin-Passwort erforderlich';
+      document.getElementById('pwSection').style.display = 'block';
+      document.getElementById('pwInput').focus();
+    }
+
+    function confirmLogin(){
+      const pw = document.getElementById('pwInput').value || '';
+      const correct = chosenRole === 'teacher' ? TEACHER_PASSWORD : ADMIN_PASSWORD;
+      if(pw === correct){ currentRole = chosenRole; isAuthenticated = true; sessionStorage.setItem('role', currentRole); updateRoleUI(); closeLogin(); }
+      else { const e = document.getElementById('loginError'); e.style.display='block'; e.textContent='❌ Falsches Passwort'; }
+    }
+
+    function loadData(key){ return JSON.parse(localStorage.getItem(key) || '[]') }
+    function saveData(key, arr){ localStorage.setItem(key, JSON.stringify(arr)) }
+
+    function renderTasks(){
+      const list = document.getElementById('tasks'); list.innerHTML='';
+      const tasks = loadData('tasks');
+      if(tasks.length===0){ list.innerHTML='<div class="meta">Keine Aufgaben eingetragen.</div>'; return; }
+      tasks.forEach((t,i)=>{
+        const li = document.createElement('li'); li.className='item';
+        li.innerHTML = `<div>
+          <div style="font-weight:800">${t.title}</div>
+          <div class="meta">${t.subject || '−'} • ${t.level || '−'} • ${t.deadline || 'kein Datum'}</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn small ghost" onclick="toggleDone(${i})">${t.done?'✔':'⭕'}</button>
+          <button class="btn small ghost" onclick="delTask(${i})">🗑</button>
+        </div>`;
+        if(t.done) li.style.opacity=.6;
+        list.appendChild(li);
+      });
+    }
+
+    function renderEvents(){
+      const list = document.getElementById('events'); list.innerHTML='';
+      const ev = loadData('events');
+      if(ev.length===0){ list.innerHTML='<div class="meta">Keine Termine.</div>'; return; }
+      ev.forEach((e,i)=>{
+        const li=document.createElement('li'); li.className='item';
+        const extras = [];
+        if(e.time) extras.push(e.time);
+        if(e.location) extras.push(e.location);
+        if(e.taskNumber) extras.push(e.taskNumber);
+        const metaText = `${e.date}${ extras.length ? ' • ' + extras.join(' • ') : '' }`;
+        li.innerHTML = `<div>
+          <div style="font-weight:800">${e.title}</div>
+          <div class="meta">${metaText}</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn small ghost" onclick="delEvent(${i})">🗑</button>
+        </div>`;
+        list.appendChild(li);
+      });
+    }
+
+    function openTaskModal(){
+      if(!(currentRole==='teacher' || currentRole==='admin')){ alert('Nur Lehrer und Admins dürfen Aufgaben hinzufügen'); return; }
+      document.getElementById('taskModal').classList.add('show');
+    }
+    function closeTaskModal(){ document.getElementById('taskModal').classList.remove('show'); }
+    function saveTask(){
+      if(!(currentRole==='teacher' || currentRole==='admin')){ alert('Keine Berechtigung'); closeTaskModal(); return; }
+      const title=document.getElementById('tName').value.trim(); if(!title){ alert('Titel benötigt'); return; }
+      const tasks = loadData('tasks');
+      tasks.push({ title, description:document.getElementById('tDesc').value||'', subject:document.getElementById('tSubject').value||'', level:document.getElementById('tLevel').value||'', deadline:document.getElementById('tDeadline').value||'', done:false });
+      saveData('tasks',tasks); closeTaskModal(); renderTasks();
+      ['tName','tDesc','tSubject','tDeadline'].forEach(id=>document.getElementById(id).value='');
+    }
+    function delTask(i){ if(!confirm('Aufgabe löschen?')) return; const tasks=loadData('tasks'); tasks.splice(i,1); saveData('tasks',tasks); renderTasks(); }
+    function toggleDone(i){ const tasks=loadData('tasks'); tasks[i].done=!tasks[i].done; saveData('tasks',tasks); renderTasks(); }
+
+    function openEventModal(){ if(!(currentRole==='teacher'||currentRole==='admin')){ alert('Nur Lehrer und Admins dürfen Termine hinzufügen'); return; } document.getElementById('eventModal').classList.add('show'); }
+    function closeEventModal(){ document.getElementById('eventModal').classList.remove('show'); }
+    function saveEvent(){
+      if(!(currentRole==='teacher'||currentRole==='admin')){ alert('Keine Berechtigung'); closeEventModal(); return; }
+      const title=document.getElementById('eTitle').value.trim(); const date=document.getElementById('eDate').value;
+      if(!title || !date){ alert('Titel und Datum benötigt'); return; }
+      const time = document.getElementById('eTime').value.trim();
+      const location = document.getElementById('eLocation').value.trim();
+      const taskNumber = document.getElementById('eTaskNumber').value.trim();
+      const events = loadData('events'); events.push({ title, date, time: time || '', location: location || '', taskNumber: taskNumber || '' });
+      saveData('events',events); closeEventModal(); renderEvents();
+      ['eTitle','eDate','eTime','eLocation','eTaskNumber'].forEach(id=>document.getElementById(id).value='');
+    }
+    function delEvent(i){ if(!confirm('Termin löschen?')) return; const ev=loadData('events'); ev.splice(i,1); saveData('events',ev); renderEvents(); }
+
+    function saveNote(){ const v=document.getElementById('noteInput').value.trim(); if(!v) return; const n=loadData('notes'); n.push({text:v,at:new Date().toISOString()}); saveData('notes',n); renderNotes(); document.getElementById('noteInput').value=''; }
+    function renderNotes(){ const list=document.getElementById('notes'); list.innerHTML=''; const n=loadData('notes'); if(n.length===0){ list.innerHTML='<div class="meta">Keine Notizen.</div>'; return; } n.forEach((no,i)=>{ const li=document.createElement('li'); li.className='item'; li.innerHTML=`<div><div>${no.text}</div><div class="meta">${new Date(no.at).toLocaleString()}</div></div><div><button class="btn small ghost" onclick="delNote(${i})">🗑</button></div>`; list.appendChild(li); }) }
+    function delNote(i){ const n=loadData('notes'); n.splice(i,1); saveData('notes',n); renderNotes(); }
+    function clearNotes(){ if(!confirm('Alle Notizen löschen?')) return; saveData('notes',[]); renderNotes(); }
+
+    function toggleGamePanel(){
+      const body = document.getElementById('gameBody');
+      body.classList.toggle('show');
+      document.getElementById('gameToggleLabel').textContent = body.classList.contains('show') ? 'Geöffnet' : 'Klicken um zu öffnen';
+    }
+
+    const canvas = document.getElementById('gameCanvas'); const ctx = canvas.getContext('2d');
+    let W=0,H=0; function resize(){ W=canvas.width=canvas.offsetWidth; H=canvas.height=canvas.offsetHeight; } window.addEventListener('resize',resize); resize();
+    let gameInterval=null, frame=0, score=0, best = parseInt(localStorage.getItem('flappyPersonBest')||'0',10); document.getElementById('gbest').textContent=best;
+    let player={x:80,y:150,w:36,h:36,vy:0}; const gravity=0.6, jump=-11, gap=140, pipeW=70, speed=3; let pipes=[];
+
+    function startGame(){
+      if(!isAuthenticated){ alert('❌ Bitte anmelden (Schüler, Lehrer oder Admin) um zu spielen'); return; }
+      resetGame(); if(gameInterval) cancelAnimationFrame(gameInterval); gameLoop();
+    }
+    function stopGame(){ if(gameInterval) cancelAnimationFrame(gameInterval); gameInterval=null; alert('Spiel gestoppt'); }
+    function resetGame(){ score=0; pipes=[]; frame=0; player.y=H/2; player.vy=0; document.getElementById('gscore').textContent=0; }
+    function spawnPipe(){ const top = Math.random()*(H-gap-120)+60; pipes.push({x:W,top}); }
+    function drawPerson(x,y,w,h){ ctx.fillStyle='#FFD59A'; ctx.fillRect(x+6,y+10,w-12,h-10); ctx.beginPath(); ctx.arc(x+w/2,y+8,8,0,Math.PI*2); ctx.fillStyle='#FFE0B2'; ctx.fill(); ctx.fillStyle='#000'; ctx.fillRect(x+w/2-6,y+6,3,3); ctx.fillRect(x+w/2+2,y+6,3,3); }
+
+    function gameLoop(){
+      resize(); ctx.fillStyle='#87ceeb'; ctx.fillRect(0,0,W,H);
+      if(frame%100===0) spawnPipe();
+      pipes.forEach((p,i)=>{ p.x -= speed; ctx.fillStyle='#2ea44f'; ctx.fillRect(p.x,0,pipeW,p.top); ctx.fillRect(p.x,p.top+gap,pipeW,H-p.top-gap); if(!p.passed && p.x+pipeW < player.x){ p.passed=true; score++; document.getElementById('gscore').textContent=score; } });
+      pipes = pipes.filter(p=>p.x+pipeW> -10);
+      player.vy += gravity; player.y += player.vy; drawPerson(player.x,player.y,player.w,player.h);
+      if(player.y+player.h >= H || player.y <= 0){ endGame(); return; }
+      for(const p of pipes){ if(player.x+player.w > p.x && player.x < p.x+pipeW){ if(player.y < p.top || player.y+player.h > p.top+gap){ endGame(); return; } } }
+      frame++; gameInterval = requestAnimationFrame(gameLoop);
+    }
+
+    function jumpPerson(){ if(!gameInterval) return; player.vy = jump; }
+    function endGame(){ if(gameInterval) cancelAnimationFrame(gameInterval); gameInterval=null; if(score>best){ best=score; localStorage.setItem('flappyPersonBest',best); document.getElementById('gbest').textContent=best; alert('🏆 Neuer Highscore: '+score); } else alert('💥 Game Over — Score: '+score); }
+
+    canvas.addEventListener('click', ()=>{ if(!gameInterval) return; jumpPerson(); });
+    window.addEventListener('keydown', (e)=>{ if(e.code==='Space'){ e.preventDefault(); if(gameInterval) jumpPerson(); } if(e.code==='Escape'){ if(gameInterval) endGame(); document.getElementById('gameBody').classList.remove('show'); document.getElementById('gameToggleLabel').textContent='Klicken um zu öffnen'; } });
+
+    function init(){ renderTasks(); renderEvents(); renderNotes(); updateRoleUI(); document.querySelectorAll('.admin-only').forEach(el=>el.style.display=(currentRole==='teacher'||currentRole==='admin')?'inline-flex':'none'); }
+    init();
+  </script>
 </body>
 </html>
