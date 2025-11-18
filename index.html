@@ -1,1530 +1,1324 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SAAF 7RB — Schülerverwaltung</title>
-  <style>
-    :root{
-      --primary:#667eea;
-      --secondary:#764ba2;
-      --muted:#6b7280;
-      --success:#10b981;
-      --warning:#f59e0b;
-      --danger:#ef4444;
-      --light:#f5f7ff;
-      --lighter:#fafbff
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0;height:100%}
-    body{
-      font-family:'Inter','Segoe UI','Roboto','Arial',sans-serif;
-      background:linear-gradient(135deg,var(--primary),var(--secondary));
-      color:#0f172a;
-      min-height:100vh;
-      padding:12px
-    }
-    .wrap{
-      max-width:1200px;
-      margin:0 auto;
-      background:#fff;
-      border-radius:20px;
-      overflow:hidden;
-      box-shadow:0 25px 60px rgba(2,6,23,.25)
-    }
-    header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:20px;
-      background:linear-gradient(135deg,var(--primary),var(--secondary));
-      color:#fff;
-      flex-wrap:wrap;
-      gap:16px;
-      box-shadow:0 4px 12px rgba(0,0,0,.1)
-    }
-    .brand{
-      display:flex;
-      gap:14px;
-      align-items:center;
-      flex:1;
-      min-width:220px
-    }
-    .logo{
-      width:56px;
-      height:56px;
-      border-radius:12px;
-      background:rgba(255,255,255,.2);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-shrink:0;
-      font-size:28px;
-      font-weight:bold
-    }
-    .brand-text h1{
-      margin:0;
-      font-size:1.2rem;
-      font-weight:800;
-      letter-spacing:.5px
-    }
-    .brand-text p{
-      margin:4px 0 0 0;
-      font-size:.9rem;
-      opacity:.95;
-      font-weight:500
-    }
-    .header-nav{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      flex-wrap:wrap;
-      justify-content:flex-end
-    }
-    #roleBadge{
-      background:rgba(255,255,255,.15);
-      padding:10px 16px;
-      border-radius:999px;
-      font-weight:700;
-      backdrop-filter:blur(10px);
-      font-size:.9rem
-    }
-    main{
-      padding:24px;
-      display:grid;
-      gap:20px;
-      animation:fadeIn .5s ease
-    }
-    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    .card{
-      background:linear-gradient(180deg,var(--lighter),var(--light));
-      padding:20px;
-      border-radius:14px;
-      border:1.5px solid #e6ecff;
-      transition:all .3s cubic-bezier(.4,0,.2,1);
-      backdrop-filter:blur(10px)
-    }
-    .card:hover{
-      transform:translateY(-4px);
-      box-shadow:0 12px 30px rgba(102,126,234,.15);
-      border-color:var(--primary)
-    }
-    .card h2{
-      margin:0 0 16px 0;
-      color:var(--primary);
-      font-size:1.3rem;
-      font-weight:700;
-      display:flex;
-      align-items:center;
-      gap:8px
-    }
-    .btn{
-      background:linear-gradient(135deg,var(--primary),var(--secondary));
-      color:#fff;
-      padding:12px 20px;
-      border-radius:10px;
-      border:none;
-      cursor:pointer;
-      font-weight:600;
-      font-size:.95rem;
-      transition:all .3s;
-      white-space:nowrap;
-      box-shadow:0 4px 12px rgba(102,126,234,.2);
-      display:inline-flex;
-      align-items:center;
-      gap:6px
-    }
-    .btn:hover{
-      transform:translateY(-3px);
-      box-shadow:0 8px 20px rgba(102,126,234,.35)
-    }
-    .btn:active{transform:translateY(-1px)}
-    .btn.ghost{
-      background:transparent;
-      color:var(--primary);
-      border:2.5px solid var(--primary);
-      box-shadow:none
-    }
-    .btn.ghost:hover{
-      background:var(--primary);
-      color:#fff
-    }
-    .btn.secondary{
-      background:#f0f4ff;
-      color:var(--primary);
-      border:none;
-      box-shadow:none
-    }
-    .btn.secondary:hover{background:#e0ecff}
-    .btn.small{
-      padding:10px 14px;
-      font-size:.85rem
-    }
-    .btn-group{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:14px
-    }
-    .list{
-      list-style:none;
-      padding:0;
-      margin:0;
-      display:grid;
-      gap:12px
-    }
-    .item{
-      background:#fff;
-      padding:16px;
-      border-radius:12px;
-      border:1.5px solid #eef2ff;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:12px;
-      transition:all .3s;
-      cursor:pointer
-    }
-    .item:hover{
-      border-color:var(--primary);
-      box-shadow:0 6px 16px rgba(102,126,234,.12);
-      background:linear-gradient(135deg,#fff,#f8faff)
-    }
-    .item-content{flex:1;min-width:200px}
-    .item-content .title{
-      font-weight:700;
-      font-size:1rem;
-      color:#0f172a;
-      margin-bottom:4px
-    }
-    .item-content .meta{
-      font-size:.85rem;
-      color:var(--muted);
-      margin:0
-    }
-    .item-actions{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center
-    }
-    .empty-state{
-      text-align:center;
-      padding:32px 16px;
-      color:var(--muted);
-      font-style:italic;
-      opacity:.7
-    }
-    .modal{
-      position:fixed;
-      inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      background:rgba(0,0,0,.6);
-      backdrop-filter:blur(4px);
-      z-index:1000;
-      padding:16px;
-      animation:slideIn .3s ease
-    }
-    @keyframes slideIn{from{opacity:0}to{opacity:1}}
-    .modal.show{display:flex}
-    .modal-card{
-      background:#fff;
-      padding:28px;
-      border-radius:16px;
-      max-width:520px;
-      width:100%;
-      max-height:85vh;
-      overflow-y:auto;
-      box-shadow:0 25px 60px rgba(0,0,0,.3)
-    }
-    .modal-card h3{
-      margin:0 0 14px 0;
-      color:var(--primary);
-      font-size:1.3rem;
-      font-weight:700
-    }
-    .form-group{
-      margin-bottom:16px
-    }
-    .form-group label{
-      display:block;
-      font-weight:600;
-      margin-bottom:6px;
-      color:#0f172a;
-      font-size:.95rem
-    }
-    .roles{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
-      gap:12px
-    }
-    .role-btn{
-      padding:14px;
-      border-radius:10px;
-      border:2.5px solid #e6ecff;
-      background:#fff;
-      cursor:pointer;
-      font-weight:700;
-      transition:all .3s;
-      font-size:.95rem
-    }
-    .role-btn:hover{
-      border-color:var(--primary);
-      background:#f0f4ff;
-      transform:translateY(-2px)
-    }
-    .role-btn.active{
-      background:linear-gradient(135deg,var(--primary),var(--secondary));
-      color:#fff;
-      border-color:var(--primary);
-      box-shadow:0 4px 12px rgba(102,126,234,.3)
-    }
-    input,textarea,select{
-      width:100%;
-      padding:14px;
-      border:1.5px solid #e6e9f2;
-      border-radius:10px;
-      font-family:inherit;
-      font-size:.95rem;
-      transition:all .3s;
-      background:#fafbff
-    }
-    input:focus,textarea:focus,select:focus{
-      outline:none;
-      border-color:var(--primary);
-      background:#fff;
-      box-shadow:0 0 0 4px rgba(102,126,234,.1)
-    }
-    textarea{resize:vertical;min-height:100px}
-    .collapse{
-      border-radius:14px;
-      overflow:hidden;
-      border:1.5px solid #e6ecff;
-      background:#fff
-    }
-    .collapse-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:16px;
-      background:linear-gradient(90deg,#eef2ff,#f7f7ff);
-      cursor:pointer;
-      font-weight:700;
-      transition:all .3s;
-      user-select:none
-    }
-    .collapse-header:hover{
-      background:linear-gradient(90deg,#e0e7ff,#f0f0ff);
-      transform:translateX(4px)
-    }
-    .collapse-body{
-      display:none;
-      padding:16px;
-      background:#fff
-    }
-    .collapse-body.show{display:block}
-    canvas{
-      width:100%;
-      height:320px;
-      background:linear-gradient(180deg,#87ceeb 0%,#e0f6ff 100%);
-      display:block;
-      border-radius:12px;
-      border:2px solid #cce5ff
-    }
-    .game-info{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:14px;
-      padding:12px;
-      background:linear-gradient(135deg,#f0f4ff,#f8faff);
-      border-radius:10px;
-      font-weight:600
-    }
-    .game-controls{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap
-    }
-    .game-hint{
-      margin-top:12px;
-      color:var(--muted);
-      font-size:.9rem;
-      font-style:italic;
-      padding:10px;
-      background:#f8faff;
-      border-left:3px solid var(--primary);
-      border-radius:4px
-    }
-    footer{
-      padding:20px;
-      text-align:center;
-      color:var(--muted);
-      background:linear-gradient(180deg,#fbfbff,#f5f7ff);
-      border-top:1.5px solid #e6ecff;
-      font-size:.9rem;
-      font-weight:500
-    }
-    .success-message{
-      background:linear-gradient(135deg,var(--success),#059669);
-      color:#fff;
-      padding:14px;
-      border-radius:10px;
-      margin-bottom:12px;
-      font-weight:600
-    }
-    .error-message{
-      background:linear-gradient(135deg,var(--danger),#dc2626);
-      color:#fff;
-      padding:14px;
-      border-radius:10px;
-      margin-bottom:12px;
-      font-weight:600
-    }
-    @media(max-width:768px){
-      header{
-        padding:14px;
-        flex-direction:column;
-        align-items:flex-start
-      }
-      .header-nav{
-        justify-content:flex-start;
-        width:100%
-      }
-      .brand{width:100%}
-      .brand-text h1{font-size:1.1rem}
-      .roles{grid-template-columns:1fr}
-      main{
-        padding:14px;
-        gap:14px
-      }
-      .card{padding:14px}
-      .card h2{font-size:1.1rem}
-      .item{
-        flex-direction:column;
-        align-items:flex-start
-      }
-      .item-actions{
-        width:100%;
-        justify-content:flex-start
-      }
-      .btn{
-        width:100%;
-        justify-content:center
-      }
-      .btn.small{padding:12px}
-      canvas{height:240px}
-      .modal-card{
-        padding:20px;
-        border-radius:14px
-      }
-      .game-info{
-        flex-direction:column;
-        align-items:flex-start;
-        gap:10px
-      }
-    }
-    @media(max-width:480px){
-      body{padding:8px}
-      .wrap{border-radius:16px}
-      header{padding:12px}
-      .logo{width:44px;height:44px;font-size:22px}
-      .brand-text h1{font-size:1rem}
-      .brand-text p{font-size:.8rem}
-      main{padding:10px;gap:10px}
-      .card{padding:12px}
-      .card h2{font-size:1rem}
-      .btn{padding:10px 12px;font-size:.8rem}
-      .modal-card{padding:16px}
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0066ff;
+            --primary-light: #e6f0ff;
+            --secondary: #f5f5f5;
+            --destructive: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --border: #e5e7eb;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --bg: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecf1 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav-brand-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.3s;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 0.25rem;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0052cc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: #f0f0f0;
+        }
+
+        .btn-danger {
+            background: var(--destructive);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-small {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Home Page */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .iserv-section {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .iserv-section h2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .iserv-section p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Game Page */
+        .game-container {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        #gameCanvas {
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            background: linear-gradient(180deg, #87ceeb 0%, #e0f6ff 100%);
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+            border: 2px solid var(--border);
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--secondary);
+            border-radius: 8px;
+        }
+
+        .game-score {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .game-controls {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .leaderboard {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .leaderboard h2 {
+            margin-bottom: 1rem;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .leaderboard-rank {
+            font-weight: bold;
+            color: var(--primary);
+            min-width: 30px;
+        }
+
+        /* Homework Page */
+        .homework-section {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .homework-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .homework-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .homework-form {
+            background: var(--secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .homework-list {
+            list-style: none;
+        }
+
+        .homework-item {
+            background: var(--secondary);
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .homework-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .homework-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .homework-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .homework-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .homework-description {
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .homework-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .due-date-warning {
+            color: var(--warning);
+            font-weight: 600;
+        }
+
+        .due-date-overdue {
+            color: var(--destructive);
+            font-weight: 600;
+        }
+
+        /* Notes Page */
+        .notes-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+        }
+
+        .notes-form {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 2rem;
+            height: fit-content;
+        }
+
+        .notes-form h2 {
+            margin-bottom: 1rem;
+        }
+
+        .notes-list {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .notes-list h2 {
+            margin-bottom: 1rem;
+        }
+
+        .note-card {
+            background: var(--secondary);
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+        }
+
+        .note-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .note-content {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .note-date {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        /* Chat Page */
+        .chat-container {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--secondary);
+            border-radius: 8px;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: var(--bg);
+            border-radius: 6px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .message-author {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .message-content {
+            margin-top: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .message-time {
+            font-size: 0.8rem;
+            color: #999;
+            margin-top: 0.25rem;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: inherit;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .notes-container {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-container {
+                height: 400px;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+    </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo">📚</div>
-        <div class="brand-text">
-          <h1>SAAF 7RB</h1>
-          <p>Schülerverwaltung & Lernportal</p>
-        </div>
-      </div>
-      <div class="header-nav">
-        <button class="btn small" onclick="window.open('https://www.hrsaaf.de/','_blank')">🏫 Schulseite</button>
-        <button class="btn small" onclick="openChatModal()">💬 Chat</button>
-        <button class="btn small" onclick="openCloudModal()">☁️ Sync</button>
-        <div id="roleBadge">👤 Gast</div>
-        <button class="btn small" onclick="openLogin()">🔐 Anmelden</button>
-      </div>
-    </header>
-
-    <main>
-      <section class="card">
-        <h2>🗒️ Aufgaben & Termine</h2>
-        <ul id="tasks" class="list"></ul>
-        <div class="btn-group">
-          <button class="btn small" onclick="openTaskModal()">➕ Neue Aufgabe</button>
-          <button class="btn small ghost admin-only" onclick="openEventModal()" style="display:none">➕ Termin eintragen</button>
-        </div>
-      </section>
-      
-      <section class="card">
-        <h2>📋 Hausaufgaben</h2>
-        <ul id="events" class="list"></ul>
-      </section>
-
-      <section class="card">
-        <h2>📝 Notizen</h2>
-        <textarea id="noteInput" placeholder="Schreibe deine Notiz hier..."></textarea>
-        <div class="btn-group">
-          <button class="btn small" onclick="saveNote()">💾 Speichern</button>
-          <button class="btn small ghost" onclick="clearNotes()">🗑️ Löschen</button>
-        </div>
-        <ul id="notes" class="list" style="margin-top:16px"></ul>
-      </section>
-
-      <section class="card collapse">
-        <div class="collapse-header" onclick="toggleGamePanel()">
-          <div style="font-weight:800;font-size:1.1rem">🎮 Flappy Person — Spiel</div>
-          <div id="gameToggleLabel" style="opacity:.8;font-size:.9rem">Klick zum Öffnen</div>
-        </div>
-        <div class="collapse-body" id="gameBody">
-          <div class="game-info">
-            <div>Score: <span id="gscore" style="color:var(--primary);font-size:1.2rem">0</span> | Best: <span id="gbest" style="color:var(--primary);font-size:1.2rem">0</span></div>
-            <div class="game-controls">
-              <button class="btn small" onclick="startGame()">▶️ Start</button>
-              <button class="btn small ghost" onclick="stopGame()">⏹️ Stop</button>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <div class="nav-brand-icon">S</div>
+                    <span>Student Portal</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a onclick="switchPage('home')" class="nav-link active">Home</a></li>
+                    <li><a onclick="switchPage('game')" class="nav-link">Spiel</a></li>
+                    <li><a onclick="switchPage('homework')" class="nav-link">Hausaufgaben</a></li>
+                    <li><a onclick="switchPage('notes')" class="nav-link">Notizen</a></li>
+                    <li><a onclick="switchPage('chat')" class="nav-link">Chat</a></li>
+                    <li><a href="https://hrsaaf.de/iserv" target="_blank" class="nav-link">iServ ↗</a></li>
+                </ul>
+                <div class="nav-right">
+                    <div class="user-info">
+                        <span id="userName">Gast</span>
+                        <span id="userRole" style="font-size: 0.8rem; color: var(--text-secondary);"></span>
+                    </div>
+                    <button class="btn btn-secondary btn-small" onclick="toggleLoginModal()">Anmelden</button>
+                </div>
             </div>
-          </div>
-          <canvas id="gameCanvas"></canvas>
-          <div class="game-hint">⌨️ Click zum Springen • Leertaste • ESC zum Beenden</div>
         </div>
-      </section>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <!-- Home Page -->
+            <div id="home" class="page active">
+                <div class="hero">
+                    <h1>Dein Student Portal</h1>
+                    <p>Alles was du für die Schule brauchst, an einem Ort. Spiele, Hausaufgaben, Notizen und mehr.</p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card" onclick="switchPage('game')">
+                        <div class="feature-icon">🎮</div>
+                        <h3>Spiel</h3>
+                        <p>Spiele Geometry Dash und entspanne dich zwischen den Hausaufgaben</p>
+                    </div>
+                    <div class="feature-card" onclick="switchPage('homework')">
+                        <div class="feature-icon">📚</div>
+                        <h3>Hausaufgaben</h3>
+                        <p>Gib den Code ein und sieh dir alle Hausaufgaben an</p>
+                    </div>
+                    <div class="feature-card" onclick="switchPage('notes')">
+                        <div class="feature-icon">📝</div>
+                        <h3>Notizen</h3>
+                        <p>Deine persönlichen Notizen, nur für dich sichtbar</p>
+                    </div>
+                    <div class="feature-card" onclick="switchPage('chat')">
+                        <div class="feature-icon">💬</div>
+                        <h3>Chat</h3>
+                        <p>Chatte mit deinen Mitschülern in Echtzeit</p>
+                    </div>
+                </div>
+
+                <div class="iserv-section">
+                    <h2>Schnellzugriff</h2>
+                    <p>Direkter Link zu deinem iServ</p>
+                    <a href="https://hrsaaf.de/iserv" target="_blank" class="btn btn-primary">Zu iServ ↗</a>
+                </div>
+            </div>
+
+            <!-- Game Page -->
+            <div id="game" class="page">
+                <div class="game-container">
+                    <h2>Geometry Dash</h2>
+                    <canvas id="gameCanvas"></canvas>
+                    <div class="game-info">
+                        <div>
+                            <span style="color: var(--text-secondary);">Punkte: </span>
+                            <span class="game-score" id="gameScore">0</span>
+                        </div>
+                        <div class="game-controls">
+                            <button class="btn btn-primary btn-small" onclick="startGame()">Starten</button>
+                            <button class="btn btn-secondary btn-small" onclick="resetGame()">Zurücksetzen</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="leaderboard">
+                    <h2>🏆 Top Spieler</h2>
+                    <ul class="leaderboard-list" id="leaderboard">
+                        <li class="leaderboard-item">
+                            <span class="leaderboard-rank">1.</span>
+                            <span>Noch keine Scores</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Homework Page -->
+            <div id="homework" class="page">
+                <div class="homework-section">
+                    <div class="homework-header">
+                        <h2>Hausaufgaben</h2>
+                        <button class="btn btn-primary btn-small" onclick="toggleTeacherModal()">Lehrer Modus</button>
+                    </div>
+
+                    <div id="teacherForm" class="homework-form hidden">
+                        <h3>Neue Hausaufgabe erstellen</h3>
+                        <div class="form-group">
+                            <label>Titel</label>
+                            <input type="text" id="hwTitle" placeholder="z.B. Mathematik Aufgaben">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Fach</label>
+                                <input type="text" id="hwSubject" placeholder="z.B. Mathematik">
+                            </div>
+                            <div class="form-group">
+                                <label>Fälligkeitsdatum</label>
+                                <input type="date" id="hwDueDate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Beschreibung</label>
+                            <textarea id="hwDescription" placeholder="Beschreibe die Aufgabe..."></textarea>
+                        </div>
+                        <div class="form-row">
+                            <button class="btn btn-primary" onclick="createHomework()">Erstellen</button>
+                            <button class="btn btn-secondary" onclick="toggleTeacherForm()">Abbrechen</button>
+                        </div>
+                    </div>
+
+                    <ul class="homework-list" id="homeworkList">
+                        <li style="text-align: center; color: var(--text-secondary); padding: 2rem;">
+                            Noch keine Hausaufgaben vorhanden
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Notes Page -->
+            <div id="notes" class="page">
+                <div class="notes-container">
+                    <div class="notes-form">
+                        <h2>Neue Notiz</h2>
+                        <div class="form-group">
+                            <label>Titel</label>
+                            <input type="text" id="noteTitle" placeholder="Notiz Titel">
+                        </div>
+                        <div class="form-group">
+                            <label>Inhalt</label>
+                            <textarea id="noteContent" placeholder="Schreib deine Notiz..."></textarea>
+                        </div>
+                        <button class="btn btn-primary" onclick="createNote()" style="width: 100%;">Speichern</button>
+                    </div>
+
+                    <div class="notes-list">
+                        <h2>Meine Notizen</h2>
+                        <div id="notesList">
+                            <p style="text-align: center; color: var(--text-secondary);">Noch keine Notizen</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Page -->
+            <div id="chat" class="page">
+                <div class="chat-container">
+                    <h2 style="margin-bottom: 1rem;">Chat</h2>
+                    <div class="chat-messages" id="chatMessages">
+                        <p style="text-align: center; color: var(--text-secondary);">Keine Nachrichten</p>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chatInput" placeholder="Schreib eine Nachricht..." onkeypress="handleChatKeypress(event)">
+                        <button class="btn btn-primary" onclick="sendMessage()">Senden</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Anmelden</h2>
+                <button class="modal-close" onclick="toggleLoginModal()">×</button>
+            </div>
+            <div class="form-group">
+                <label>Benutzername</label>
+                <input type="text" id="loginUsername" placeholder="Dein Name">
+            </div>
+            <div class="form-group">
+                <label>Rolle</label>
+                <select id="loginRole">
+                    <option value="student">Schüler</option>
+                    <option value="teacher">Lehrer</option>
+                </select>
+            </div>
+            <div id="teacherCodeField" class="form-group hidden">
+                <label>Lehrer Code</label>
+                <input type="password" id="teacherCode" placeholder="Code eingeben">
+            </div>
+            <button class="btn btn-primary" onclick="login()" style="width: 100%; margin-top: 1rem;">Anmelden</button>
+        </div>
+    </div>
+
+    <!-- Teacher Modal -->
+    <div id="teacherModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Lehrer Modus</h2>
+                <button class="modal-close" onclick="toggleTeacherModal()">×</button>
+            </div>
+            <p style="margin-bottom: 1rem; color: var(--text-secondary);">Gib den Lehrer Code ein um Hausaufgaben zu erstellen</p>
+            <div class="form-group">
+                <label>Lehrer Code</label>
+                <input type="password" id="teacherCodeInput" placeholder="Code eingeben">
+            </div>
+            <button class="btn btn-primary" onclick="unlockTeacherMode()" style="width: 100%;">Freischalten</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
     <footer>
-      🏫 SAAF 7RB • Dezember 2025 — Schülerplattform der HRSAAF
+        <p>© 2025 Student Portal. Erstellt für Schüler.</p>
     </footer>
-  </div>
 
-  <!-- Chat Modal -->
-  <div class="modal" id="chatModal">
-    <div class="modal-card">
-      <h3>💬 Schulchat</h3>
-      <p style="color:var(--muted);margin:12px 0">Tritt dem Schulchat bei, um dich mit anderen Schülern und Lehrern auszutauschen.</p>
-      <div id="chatStatus" style="margin-bottom:14px"></div>
-      <div class="form-group">
-        <label>E-Mail-Adresse</label>
-        <input id="chatEmail" type="email" placeholder="deine-email@schule.de" />
-      </div>
-      <button class="btn" onclick="joinChat()" style="width:100%;justify-content:center">🚀 Chat beitreten</button>
-      <button class="btn ghost" onclick="closeChatModal()" style="width:100%;justify-content:center;margin-top:10px">Abbrechen</button>
-    </div>
-  </div>
+    <script>
+        // Data Storage
+        const data = {
+            user: {
+                name: 'Gast',
+                role: 'student',
+                isTeacher: false
+            },
+            homework: [],
+            notes: [],
+            messages: [],
+            gameScores: [],
+            completedHomework: new Set()
+        };
 
-  <!-- Cloud Sync Modal -->
-  <div class="modal" id="cloudModal">
-    <div class="modal-card">
-      <h3>☁️ Cloud Sync</h3>
-      <p style="color:var(--muted);margin:8px 0">Füge hier deine Firebase-Web-Konfiguration ein, um Aufgaben/Termine/Notizen automatisch zwischen Geräten zu synchronisieren. Du kannst die Konfiguration auch später entfernen.</p>
-      <div class="form-group">
-        <label>Firebase Web-Konfiguration (JSON)</label>
-        <textarea id="firebaseConfigInput" placeholder='{"apiKey":"...","authDomain":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}'></textarea>
-      </div>
-      <div class="form-group" style="margin-top:6px">
-        <label>Anmelden / Konto</label>
-        <input id="cloudEmail" type="email" placeholder="deine-email@schule.de" />
-        <input id="cloudPw" type="password" placeholder="Passwort" style="margin-top:8px" />
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <button class="btn small" onclick="signInEmail()">Anmelden</button>
-          <button class="btn small ghost" onclick="signUpEmail()">Konto erstellen</button>
-          <button class="btn small ghost" onclick="signOutCloud()">Abmelden</button>
-        </div>
-        <div id="cloudAuthStatus" style="margin-top:8px;color:var(--muted)"></div>
-      </div>
-      <div class="form-group" style="display:flex;gap:8px">
-        <button class="btn" onclick="saveCloudConfig()">✅ Aktivieren</button>
-        <button class="btn ghost" onclick="clearCloudConfig()">❌ Entfernen</button>
-      </div>
-      <div id="roleManager" style="margin-top:10px;display:none">
-        <div class="form-group">
-          <label>Rolle zuweisen (Admin)</label>
-          <input id="roleEmail" type="email" placeholder="email@schule.de" />
-          <select id="roleSelect" style="margin-top:8px">
-            <option value="student">Schüler</option>
-            <option value="teacher">Lehrer</option>
-            <option value="admin">Admin</option>
-          </select>
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <button class="btn" onclick="assignRole()">Zuweisen</button>
-          </div>
-        </div>
-        <div id="roleManagerStatus" style="color:var(--muted)"></div>
-      </div>
-      <div id="cloudStatus" style="margin-top:8px;color:var(--muted)"></div>
-      <button class="btn ghost" onclick="closeCloudModal()" style="width:100%;justify-content:center;margin-top:10px">Schließen</button>
-    </div>
-  </div>
+        // Teacher Codes
+        const TEACHER_CODE = 'Lehrer22';
+        const ADMIN_CODE = 'ADMIN24';
 
-  <!-- Login Modal -->
-  <div class="modal" id="loginModal">
-    <div class="modal-card">
-      <h3>🔐 Anmelden</h3>
-      <div class="form-group" style="margin-top:14px">
-        <label>Wähle deine Rolle</label>
-        <div class="roles">
-          <button class="role-btn" onclick="pickRole('student', this)">👤 Schüler</button>
-          <button class="role-btn" onclick="pickRole('teacher', this)">👨‍🏫 Lehrer</button>
-          <button class="role-btn" onclick="pickRole('admin', this)">👨‍💼 Admin</button>
-        </div>
-      </div>
-      <div id="pwSection" style="display:none;margin-top:16px">
-        <div class="form-group">
-          <label id="roleText"></label>
-          <input id="pwInput" type="password" placeholder="Passwort eingeben" />
-        </div>
-        <div id="loginError" class="error-message" style="display:none"></div>
-        <button class="btn" onclick="confirmLogin()" style="width:100%;justify-content:center">✓ Bestätigen</button>
-      </div>
-      <button class="btn ghost" onclick="closeLogin()" style="width:100%;justify-content:center;margin-top:10px">Schließen</button>
-    </div>
-  </div>
-
-  <!-- Task Modal -->
-  <div class="modal" id="taskModal">
-    <div class="modal-card">
-      <h3>➕ Neue Aufgabe</h3>
-      <div class="form-group">
-        <label>Titel</label>
-        <input id="tName" type="text" placeholder="z.B. Mathe Hausaufgaben" />
-      </div>
-      <div class="form-group">
-        <label>Beschreibung</label>
-        <input id="tDesc" type="text" placeholder="Optional" />
-      </div>
-      <div class="form-group">
-        <label>Fach</label>
-        <input id="tSubject" type="text" placeholder="z.B. Mathematik" />
-      </div>
-      <div class="form-group">
-        <label>Schwierigkeit</label>
-        <select id="tLevel">
-          <option value="">Wählen...</option>
-          <option value="leicht">⭐ Leicht</option>
-          <option value="mittel">⭐⭐ Mittel</option>
-          <option value="schwer">⭐⭐⭐ Schwer</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Abgabedatum</label>
-        <input id="tDeadline" type="date" />
-      </div>
-      <button class="btn" onclick="saveTask()" style="width:100%;justify-content:center">💾 Speichern</button>
-      <button class="btn ghost" onclick="closeTaskModal()" style="width:100%;justify-content:center;margin-top:10px">Abbrechen</button>
-    </div>
-  </div>
-
-  <!-- Event Modal -->
-  <div class="modal" id="eventModal">
-    <div class="modal-card">
-      <h3>📅 Neuer Termin</h3>
-      <div class="form-group">
-        <label>Titel</label>
-        <input id="eTitle" type="text" placeholder="z.B. Klassenarbeit Englisch" />
-      </div>
-      <div class="form-group">
-        <label>Datum</label>
-        <input id="eDate" type="date" />
-      </div>
-      <div class="form-group">
-        <label>Uhrzeit</label>
-        <input id="eTime" type="time" />
-      </div>
-      <div class="form-group">
-        <label>Seite / Arbeitsblatt</label>
-        <input id="eLocation" type="text" placeholder="z.B. Seite 42-45" />
-      </div>
-      <div class="form-group">
-        <label>Aufgaben-Nummer</label>
-        <input id="eTaskNumber" type="text" placeholder="z.B. Aufgabe 1-5" />
-      </div>
-      <button class="btn" onclick="saveEvent()" style="width:100%;justify-content:center">💾 Speichern</button>
-      <button class="btn ghost" onclick="closeEventModal()" style="width:100%;justify-content:center;margin-top:10px">Abbrechen</button>
-    </div>
-  </div>
-
-  <script>
-    // Konfiguration
-    const CONFIG = {
-      teacherPassword: 'HA113',
-      adminPassword: 'ADMIN24',
-      notificationHours: 5,
-      storagePrefix: 'saaf_',
-      // Set this to your Firebase web config object to enable cloud sync.
-      // Example:
-      // firebaseConfig: {
-      //   apiKey: "...",
-      //   authDomain: "...",
-      //   projectId: "...",
-      //   storageBucket: "...",
-      //   messagingSenderId: "...",
-      //   appId: "..."
-      // }
-      firebaseConfig: null,
-      useFirestore: false
-    };
-
-    // Firestore caches (used when CONFIG.useFirestore is true)
-    let db = null;
-    let tasksCache = [];
-    let eventsCache = [];
-    let notesCache = [];
-
-    // State
-    let currentRole = sessionStorage.getItem('role') || null;
-    let isAuthenticated = !!currentRole;
-    let notificationsEnabled = localStorage.getItem('notificationsEnabled') !== 'false';
-
-    // Initialisierung
-    function init() {
-      // Load saved firebaseConfig from localStorage if present
-      try {
-        const saved = localStorage.getItem(CONFIG.storagePrefix + 'firebaseConfig');
-        if (saved && !CONFIG.firebaseConfig) {
-          CONFIG.firebaseConfig = JSON.parse(saved);
-        }
-      } catch (e) {
-        console.warn('Invalid saved firebaseConfig', e);
-      }
-
-      initFirebase();
-      updateRoleUI();
-      renderTasks();
-      renderEvents();
-      renderNotes();
-      setupNotifications();
-      checkNotifications();
-    }
-
-    // ==================== Firebase / Firestore (optional) ====================
-    function initFirebase() {
-      if (!CONFIG.firebaseConfig) return;
-      try {
-        // Avoid double-initialization when re-saving config
-        if (!firebase.apps || firebase.apps.length === 0) {
-          firebase.initializeApp(CONFIG.firebaseConfig);
-        }
-        db = firebase.firestore();
-        CONFIG.useFirestore = true;
-
-        // Enable offline persistence where available
-        if (firebase && firebase.firestore && firebase.firestore().enablePersistence) {
-          firebase.firestore().enablePersistence().catch((err) => {
-            console.warn('Firestore persistence not enabled', err);
-          });
+        // Initialize
+        function init() {
+            loadData();
+            updateUI();
+            initGame();
         }
 
-        // Auth: keep a signed-in user; fallback to anonymous sign-in
-        if (firebase.auth) {
-          firebase.auth().onAuthStateChanged(user => {
-            if (user) {
-              document.getElementById('cloudStatus') && (document.getElementById('cloudStatus').textContent = 'Verbunden als: ' + (user.isAnonymous ? 'Gast' : (user.email || user.uid)));
-              // resolve role from Firestore mapping (if exists)
-              resolveRoleForUser(user);
-              document.getElementById('cloudAuthStatus') && (document.getElementById('cloudAuthStatus').textContent = user.email ? ('Angemeldet: ' + user.email) : 'Angemeldet (anonym)');
-            } else {
-              // sign in anonymously so writes are authenticated
-              firebase.auth().signInAnonymously().catch(err => console.warn('Anonymous sign-in failed', err));
+        // Data Management
+        function saveData() {
+            localStorage.setItem('studentPortalData', JSON.stringify({
+                user: data.user,
+                homework: data.homework,
+                notes: data.notes,
+                messages: data.messages,
+                gameScores: data.gameScores,
+                completedHomework: Array.from(data.completedHomework)
+            }));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('studentPortalData');
+            if (saved) {
+                const loaded = JSON.parse(saved);
+                data.user = loaded.user || data.user;
+                data.homework = loaded.homework || [];
+                data.notes = loaded.notes || [];
+                data.messages = loaded.messages || [];
+                data.gameScores = loaded.gameScores || [];
+                data.completedHomework = new Set(loaded.completedHomework || []);
             }
-          });
         }
 
-        // Real-time listeners
-        db.collection('tasks').orderBy('createdAt', 'asc').onSnapshot(snap => {
-          tasksCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-          renderTasks();
-        });
+        // Navigation
+        function switchPage(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageName).classList.add('active');
+            
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
 
-        db.collection('events').orderBy('createdAt', 'asc').onSnapshot(snap => {
-          eventsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-          renderEvents();
-        });
-
-        db.collection('notes').orderBy('createdAt', 'asc').onSnapshot(snap => {
-          notesCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-          renderNotes();
-        });
-
-      } catch (e) {
-        console.warn('Firebase initialization error', e);
-      }
-    }
-
-    // Rolle UI aktualisieren
-    function updateRoleUI() {
-      const badge = document.getElementById('roleBadge');
-      const roleTexts = {
-        'student': '👤 Schüler',
-        'teacher': '👨‍🏫 Lehrer',
-        'admin': '👨‍💼 Admin'
-      };
-      badge.textContent = roleTexts[currentRole] || '👤 Gast';
-      
-      const adminElements = document.querySelectorAll('.admin-only');
-      adminElements.forEach(el => {
-        el.style.display = (currentRole === 'teacher' || currentRole === 'admin') ? 'inline-flex' : 'none';
-      });
-    }
-
-    // ==================== Chat ====================
-    function openChatModal() {
-      document.getElementById('chatModal').classList.add('show');
-      document.getElementById('chatEmail').focus();
-    }
-
-    function closeChatModal() {
-      document.getElementById('chatModal').classList.remove('show');
-      document.getElementById('chatEmail').value = '';
-      document.getElementById('chatStatus').innerHTML = '';
-    }
-
-    function joinChat() {
-      const email = document.getElementById('chatEmail').value.trim();
-      if (!email || !email.includes('@')) {
-        alert('❌ Bitte gültige E-Mail-Adresse eingeben');
-        return;
-      }
-      const status = document.getElementById('chatStatus');
-      status.innerHTML = `<div class="success-message">✅ Willkommen ${email.split('@')[0]}! Du bist dem Chat beigetreten.</div>`;
-      setTimeout(() => closeChatModal(), 2000);
-    }
-
-    // ==================== Cloud Sync helpers ====================
-    function openCloudModal() {
-      document.getElementById('cloudModal').classList.add('show');
-      const saved = localStorage.getItem(CONFIG.storagePrefix + 'firebaseConfig');
-      document.getElementById('firebaseConfigInput').value = saved || '';
-      document.getElementById('cloudStatus').textContent = CONFIG.useFirestore ? 'Cloud-Sync aktiviert' : 'Cloud-Sync nicht aktiviert';
-    }
-
-    function closeCloudModal() {
-      document.getElementById('cloudModal').classList.remove('show');
-    }
-
-    function saveCloudConfig() {
-      const txt = document.getElementById('firebaseConfigInput').value.trim();
-      if (!txt) { alert('Bitte Firebase-Konfiguration einfügen'); return; }
-      try {
-        const cfg = JSON.parse(txt);
-        localStorage.setItem(CONFIG.storagePrefix + 'firebaseConfig', JSON.stringify(cfg));
-        CONFIG.firebaseConfig = cfg;
-        // re-init Firebase
-        initFirebase();
-        document.getElementById('cloudStatus').textContent = 'Cloud-Sync aktiviert';
-        setTimeout(() => closeCloudModal(), 800);
-      } catch (e) {
-        alert('Ungültiges JSON: ' + e.message);
-      }
-    }
-
-    function clearCloudConfig() {
-      if (!confirm('Cloud-Konfiguration entfernen?')) return;
-      localStorage.removeItem(CONFIG.storagePrefix + 'firebaseConfig');
-      CONFIG.firebaseConfig = null;
-      CONFIG.useFirestore = false;
-      db = null;
-      document.getElementById('cloudStatus').textContent = 'Cloud-Sync deaktiviert';
-      renderTasks(); renderEvents(); renderNotes();
-    }
-
-    // ==================== Auth helpers (email/password) ====================
-    function signUpEmail() {
-      if (!CONFIG.useFirestore) { alert('Cloud nicht aktiviert'); return; }
-      const email = document.getElementById('cloudEmail').value.trim();
-      const pw = document.getElementById('cloudPw').value;
-      if (!email || !pw) { alert('E-Mail und Passwort benötigt'); return; }
-      firebase.auth().createUserWithEmailAndPassword(email, pw)
-        .then(() => { document.getElementById('cloudAuthStatus').textContent = 'Konto erstellt und angemeldet'; })
-        .catch(err => { alert('Fehler beim Erstellen: ' + err.message); });
-    }
-
-    function signInEmail() {
-      if (!CONFIG.useFirestore) { alert('Cloud nicht aktiviert'); return; }
-      const email = document.getElementById('cloudEmail').value.trim();
-      const pw = document.getElementById('cloudPw').value;
-      if (!email || !pw) { alert('E-Mail und Passwort benötigt'); return; }
-      firebase.auth().signInWithEmailAndPassword(email, pw)
-        .then(() => { document.getElementById('cloudAuthStatus').textContent = 'Angemeldet'; })
-        .catch(err => { alert('Fehler beim Anmelden: ' + err.message); });
-    }
-
-    function signOutCloud() {
-      if (!CONFIG.useFirestore || !firebase.auth) return;
-      firebase.auth().signOut().then(() => {
-        document.getElementById('cloudAuthStatus').textContent = 'Abgemeldet';
-        // fallback to previous session role if any
-        currentRole = sessionStorage.getItem('role') || null;
-        updateRoleUI();
-      });
-    }
-
-    // Assign role in Firestore (admin-only)
-    function assignRole() {
-      if (!CONFIG.useFirestore || !db) { alert('Cloud nicht aktiviert'); return; }
-      const email = document.getElementById('roleEmail').value.trim();
-      const role = document.getElementById('roleSelect').value;
-      if (!email || !role) { alert('E-Mail und Rolle erforderlich'); return; }
-      db.collection('userRoles').doc(email).set({ email, role, updatedAt: new Date().toISOString() })
-        .then(() => { document.getElementById('roleManagerStatus').textContent = 'Rolle zugewiesen'; })
-        .catch(err => { alert('Fehler beim Zuweisen: ' + err.message); });
-    }
-
-    // Resolve role from Firestore userRoles collection
-    function resolveRoleForUser(user) {
-      if (!CONFIG.useFirestore || !db || !user) return;
-      const email = user.email;
-      if (!email) return;
-      db.collection('userRoles').doc(email).get().then(doc => {
-        if (doc.exists) {
-          const r = doc.data().role;
-          currentRole = r;
-          sessionStorage.setItem('role', currentRole);
-          updateRoleUI();
-          // If admin, show role manager
-          document.getElementById('roleManager').style.display = (currentRole === 'admin') ? 'block' : 'none';
-        } else {
-          // default to student
-          currentRole = 'student';
-          sessionStorage.setItem('role', currentRole);
-          updateRoleUI();
-          document.getElementById('roleManager').style.display = 'none';
+            if (pageName === 'game') {
+                updateLeaderboard();
+            } else if (pageName === 'homework') {
+                renderHomework();
+            } else if (pageName === 'notes') {
+                renderNotes();
+            } else if (pageName === 'chat') {
+                renderChat();
+            }
         }
-      }).catch(err => console.warn('Role lookup failed', err));
-    }
 
-    // ==================== Login ====================
-    function openLogin() {
-      document.getElementById('loginModal').classList.add('show');
-      document.getElementById('pwSection').style.display = 'none';
-      document.getElementById('loginError').style.display = 'none';
-    }
-
-    function closeLogin() {
-      document.getElementById('loginModal').classList.remove('show');
-      document.getElementById('pwInput').value = '';
-    }
-
-    let chosenRole = null;
-
-    function pickRole(role, btn) {
-      chosenRole = role;
-      document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      
-      if (role === 'student') {
-        currentRole = 'student';
-        isAuthenticated = true;
-        sessionStorage.setItem('role', currentRole);
-        updateRoleUI();
-        closeLogin();
-        return;
-      }
-      
-      document.getElementById('roleText').textContent = 
-        role === 'teacher' ? '👨‍🏫 Lehrer-Passwort' : '👨‍💼 Admin-Passwort';
-      document.getElementById('pwSection').style.display = 'block';
-      document.getElementById('pwInput').focus();
-    }
-
-    function confirmLogin() {
-      const pw = document.getElementById('pwInput').value || '';
-      const correct = chosenRole === 'teacher' ? CONFIG.teacherPassword : CONFIG.adminPassword;
-      
-      if (pw === correct) {
-        currentRole = chosenRole;
-        isAuthenticated = true;
-        sessionStorage.setItem('role', currentRole);
-        updateRoleUI();
-        closeLogin();
-      } else {
-        const error = document.getElementById('loginError');
-        error.style.display = 'block';
-        error.textContent = '❌ Falsches Passwort';
-      }
-    }
-
-    // ==================== Datenverwaltung ====================
-    function loadData(key) {
-      if (CONFIG.useFirestore) {
-        if (key === 'tasks') return tasksCache || [];
-        if (key === 'events') return eventsCache || [];
-        if (key === 'notes') return notesCache || [];
-        return [];
-      }
-      return JSON.parse(localStorage.getItem(CONFIG.storagePrefix + key) || '[]');
-    }
-
-    function saveData(key, arr) {
-      // Generic fallback to localStorage; Firestore writes are handled in the specific save functions.
-      localStorage.setItem(CONFIG.storagePrefix + key, JSON.stringify(arr));
-    }
-
-    // ==================== Aufgaben ====================
-    function renderTasks() {
-      const list = document.getElementById('tasks');
-      list.innerHTML = '';
-      const tasks = loadData('tasks');
-
-      if (tasks.length === 0) {
-        list.innerHTML = '<div class="empty-state">Keine Aufgaben eingetragen</div>';
-        return;
-      }
-
-      let hasVisibleTasks = false;
-      tasks.forEach((t, i) => {
-        // Show tasks if created by teacher/admin to everyone, or if no createdBy (legacy)
-        const isPublic = !t.createdBy || t.createdBy === 'teacher' || t.createdBy === 'admin';
-        const isOwner = t.createdBy && t.createdBy === currentRole;
-        if (!isPublic && !isOwner && currentRole === 'student') return; // students don't see private other-student tasks
-
-        hasVisibleTasks = true;
-        const li = document.createElement('li');
-        li.className = 'item';
-        li.style.opacity = t.done ? '0.6' : '1';
-
-        const deadline = t.deadline ? new Date(t.deadline).toLocaleDateString('de-DE') : 'Kein Datum';
-        const difficulty = t.level ? { leicht: '⭐', mittel: '⭐⭐', schwer: '⭐⭐⭐' }[t.level] : '';
-        const createdByText = t.createdBy ? `(von ${t.createdBy === 'teacher' ? 'Lehrer' : t.createdBy === 'admin' ? 'Admin' : 'Benutzer'})` : '';
-
-        // Determine action handlers depending on storage
-        const idOrIndex = t.id ? `'${t.id}'` : i;
-
-        li.innerHTML = `
-          <div class="item-content">
-            <div class="title">${t.title}</div>
-            <p class="item-content meta">${t.subject || '−'} ${difficulty} • ${deadline} ${createdByText}</p>
-          </div>
-          <div class="item-actions">
-            <button class="btn small ghost" onclick="toggleDone(${idOrIndex})">${t.done ? '✅' : '⭕'}</button>
-            <button class="btn small ghost" onclick="delTask(${idOrIndex})" style="display:${(currentRole === 'teacher' || currentRole === 'admin') ? 'flex' : 'none'}">🗑️</button>
-          </div>
-        `;
-        list.appendChild(li);
-      });
-
-      if (!hasVisibleTasks) {
-        list.innerHTML = '<div class="empty-state">Keine Aufgaben eingetragen</div>';
-      }
-    }
-
-    function openTaskModal() {
-      if (!(currentRole === 'teacher' || currentRole === 'admin')) {
-        alert('❌ Nur Lehrer und Admins dürfen Aufgaben hinzufügen');
-        return;
-      }
-      document.getElementById('taskModal').classList.add('show');
-    }
-
-    function closeTaskModal() {
-      document.getElementById('taskModal').classList.remove('show');
-    }
-
-    function saveTask() {
-      if (!(currentRole === 'teacher' || currentRole === 'admin')) {
-        alert('❌ Keine Berechtigung');
-        return;
-      }
-      
-      const title = document.getElementById('tName').value.trim();
-      if (!title) {
-        alert('❌ Titel erforderlich');
-        return;
-      }
-      
-      const deadline = document.getElementById('tDeadline').value;
-      const payload = {
-        title,
-        description: document.getElementById('tDesc').value || '',
-        subject: document.getElementById('tSubject').value || '',
-        level: document.getElementById('tLevel').value || '',
-        deadline: deadline || '',
-        done: false,
-        createdBy: currentRole,
-        createdAt: new Date().toISOString()
-      };
-
-      if (CONFIG.useFirestore && db) {
-        db.collection('tasks').add(payload).catch(err => {
-          console.error('Fehler beim Speichern in Firestore', err);
-          alert('Speichern fehlgeschlagen. Verbindung prüfen.');
-        });
-      } else {
-        const tasks = loadData('tasks');
-        tasks.push(payload);
-        saveData('tasks', tasks);
-        renderTasks();
-      }
-
-      closeTaskModal();
-      scheduleNotification(deadline, title);
-      
-      ['tName', 'tDesc', 'tSubject', 'tLevel', 'tDeadline'].forEach(id => {
-        document.getElementById(id).value = '';
-      });
-    }
-
-    function delTask(iOrId) {
-      if (!confirm('❌ Aufgabe wirklich löschen?')) return;
-      if (CONFIG.useFirestore && typeof iOrId === 'string') {
-        db.collection('tasks').doc(iOrId).delete().catch(err => console.error(err));
-        return;
-      }
-      const i = Number(iOrId);
-      const tasks = loadData('tasks');
-      tasks.splice(i, 1);
-      saveData('tasks', tasks);
-      renderTasks();
-    }
-
-    function toggleDone(iOrId) {
-      if (CONFIG.useFirestore && typeof iOrId === 'string') {
-        const ref = db.collection('tasks').doc(iOrId);
-        ref.get().then(doc => {
-          if (!doc.exists) return;
-          ref.update({ done: !doc.data().done }).catch(err => console.error(err));
-        }).catch(err => console.error(err));
-        return;
-      }
-      const i = Number(iOrId);
-      const tasks = loadData('tasks');
-      tasks[i].done = !tasks[i].done;
-      saveData('tasks', tasks);
-      renderTasks();
-    }
-
-    // ==================== Events/Termine ====================
-    function renderEvents() {
-      const list = document.getElementById('events');
-      list.innerHTML = '';
-      const events = loadData('events');
-      
-      if (events.length === 0) {
-        list.innerHTML = '<div class="empty-state">Keine Termine eingetragen</div>';
-        return;
-      }
-      
-      let hasVisibleEvents = false;
-      events.forEach((e, i) => {
-        const isPublic = !e.createdBy || e.createdBy === 'teacher' || e.createdBy === 'admin';
-        const isOwner = e.createdBy && e.createdBy === currentRole;
-        if (!isPublic && !isOwner && currentRole === 'student') return;
-
-        hasVisibleEvents = true;
-        const li = document.createElement('li');
-        li.className = 'item';
-
-        const dateObj = new Date(e.date || e.deadline || '');
-        const formattedDate = isNaN(dateObj) ? (e.date || 'Datum') : dateObj.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
-        const extras = [e.time, e.location, e.taskNumber].filter(x => x).join(' • ');
-        const createdByText = e.createdBy ? `(von ${e.createdBy === 'teacher' ? 'Lehrer' : e.createdBy === 'admin' ? 'Admin' : 'Benutzer'})` : '';
-
-        const idOrIndex = e.id ? `'${e.id}'` : i;
-
-        li.innerHTML = `
-          <div class="item-content">
-            <div class="title">${e.title}</div>
-            <p class="item-content meta">${formattedDate}${extras ? ' • ' + extras : ''} ${createdByText}</p>
-          </div>
-          <div class="item-actions">
-            <button class="btn small ghost" onclick="delEvent(${idOrIndex})" style="display:${(currentRole === 'teacher' || currentRole === 'admin') ? 'flex' : 'none'}">🗑️</button>
-          </div>
-        `;
-        list.appendChild(li);
-      });
-      
-      if (!hasVisibleEvents) {
-        list.innerHTML = '<div class="empty-state">Keine Termine eingetragen</div>';
-      }
-    }
-
-    function openEventModal() {
-      if (!(currentRole === 'teacher' || currentRole === 'admin')) {
-        alert('❌ Nur Lehrer und Admins dürfen Termine eintragen');
-        return;
-      }
-      document.getElementById('eventModal').classList.add('show');
-    }
-
-    function closeEventModal() {
-      document.getElementById('eventModal').classList.remove('show');
-    }
-
-    function saveEvent() {
-      if (!(currentRole === 'teacher' || currentRole === 'admin')) {
-        alert('❌ Keine Berechtigung');
-        return;
-      }
-      
-      const title = document.getElementById('eTitle').value.trim();
-      const date = document.getElementById('eDate').value;
-      
-      if (!title || !date) {
-        alert('❌ Titel und Datum erforderlich');
-        return;
-      }
-      
-      const payload = {
-        title,
-        date,
-        time: document.getElementById('eTime').value.trim() || '',
-        location: document.getElementById('eLocation').value.trim() || '',
-        taskNumber: document.getElementById('eTaskNumber').value.trim() || '',
-        createdBy: currentRole,
-        createdAt: new Date().toISOString()
-      };
-
-      if (CONFIG.useFirestore && db) {
-        db.collection('events').add(payload).catch(err => {
-          console.error('Fehler beim Speichern in Firestore', err);
-          alert('Speichern fehlgeschlagen. Verbindung prüfen.');
-        });
-      } else {
-        const events = loadData('events');
-        events.push(payload);
-        saveData('events', events);
-        renderEvents();
-      }
-
-      closeEventModal();
-      scheduleNotification(date, title);
-      
-      ['eTitle', 'eDate', 'eTime', 'eLocation', 'eTaskNumber'].forEach(id => {
-        document.getElementById(id).value = '';
-      });
-    }
-
-    function delEvent(iOrId) {
-      if (!confirm('❌ Termin wirklich löschen?')) return;
-      if (CONFIG.useFirestore && typeof iOrId === 'string') {
-        db.collection('events').doc(iOrId).delete().catch(err => console.error(err));
-        return;
-      }
-      const i = Number(iOrId);
-      const events = loadData('events');
-      events.splice(i, 1);
-      saveData('events', events);
-      renderEvents();
-    }
-
-    // ==================== Notizen ====================
-    function saveNote() {
-      const text = document.getElementById('noteInput').value.trim();
-      if (!text) return;
-      const payload = { text, createdAt: new Date().toISOString() };
-      if (CONFIG.useFirestore && db) {
-        db.collection('notes').add(payload).catch(err => console.error('Fehler beim Speichern der Notiz', err));
-      } else {
-        const notes = loadData('notes');
-        notes.push(payload);
-        saveData('notes', notes);
-        renderNotes();
-      }
-      document.getElementById('noteInput').value = '';
-    }
-
-    function renderNotes() {
-      const list = document.getElementById('notes');
-      list.innerHTML = '';
-      const notes = loadData('notes');
-      
-      if (notes.length === 0) {
-        list.innerHTML = '<div class="empty-state">Noch keine Notizen</div>';
-        return;
-      }
-      
-      notes.forEach((note, i) => {
-        const li = document.createElement('li');
-        li.className = 'item';
-        const date = new Date(note.createdAt);
-        const timeStr = date.toLocaleString('de-DE', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
-        const idOrIndex = note.id ? `'${note.id}'` : i;
-
-        li.innerHTML = `
-          <div class="item-content">
-            <div class="title">${note.text}</div>
-            <p class="item-content meta">${timeStr}</p>
-          </div>
-          <div class="item-actions">
-            <button class="btn small ghost" onclick="delNote(${idOrIndex})">🗑️</button>
-          </div>
-        `;
-        list.appendChild(li);
-      });
-    }
-
-    function delNote(i) {
-      if (CONFIG.useFirestore && typeof i === 'string') {
-        db.collection('notes').doc(i).delete().catch(err => console.error(err));
-        return;
-      }
-      const idx = Number(i);
-      const notes = loadData('notes');
-      notes.splice(idx, 1);
-      saveData('notes', notes);
-      renderNotes();
-    }
-
-    function clearNotes() {
-      if (!confirm('❌ Alle Notizen wirklich löschen?')) return;
-      saveData('notes', []);
-      renderNotes();
-    }
-
-    // ==================== Spiel ====================
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    let W = 0, H = 0;
-
-    function resizeCanvas() {
-      W = canvas.width = canvas.offsetWidth;
-      H = canvas.height = canvas.offsetHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    let gameInterval = null, frame = 0, score = 0;
-    let best = parseInt(localStorage.getItem(CONFIG.storagePrefix + 'bestScore') || '0', 10);
-    document.getElementById('gbest').textContent = best;
-
-    let player = { x: 80, y: 150, w: 36, h: 36, vy: 0 };
-    const gravity = 0.6, jump = -11, gap = 140, pipeW = 70, speed = 3;
-    let pipes = [];
-
-    function toggleGamePanel() {
-      const body = document.getElementById('gameBody');
-      body.classList.toggle('show');
-      document.getElementById('gameToggleLabel').textContent = 
-        body.classList.contains('show') ? 'Geöffnet' : 'Klick zum Öffnen';
-    }
-
-    function startGame() {
-      if (!isAuthenticated) {
-        alert('❌ Bitte melde dich an um zu spielen');
-        return;
-      }
-      resetGame();
-      if (gameInterval) cancelAnimationFrame(gameInterval);
-      gameLoop();
-    }
-
-    function stopGame() {
-      if (gameInterval) cancelAnimationFrame(gameInterval);
-      gameInterval = null;
-    }
-
-    function resetGame() {
-      score = 0;
-      pipes = [];
-      frame = 0;
-      player.y = H / 2;
-      player.vy = 0;
-      document.getElementById('gscore').textContent = 0;
-    }
-
-    function spawnPipe() {
-      const top = Math.random() * (H - gap - 120) + 60;
-      pipes.push({ x: W, top, passed: false });
-    }
-
-    function drawPerson(x, y, w, h) {
-      // Kopf
-      ctx.fillStyle = '#FFD59A';
-      ctx.beginPath();
-      ctx.arc(x + w / 2, y + 6, 6, 0, Math.PI * 2);
-      ctx.fill();
-      
-      // Augen
-      ctx.fillStyle = '#000';
-      ctx.fillRect(x + w / 2 - 7, y + 4, 2, 2);
-      ctx.fillRect(x + w / 2 + 4, y + 4, 2, 2);
-      
-      // Mund
-      ctx.strokeStyle = '#000';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.arc(x + w / 2, y + 8, 2, 0, Math.PI);
-      ctx.stroke();
-      
-      // Hemd (Rot)
-      ctx.fillStyle = '#FF6B6B';
-      ctx.fillRect(x + 4, y + 12, w - 8, 10);
-      
-      // Arme
-      ctx.fillStyle = '#FFD59A';
-      ctx.fillRect(x + 2, y + 14, 3, 8);
-      ctx.fillRect(x + w - 5, y + 14, 3, 8);
-      
-      // Hose (Dunkel)
-      ctx.fillStyle = '#2C3E50';
-      ctx.fillRect(x + 5, y + 22, w / 2 - 6, h - 22);
-      ctx.fillRect(x + w / 2 + 1, y + 22, w / 2 - 6, h - 22);
-      
-      // Schuhe
-      ctx.fillStyle = '#333';
-      ctx.fillRect(x + 5, y + h - 2, w / 2 - 6, 2);
-      ctx.fillRect(x + w / 2 + 1, y + h - 2, w / 2 - 6, 2);
-    }
-
-    function gameLoop() {
-      resizeCanvas();
-      ctx.fillStyle = '#87ceeb';
-      ctx.fillRect(0, 0, W, H);
-
-      if (frame % 100 === 0) spawnPipe();
-
-      pipes.forEach(p => {
-        p.x -= speed;
-        ctx.fillStyle = '#2ea44f';
-        ctx.fillRect(p.x, 0, pipeW, p.top);
-        ctx.fillRect(p.x, p.top + gap, pipeW, H - p.top - gap);
-        
-        if (!p.passed && p.x + pipeW < player.x) {
-          p.passed = true;
-          score++;
-          document.getElementById('gscore').textContent = score;
+        // Authentication
+        function toggleLoginModal() {
+            document.getElementById('loginModal').classList.toggle('active');
         }
-      });
 
-      pipes = pipes.filter(p => p.x + pipeW > -10);
-
-      player.vy += gravity;
-      player.y += player.vy;
-      drawPerson(player.x, player.y, player.w, player.h);
-
-      if (player.y + player.h >= H || player.y <= 0) {
-        endGame();
-        return;
-      }
-
-      for (const p of pipes) {
-        if (player.x + player.w > p.x && player.x < p.x + pipeW) {
-          if (player.y < p.top || player.y + player.h > p.top + gap) {
-            endGame();
-            return;
-          }
+        function toggleTeacherModal() {
+            document.getElementById('teacherModal').classList.toggle('active');
         }
-      }
 
-      frame++;
-      gameInterval = requestAnimationFrame(gameLoop);
-    }
-
-    function jumpPerson() {
-      if (!gameInterval) return;
-      player.vy = jump;
-    }
-
-    function endGame() {
-      if (gameInterval) cancelAnimationFrame(gameInterval);
-      gameInterval = null;
-      
-      if (score > best) {
-        best = score;
-        localStorage.setItem(CONFIG.storagePrefix + 'bestScore', best);
-        document.getElementById('gbest').textContent = best;
-        alert('🏆 Neuer Highscore: ' + score);
-      } else {
-        alert('💥 Game Over — Score: ' + score);
-      }
-    }
-
-    canvas.addEventListener('click', () => {
-      if (!gameInterval) return;
-      jumpPerson();
-    });
-
-    window.addEventListener('keydown', (e) => {
-      if (e.code === 'Space') {
-        e.preventDefault();
-        if (gameInterval) jumpPerson();
-      }
-      if (e.code === 'Escape') {
-        if (gameInterval) endGame();
-        document.getElementById('gameBody').classList.remove('show');
-        document.getElementById('gameToggleLabel').textContent = 'Klick zum Öffnen';
-      }
-    });
-
-    // ==================== Benachrichtigungen ====================
-    function setupNotifications() {
-      if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission();
-      }
-    }
-
-    function scheduleNotification(dateStr, title) {
-      if (!dateStr) return;
-
-      const deadline = new Date(dateStr);
-      const notificationTime = new Date(deadline.getTime() - CONFIG.notificationHours * 60 * 60 * 1000);
-      const now = new Date();
-
-      if (notificationTime <= now && deadline > now) {
-        if (notificationsEnabled && 'Notification' in window && Notification.permission === 'granted') {
-          new Notification('⏰ Aufgabe fällig!', {
-            body: `${title} — in ${CONFIG.notificationHours} Stunden`,
-            icon: '📚',
-            badge: '🔔'
-          });
+        function toggleTeacherForm() {
+            document.getElementById('teacherForm').classList.toggle('hidden');
         }
-      }
-    }
 
-    function checkNotifications() {
-      setInterval(() => {
-        const tasks = loadData('tasks');
-        const events = loadData('events');
-        [...tasks, ...events].forEach(item => {
-          const dateStr = item.deadline || item.date;
-          if (dateStr && !item.notified) {
-            const deadline = new Date(dateStr);
-            if (isNaN(deadline)) return;
-            const notificationTime = new Date(deadline.getTime() - CONFIG.notificationHours * 60 * 60 * 1000);
-            const now = new Date();
-            if (notificationTime <= now && deadline > now) {
-              // show notification
-              scheduleNotification(dateStr, item.title);
-              // mark as notified and persist change
-              item.notified = true;
-              if (CONFIG.useFirestore && item.id && db) {
-                const collection = (item.date || item.time || item.location) ? 'events' : 'tasks';
-                db.collection(collection).doc(item.id).update({ notified: true }).catch(err => console.warn('Could not update notified flag', err));
-              } else {
-                // localStorage update: find and save
-                if (item.title) {
-                  if (item.date || item.time || item.location) {
-                    const evs = loadData('events');
-                    const idx = evs.findIndex(x => x.createdAt === item.createdAt && x.title === item.title);
-                    if (idx > -1) { evs[idx].notified = true; saveData('events', evs); }
-                  } else {
-                    const tks = loadData('tasks');
-                    const idx = tks.findIndex(x => x.createdAt === item.createdAt && x.title === item.title);
-                    if (idx > -1) { tks[idx].notified = true; saveData('tasks', tks); }
-                  }
+        function login() {
+            const username = document.getElementById('loginUsername').value;
+            const role = document.getElementById('loginRole').value;
+            const code = document.getElementById('teacherCode').value;
+
+            if (!username) {
+                alert('Bitte gib einen Namen ein');
+                return;
+            }
+
+            if (role === 'teacher') {
+                if (code !== TEACHER_CODE && code !== ADMIN_CODE) {
+                    alert('Falscher Code');
+                    return;
                 }
-              }
+                data.user.role = code === ADMIN_CODE ? 'admin' : 'teacher';
+                data.user.isTeacher = true;
+            } else {
+                data.user.role = 'student';
+                data.user.isTeacher = false;
             }
-          }
+
+            data.user.name = username;
+            saveData();
+            updateUI();
+            toggleLoginModal();
+        }
+
+        function unlockTeacherMode() {
+            const code = document.getElementById('teacherCodeInput').value;
+            if (code === TEACHER_CODE || code === ADMIN_CODE) {
+                data.user.isTeacher = true;
+                data.user.role = code === ADMIN_CODE ? 'admin' : 'teacher';
+                saveData();
+                updateUI();
+                toggleTeacherModal();
+                toggleTeacherForm();
+                alert('Lehrer Modus aktiviert!');
+            } else {
+                alert('Falscher Code');
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('userName').textContent = data.user.name;
+            document.getElementById('userRole').textContent = data.user.isTeacher ? '(Lehrer)' : '(Schüler)';
+            
+            if (data.user.isTeacher) {
+                document.getElementById('teacherForm').classList.remove('hidden');
+            }
+        }
+
+        // Homework
+        function createHomework() {
+            const title = document.getElementById('hwTitle').value;
+            const subject = document.getElementById('hwSubject').value;
+            const dueDate = document.getElementById('hwDueDate').value;
+            const description = document.getElementById('hwDescription').value;
+
+            if (!title) {
+                alert('Bitte gib einen Titel ein');
+                return;
+            }
+
+            const homework = {
+                id: Date.now(),
+                title,
+                subject,
+                dueDate: new Date(dueDate),
+                description,
+                createdBy: data.user.name,
+                createdAt: new Date()
+            };
+
+            data.homework.push(homework);
+            saveData();
+            renderHomework();
+
+            document.getElementById('hwTitle').value = '';
+            document.getElementById('hwSubject').value = '';
+            document.getElementById('hwDueDate').value = '';
+            document.getElementById('hwDescription').value = '';
+            toggleTeacherForm();
+            alert('Hausaufgabe erstellt!');
+        }
+
+        function renderHomework() {
+            const list = document.getElementById('homeworkList');
+            if (data.homework.length === 0) {
+                list.innerHTML = '<li style="text-align: center; color: var(--text-secondary); padding: 2rem;">Noch keine Hausaufgaben vorhanden</li>';
+                return;
+            }
+
+            list.innerHTML = data.homework.map(hw => {
+                const dueDate = new Date(hw.dueDate);
+                const now = new Date();
+                const diffTime = dueDate - now;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                let dateClass = '';
+                let dateText = '';
+                
+                if (diffDays < 0) {
+                    dateClass = 'due-date-overdue';
+                    dateText = 'Überfällig';
+                } else if (diffDays <= 1) {
+                    dateClass = 'due-date-warning';
+                    dateText = 'Morgen fällig!';
+                } else {
+                    dateText = dueDate.toLocaleDateString('de-DE');
+                }
+
+                const isCompleted = data.completedHomework.has(hw.id);
+
+                return `
+                    <li class="homework-item">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div style="flex: 1;">
+                                <div class="homework-title">${hw.title}</div>
+                                <div class="homework-meta">
+                                    ${hw.subject ? `<span class="homework-meta-item">📚 ${hw.subject}</span>` : ''}
+                                    <span class="homework-meta-item ${dateClass}">📅 ${dateText}</span>
+                                </div>
+                                ${hw.description ? `<div class="homework-description">${hw.description}</div>` : ''}
+                                <div style="font-size: 0.8rem; color: var(--text-secondary);">Von: ${hw.createdBy}</div>
+                            </div>
+                            <div class="homework-actions">
+                                ${!data.user.isTeacher ? `
+                                    <button class="btn btn-small ${isCompleted ? 'btn-primary' : 'btn-secondary'}" onclick="toggleHomeworkCompletion(${hw.id})">
+                                        ${isCompleted ? '✓ Erledigt' : '☐ Abhaken'}
+                                    </button>
+                                ` : ''}
+                                ${data.user.isTeacher ? `
+                                    <button class="btn btn-danger btn-small" onclick="deleteHomework(${hw.id})">Löschen</button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </li>
+                `;
+            }).join('');
+        }
+
+        function toggleHomeworkCompletion(id) {
+            if (data.completedHomework.has(id)) {
+                data.completedHomework.delete(id);
+            } else {
+                data.completedHomework.add(id);
+            }
+            saveData();
+            renderHomework();
+        }
+
+        function deleteHomework(id) {
+            if (confirm('Wirklich löschen?')) {
+                data.homework = data.homework.filter(hw => hw.id !== id);
+                saveData();
+                renderHomework();
+            }
+        }
+
+        // Notes
+        function createNote() {
+            const title = document.getElementById('noteTitle').value;
+            const content = document.getElementById('noteContent').value;
+
+            if (!title || !content) {
+                alert('Bitte füll alle Felder aus');
+                return;
+            }
+
+            const note = {
+                id: Date.now(),
+                title,
+                content,
+                createdAt: new Date()
+            };
+
+            data.notes.push(note);
+            saveData();
+            renderNotes();
+
+            document.getElementById('noteTitle').value = '';
+            document.getElementById('noteContent').value = '';
+            alert('Notiz gespeichert!');
+        }
+
+        function renderNotes() {
+            const list = document.getElementById('notesList');
+            if (data.notes.length === 0) {
+                list.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Noch keine Notizen</p>';
+                return;
+            }
+
+            list.innerHTML = data.notes.map(note => `
+                <div class="note-card">
+                    <div class="note-title">${note.title}</div>
+                    <div class="note-content">${note.content}</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="note-date">${new Date(note.createdAt).toLocaleDateString('de-DE')}</div>
+                        <button class="btn btn-danger btn-small" onclick="deleteNote(${note.id})">Löschen</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteNote(id) {
+            if (confirm('Notiz löschen?')) {
+                data.notes = data.notes.filter(n => n.id !== id);
+                saveData();
+                renderNotes();
+            }
+        }
+
+        // Chat
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            const msg = {
+                id: Date.now(),
+                author: data.user.name,
+                content: message,
+                timestamp: new Date()
+            };
+
+            data.messages.push(msg);
+            saveData();
+            renderChat();
+            input.value = '';
+        }
+
+        function handleChatKeypress(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function renderChat() {
+            const container = document.getElementById('chatMessages');
+            if (data.messages.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Keine Nachrichten</p>';
+                return;
+            }
+
+            container.innerHTML = data.messages.map(msg => `
+                <div class="message">
+                    <div class="message-author">${msg.author}</div>
+                    <div class="message-content">${msg.content}</div>
+                    <div class="message-time">${new Date(msg.timestamp).toLocaleTimeString('de-DE')}</div>
+                </div>
+            `).join('');
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Game
+        let gameRunning = false;
+        let gameScore = 0;
+        let playerY = 0;
+        let playerVelocity = 0;
+        let obstacles = [];
+        const GRAVITY = 0.6;
+        const JUMP_STRENGTH = -12;
+
+        function initGame() {
+            const canvas = document.getElementById('gameCanvas');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+
+        function startGame() {
+            gameRunning = true;
+            gameScore = 0;
+            playerY = 150;
+            playerVelocity = 0;
+            obstacles = [];
+            gameLoop();
+        }
+
+        function resetGame() {
+            gameRunning = false;
+            gameScore = 0;
+            playerY = 150;
+            playerVelocity = 0;
+            obstacles = [];
+            document.getElementById('gameScore').textContent = '0';
+            drawGame();
+        }
+
+        function gameLoop() {
+            if (!gameRunning) return;
+
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Physics
+            playerVelocity += GRAVITY;
+            playerY += playerVelocity;
+
+            // Boundaries
+            if (playerY > canvas.height - 30) {
+                playerY = canvas.height - 30;
+                playerVelocity = 0;
+            }
+
+            // Obstacles
+            if (Math.random() < 0.02) {
+                obstacles.push({ x: canvas.width, y: canvas.height - 30 });
+            }
+
+            obstacles = obstacles.filter(obs => {
+                obs.x -= 5;
+                return obs.x > 0;
+            });
+
+            // Collision
+            obstacles.forEach(obs => {
+                if (playerY + 20 > obs.y && playerY < obs.y + 30 && obs.x < 50 && obs.x + 20 > 0) {
+                    gameRunning = false;
+                    saveScore();
+                }
+            });
+
+            gameScore += 1;
+            document.getElementById('gameScore').textContent = gameScore;
+
+            drawGame();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function drawGame() {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Clear
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Ground
+            ctx.fillStyle = '#90EE90';
+            ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
+
+            // Player
+            ctx.fillStyle = '#FF6B6B';
+            ctx.fillRect(30, playerY, 20, 20);
+
+            // Obstacles
+            ctx.fillStyle = '#4A90E2';
+            obstacles.forEach(obs => {
+                ctx.fillRect(obs.x, obs.y, 20, 30);
+            });
+        }
+
+        function saveScore() {
+            const score = {
+                player: data.user.name,
+                score: gameScore,
+                date: new Date()
+            };
+            data.gameScores.push(score);
+            data.gameScores.sort((a, b) => b.score - a.score);
+            data.gameScores = data.gameScores.slice(0, 10);
+            saveData();
+            updateLeaderboard();
+        }
+
+        function updateLeaderboard() {
+            const list = document.getElementById('leaderboard');
+            if (data.gameScores.length === 0) {
+                list.innerHTML = '<li class="leaderboard-item"><span class="leaderboard-rank">-</span><span>Noch keine Scores</span></li>';
+                return;
+            }
+
+            list.innerHTML = data.gameScores.map((score, i) => `
+                <li class="leaderboard-item">
+                    <span class="leaderboard-rank">${i + 1}.</span>
+                    <span>${score.player}</span>
+                    <span style="font-weight: bold; color: var(--primary);">${score.score}</span>
+                </li>
+            `).join('');
+        }
+
+        document.getElementById('loginRole').addEventListener('change', (e) => {
+            const codeField = document.getElementById('teacherCodeField');
+            if (e.target.value === 'teacher') {
+                codeField.classList.remove('hidden');
+            } else {
+                codeField.classList.add('hidden');
+            }
         });
-      }, 60000);
-    }
 
-    // Start
-    init();
-  </script>
-
+        // Start
+        init();
+    </script>
 </body>
 </html>
