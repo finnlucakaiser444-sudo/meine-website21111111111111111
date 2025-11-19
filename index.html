@@ -3,272 +3,469 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔥 CODE QUEST COMPLETE - 100% Kostenlos</title>
+    <title>⚡ CODE QUEST - 100% KOSTENLOS</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             font-family: 'Fredoka', sans-serif;
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
             background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+            animation: bgShift 15s ease infinite;
             color: #000;
             min-height: 100vh;
             overflow-x: hidden;
         }
-        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-        .particle { position: absolute; width: 10px; height: 10px; background: rgba(255, 255, 255, 0.5); border-radius: 50%; animation: float 20s infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0) translateX(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-100vh) translateX(100px); opacity: 0; } }
         
-        .screen { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 2000; overflow-y: auto; padding: 20px; }
-        .screen.active { display: flex; }
-        .screen-content { text-align: center; max-width: 1400px; margin: auto; animation: slideUp 1s ease-out; position: relative; z-index: 10; width: 100%; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(100px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bgShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         
-        .game-title { font-family: 'Orbitron', sans-serif; font-size: 5rem; font-weight: 900; margin-bottom: 1rem; background: linear-gradient(45deg, #FF6B6B, #FFD93D, #4ECDC4, #FF6B6B); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientFlow 3s ease infinite, bounce 2s ease-in-out infinite; letter-spacing: 3px; }
-        @keyframes gradientFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
+        .screen { display: none; min-height: 100vh; padding: 2rem; }
+        .screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        .free-badge { display: inline-block; background: linear-gradient(135deg, #FFD93D 0%, #FF6B6B 100%); color: #000; padding: 1.5rem 3rem; border-radius: 50px; font-weight: 900; font-size: 1.8rem; margin-bottom: 2rem; box-shadow: 0 15px 50px rgba(255, 107, 107, 0.6); transform: rotate(-8deg); animation: pulse 1.5s ease-in-out infinite; border: 4px solid #FFF; }
-        @keyframes pulse { 0%, 100% { transform: rotate(-8deg) scale(1); } 50% { transform: rotate(-8deg) scale(1.1); } }
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: slideDown 0.8s ease-out;
+        }
         
-        .game-subtitle { font-size: 2rem; margin-bottom: 3rem; font-weight: 800; color: #FFF; text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
         
-        .mode-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2.5rem; margin-bottom: 3rem; }
-        .mode-card { background: linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 100%); border-radius: 40px; padding: 3rem; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); border: 6px solid #FFD93D; cursor: pointer; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); position: relative; overflow: hidden; }
-        .mode-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%); animation: shimmer 3s infinite; }
-        .mode-card:hover { transform: translateY(-20px) scale(1.05); box-shadow: 0 40px 100px rgba(255, 107, 107, 0.5); border-color: #FF6B6B; }
-        @keyframes shimmer { 0% { transform: translate(-50%, -50%); } 100% { transform: translate(50%, 50%); } }
-        .mode-icon { font-size: 4rem; margin-bottom: 1rem; }
-        .mode-title { font-size: 1.8rem; font-weight: 900; margin-bottom: 1rem; color: #FF6B6B; font-family: 'Orbitron', sans-serif; }
-        .mode-description { font-size: 1.1rem; color: #000; font-weight: 700; line-height: 1.8; }
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #FF1493, #FFD700, #00CED1, #FF1493);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        }
         
-        .back-button { background: linear-gradient(135deg, #4ECDC4 0%, #7FE5E0 100%); color: white; border: none; padding: 1.2rem 2.5rem; font-size: 1.2rem; font-weight: 900; border-radius: 20px; cursor: pointer; transition: all 0.4s; box-shadow: 0 12px 35px rgba(78, 205, 196, 0.4); font-family: 'Orbitron', sans-serif; margin-bottom: 2rem; }
-        .back-button:hover { transform: translateY(-4px); box-shadow: 0 18px 50px rgba(78, 205, 196, 0.6); }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         
-        .container { max-width: 1400px; margin: 0 auto; }
-        .editor-section { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem; }
-        .panel { background: linear-gradient(135deg, #FFFFFF 0%, #F9F9F9 100%); border-radius: 30px; padding: 2.5rem; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); border: 6px solid #FFD93D; }
-        .panel h2 { margin-bottom: 1.5rem; color: #FF6B6B; font-size: 1.6rem; font-weight: 900; font-family: 'Orbitron', sans-serif; }
+        .subtitle {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1rem;
+        }
         
-        .code-editor { background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%); color: #d4d4d4; padding: 2rem; border-radius: 20px; font-family: 'Courier New', monospace; font-size: 1.3rem; line-height: 2; border: 4px solid #FFD93D; min-height: 600px; overflow-y: auto; resize: vertical; font-weight: 600; box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 217, 61, 0.2); }
-        .output-container { background: #1e1e1e; border-radius: 20px; padding: 1.5rem; min-height: 350px; color: #d4d4d4; font-family: 'Courier New', monospace; font-size: 1.1rem; overflow-y: auto; border: 4px solid #FFD93D; font-weight: 600; line-height: 1.8; box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5); }
-        .output-line { margin-bottom: 0.8rem; word-break: break-all; }
-        .output-error { color: #FF6B6B; font-weight: 900; }
-        .output-success { color: #4ECDC4; font-weight: 900; }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #FFD700 0%, #FF1493 100%);
+            color: #000;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(255, 20, 147, 0.5);
+            border: 3px solid #fff;
+            animation: bounce 2s ease-in-out infinite;
+        }
         
-        button { padding: 1.2rem 2.5rem; border: none; border-radius: 20px; font-weight: 900; cursor: pointer; transition: all 0.4s; font-size: 1.1rem; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; position: relative; overflow: hidden; }
-        button::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.2); transition: left 0.4s; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        
+        .modes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+        
+        .mode-btn {
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            border: 4px solid #FFD700;
+            border-radius: 30px;
+            padding: 2.5rem 2rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mode-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.6s;
+            pointer-events: none;
+        }
+        
+        .mode-btn:hover::before { left: 100%; }
+        .mode-btn:hover { transform: translateY(-15px) scale(1.08); box-shadow: 0 25px 60px rgba(255, 20, 147, 0.4); border-color: #FF1493; }
+        
+        .mode-icon { font-size: 5rem; margin-bottom: 1rem; display: block; animation: iconBounce 2s ease-in-out infinite; }
+        @keyframes iconBounce { 0%, 100% { transform: scale(1) rotateZ(0deg); } 50% { transform: scale(1.2) rotateZ(10deg); } }
+        .mode-name { font-size: 1.4rem; font-weight: 900; color: #FF1493; margin-bottom: 0.5rem; font-family: 'Orbitron', sans-serif; }
+        .mode-desc { font-size: 0.95rem; color: #000; font-weight: 700; }
+        
+        .editor-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            max-width: 1400px;
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+        
+        .panel {
+            background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
+            border-radius: 25px;
+            padding: 2rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            border: 4px solid #FFD700;
+        }
+        
+        .panel-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #FF1493;
+            margin-bottom: 1.5rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 1.5rem;
+            border: 3px solid #FFD700;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            font-weight: 600;
+            line-height: 1.8;
+            background: #1a1a1a;
+            color: #00ff00;
+            resize: vertical;
+            min-height: 500px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+        
+        textarea::placeholder { color: #666; }
+        
+        .output {
+            background: #1a1a1a;
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 3px solid #FFD700;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            color: #00ff00;
+            min-height: 400px;
+            overflow-y: auto;
+            font-weight: 600;
+            line-height: 1.8;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .output-line { margin-bottom: 0.8rem; }
+        .output-error { color: #ff4444; font-weight: 900; }
+        .output-success { color: #00ff00; }
+        
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        
+        button {
+            flex: 1;
+            min-width: 120px;
+            padding: 1.2rem 2rem;
+            border: none;
+            border-radius: 15px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.4s;
+            font-size: 1rem;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: left 0.5s;
+        }
+        
         button:hover::before { left: 100%; }
-        .btn-primary { background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%); color: white; box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4); }
-        .btn-primary:hover { transform: translateY(-6px); box-shadow: 0 18px 50px rgba(255, 107, 107, 0.6); }
-        .btn-secondary { background: linear-gradient(135deg, #4ECDC4 0%, #7FE5E0 100%); color: white; box-shadow: 0 12px 35px rgba(78, 205, 196, 0.4); }
-        .btn-secondary:hover { transform: translateY(-6px); box-shadow: 0 18px 50px rgba(78, 205, 196, 0.6); }
         
-        .editor-buttons { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
-        .editor-buttons button { flex: 1; min-width: 120px; }
+        .btn-primary {
+            background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%);
+            color: white;
+            box-shadow: 0 10px 30px rgba(255, 20, 147, 0.4);
+        }
         
-        .html-preview { background: white; border-radius: 20px; padding: 1.5rem; margin-top: 1.5rem; border: 4px solid #FFD93D; max-height: 400px; overflow-y: auto; }
+        .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 15px 45px rgba(255, 20, 147, 0.6); }
         
-        .game-container { background: linear-gradient(135deg, #FFFFFF 0%, #F9F9F9 100%); border-radius: 30px; padding: 2.5rem; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); border: 6px solid #FFD93D; margin-bottom: 2rem; }
-        .game-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
-        .game-tile { background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%); color: white; padding: 2rem; border-radius: 20px; font-size: 2rem; font-weight: 900; cursor: pointer; transition: all 0.3s; text-align: center; box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3); }
-        .game-tile:hover { transform: scale(1.1); box-shadow: 0 12px 30px rgba(255, 107, 107, 0.5); }
-        .game-tile.matched { background: linear-gradient(135deg, #4ECDC4 0%, #7FE5E0 100%); }
+        .btn-secondary {
+            background: linear-gradient(135deg, #00CED1 0%, #00BFFF 100%);
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 206, 209, 0.4);
+        }
         
-        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); z-index: 3000; align-items: center; justify-content: center; padding: 20px; }
+        .btn-secondary:hover { transform: translateY(-4px); box-shadow: 0 15px 45px rgba(0, 206, 209, 0.6); }
+        
+        .back-btn {
+            background: linear-gradient(135deg, #00CED1 0%, #00BFFF 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 15px;
+            font-weight: 900;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 206, 209, 0.4);
+            transition: all 0.4s;
+        }
+        
+        .back-btn:hover { transform: translateY(-4px); box-shadow: 0 15px 45px rgba(0, 206, 209, 0.6); }
+        
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .game-tile {
+            background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(255, 20, 147, 0.3);
+            font-weight: 900;
+            font-size: 1.1rem;
+            border: 3px solid #fff;
+        }
+        
+        .game-tile:hover { transform: scale(1.1); box-shadow: 0 15px 45px rgba(255, 20, 147, 0.5); }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 5000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
         .modal.active { display: flex; }
-        .modal-content { background: linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 100%); border-radius: 40px; padding: 3rem; max-width: 700px; width: 100%; text-align: center; box-shadow: 0 50px 150px rgba(0, 0, 0, 0.5); border: 6px solid #FFD93D; animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
-        @keyframes popIn { 0% { transform: scale(0.5) rotateZ(-10deg); opacity: 0; } 100% { transform: scale(1) rotateZ(0); opacity: 1; } }
-        .modal-icon { font-size: 5rem; margin-bottom: 1.5rem; }
-        .modal-title { font-size: 2.5rem; font-weight: 900; margin-bottom: 1.5rem; color: #FF6B6B; font-family: 'Orbitron', sans-serif; }
-        .modal-message { color: #000; margin-bottom: 2rem; line-height: 1.8; font-size: 1.2rem; font-weight: 800; }
-        .modal-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
         
-        @media (max-width: 1024px) { .editor-section { grid-template-columns: 1fr; } }
-        @media (max-width: 768px) { .game-title { font-size: 3rem; } .mode-grid { grid-template-columns: 1fr; } .game-board { grid-template-columns: repeat(2, 1fr); } }
+        .modal-content {
+            background: linear-gradient(135deg, #fff 0%, #f5f5f5 100%);
+            border-radius: 30px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+            border: 4px solid #FFD700;
+            animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes popIn { 0% { transform: scale(0.5) rotateZ(-10deg); opacity: 0; } 100% { transform: scale(1) rotateZ(0); opacity: 1; } }
+        
+        .modal-icon { font-size: 5rem; margin-bottom: 1rem; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotateZ(0deg) scale(1); } 50% { transform: rotateZ(180deg) scale(1.1); } 100% { transform: rotateZ(360deg) scale(1); } }
+        .modal-title { font-size: 2rem; font-weight: 900; color: #FF1493; margin-bottom: 1rem; font-family: 'Orbitron', sans-serif; }
+        .modal-text { color: #000; font-size: 1.1rem; font-weight: 700; margin-bottom: 2rem; }
+        
+        @media (max-width: 1024px) { .editor-container { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .title { font-size: 2.5rem; } .modes { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-    <div class="particles" id="particlesContainer"></div>
-
-    <!-- Mode Selection -->
-    <div id="modeScreen" class="screen active">
-        <div class="screen-content">
-            <div class="game-title">⚡ CODE QUEST ⚡</div>
-            <div class="free-badge">🎉 100% KOSTENLOS 🎉</div>
-            <div class="game-subtitle">Wähle deinen Lernmodus!</div>
-
-            <div class="mode-grid">
-                <div class="mode-card" onclick="selectMode('html')">
-                    <div class="mode-icon">🌐</div>
-                    <div class="mode-title">HTML & CSS</div>
-                    <div class="mode-description">Erstelle Webseiten! Live-Vorschau!</div>
-                </div>
-
-                <div class="mode-card" onclick="selectMode('free')">
-                    <div class="mode-icon">✍️</div>
-                    <div class="mode-title">Selber Schreiben</div>
-                    <div class="mode-description">JavaScript Code schreiben!</div>
-                </div>
-
-                <div class="mode-card" onclick="selectMode('games')">
-                    <div class="mode-icon">🎮</div>
-                    <div class="mode-title">Mit Spielen Lernen</div>
-                    <div class="mode-description">Lerne durch coole Spiele!</div>
-                </div>
-
-                <div class="mode-card" onclick="selectMode('challenges')">
-                    <div class="mode-icon">🎯</div>
-                    <div class="mode-title">Aufgaben Lösen</div>
-                    <div class="mode-description">10 spannende Level!</div>
-                </div>
-            </div>
+    <!-- Home Screen -->
+    <div id="homeScreen" class="screen active">
+        <div class="header">
+            <div class="title">⚡ CODE QUEST ⚡</div>
+            <div class="subtitle">Lerne Programmieren spielerisch!</div>
+            <div class="badge">🎉 100% KOSTENLOS 🎉</div>
+        </div>
+        
+        <div class="modes">
+            <button class="mode-btn" onclick="goToMode('html')">
+                <span class="mode-icon">🌐</span>
+                <span class="mode-name">HTML & CSS</span>
+                <span class="mode-desc">Erstelle Webseiten</span>
+            </button>
+            
+            <button class="mode-btn" onclick="goToMode('js')">
+                <span class="mode-icon">⚙️</span>
+                <span class="mode-name">JavaScript</span>
+                <span class="mode-desc">Code schreiben</span>
+            </button>
+            
+            <button class="mode-btn" onclick="goToMode('quiz')">
+                <span class="mode-icon">🧠</span>
+                <span class="mode-name">Code Quiz</span>
+                <span class="mode-desc">Wissen testen</span>
+            </button>
+            
+            <button class="mode-btn" onclick="goToMode('challenges')">
+                <span class="mode-icon">🏆</span>
+                <span class="mode-name">Aufgaben</span>
+                <span class="mode-desc">10 spannende Level</span>
+            </button>
+            
+            <button class="mode-btn" onclick="openHelp()" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);">
+                <span class="mode-icon">📚</span>
+                <span class="mode-name">Hilfe & Tutorials</span>
+                <span class="mode-desc">YouTube Tutorials ansehen</span>
+            </button>
         </div>
     </div>
 
-
-
     <!-- HTML Mode -->
     <div id="htmlScreen" class="screen">
-        <div class="screen-content container">
-            <button class="back-button" onclick="backToMode()">← ZURÜCK</button>
-            <h1 style="color: white; font-size: 2.2rem; margin-bottom: 1.5rem; font-family: 'Orbitron', sans-serif;">🌐 HTML & CSS EDITOR</h1>
-            
-            <div class="editor-section">
-                <div class="panel">
-                    <h2>💻 CODE</h2>
-                    <textarea class="code-editor" id="htmlCodeEditor" placeholder="Schreib hier HTML & CSS..." style="color: #000;"><!DOCTYPE html>
+        <button class="back-btn" onclick="backHome()">← ZURÜCK</button>
+        <div class="header">
+            <div class="title">🌐 HTML & CSS</div>
+            <div class="subtitle">Erstelle deine erste Webseite!</div>
+        </div>
+        
+        <div class="editor-container">
+            <div class="panel">
+                <div class="panel-title">💻 CODE</div>
+                <textarea id="htmlCode" placeholder="Schreib HTML & CSS..."><!DOCTYPE html>
 <html>
 <head>
     <style>
-        body { background: #FF6B6B; color: #000; font-family: Arial; }
+        body { background: #FF1493; color: white; }
         h1 { text-align: center; }
     </style>
 </head>
 <body>
     <h1>🎉 Hallo Welt!</h1>
-    <p>Das ist meine erste Webseite!</p>
 </body>
 </html></textarea>
-                    <div class="editor-buttons">
-                        <button class="btn-primary" onclick="runHTML()">🌐 VORSCHAU</button>
-                        <button class="btn-secondary" onclick="clearHTML()">🗑️ LÖSCHEN</button>
-                    </div>
+                <div class="btn-group">
+                    <button class="btn-primary" onclick="runHTML()">▶ VORSCHAU</button>
+                    <button class="btn-secondary" onclick="clearHTML()">🗑️ LÖSCHEN</button>
                 </div>
-
-                <div class="panel">
-                    <h2>👁️ VORSCHAU</h2>
-                    <div class="html-preview" id="htmlPreview" style="display: none;"></div>
-                    <div id="htmlPreviewMessage" style="color: #999; font-size: 1.2rem; font-weight: 700; text-align: center; padding: 2rem;">Klick auf VORSCHAU um deine Webseite zu sehen!</div>
-                </div>
+            </div>
+            
+            <div class="panel">
+                <div class="panel-title">👁️ VORSCHAU</div>
+                <div id="htmlPreview" class="output" style="background: white; color: #000; min-height: 500px; border: 3px solid #FFD700;">Klick VORSCHAU um deine Webseite zu sehen!</div>
             </div>
         </div>
     </div>
 
-    <!-- Free Coding Mode -->
-    <div id="freeScreen" class="screen">
-        <div class="screen-content container">
-            <button class="back-button" onclick="backToMode()">← ZURÜCK</button>
-            <h1 style="color: white; font-size: 2.2rem; margin-bottom: 1.5rem; font-family: 'Orbitron', sans-serif;">✍️ JAVASCRIPT SCHREIBEN</h1>
+    <!-- JavaScript Mode -->
+    <div id="jsScreen" class="screen">
+        <button class="back-btn" onclick="backHome()">← ZURÜCK</button>
+        <div class="header">
+            <div class="title">✍️ JAVASCRIPT</div>
+            <div class="subtitle">Schreib deinen Code!</div>
+        </div>
+        
+        <div class="editor-container">
+            <div class="panel">
+                <div class="panel-title">💻 CODE</div>
+                <textarea id="jsCode" placeholder="Schreib JavaScript...">console.log('Hallo Welt!');</textarea>
+                <div class="btn-group">
+                    <button class="btn-primary" onclick="runJS()">▶ AUSFÜHREN</button>
+                    <button class="btn-secondary" onclick="clearJS()">🗑️ LÖSCHEN</button>
+                </div>
+            </div>
             
-            <div class="editor-section">
-                <div class="panel">
-                    <h2>💻 CODE EDITOR</h2>
-                    <textarea class="code-editor" id="freeCodeEditor" placeholder="Schreib hier deinen Code..." style="color: #000;">console.log('Hallo Welt!');</textarea>
-                    <div class="editor-buttons">
-                        <button class="btn-primary" onclick="runFreeCode()">▶ AUSFÜHREN</button>
-                        <button class="btn-secondary" onclick="clearFreeCode()">🗑️ LÖSCHEN</button>
-                    </div>
-                </div>
-
-                <div class="panel">
-                    <h2>📤 AUSGABE</h2>
-                    <div class="output-container" id="freeOutput">
-                        <div class="output-line">Hier wird die Ausgabe angezeigt...</div>
-                    </div>
-                </div>
+            <div class="panel">
+                <div class="panel-title">📤 AUSGABE</div>
+                <div id="jsOutput" class="output">Hier wird die Ausgabe angezeigt...</div>
             </div>
         </div>
     </div>
 
-    <!-- Games Mode -->
-    <div id="gamesScreen" class="screen">
-        <div class="screen-content container">
-            <button class="back-button" onclick="backToMode()">← ZURÜCK</button>
-            <h1 style="color: white; font-size: 2.2rem; margin-bottom: 1.5rem; font-family: 'Orbitron', sans-serif;">🎮 MIT SPIELEN LERNEN</h1>
+    <!-- Quiz Mode -->
+    <div id="quizScreen" class="screen">
+        <button class="back-btn" onclick="backHome()">← ZURÜCK</button>
+        <div class="header">
+            <div class="title">💻 CODE QUIZ</div>
+            <div class="subtitle">Teste dein Programmier-Wissen!</div>
+        </div>
+        
+        <div class="panel" style="max-width: 800px; width: 100%;">
+            <div id="quizQuestion" style="background: #1a1a1a; color: #00ff00; padding: 2rem; border-radius: 15px; margin-bottom: 2rem; font-family: 'Courier New', monospace; font-weight: 700; font-size: 1.1rem; border: 3px solid #FFD700;"></div>
             
-            <div class="game-container">
-                <h2 style="color: #FF6B6B; margin-bottom: 2rem; font-size: 1.8rem; font-family: 'Orbitron', sans-serif;">💻 CODE QUIZ</h2>
-                <p style="color: #000; margin-bottom: 2rem; font-size: 1.1rem; font-weight: 700;">Was ist die richtige Antwort? Teste dein Programmier-Wissen!</p>
-                <div style="background: #f5f5f5; border-radius: 20px; padding: 2rem; margin-bottom: 2rem; border: 3px solid #FFD93D;">
-                    <div id="quizQuestion" style="color: #000; font-size: 1.3rem; font-weight: 900; margin-bottom: 2rem; font-family: 'Courier New', monospace; background: #1e1e1e; color: #4ECDC4; padding: 1.5rem; border-radius: 15px;"></div>
-                    <div id="quizOptions" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;"></div>
-                    <p id="quizMessage" style="color: #000; font-size: 1.1rem; font-weight: 700; text-align: center;"></p>
-                </div>
-                <div style="display: flex; gap: 1rem; justify-content: center;">
-                    <button class="btn-primary" onclick="nextQuiz()">→ NÄCHSTE FRAGE</button>
-                    <button class="btn-secondary" onclick="startQuiz()">🔄 NEUES SPIEL</button>
-                </div>
-                <p id="quizScore" style="color: #000; margin-top: 2rem; font-size: 1.2rem; font-weight: 900; text-align: center;">Punkte: 0/0</p>
+            <div id="quizOptions" class="game-grid"></div>
+            
+            <div id="quizMessage" style="color: #FF1493; font-size: 1.2rem; font-weight: 900; margin-bottom: 2rem;"></div>
+            
+            <div class="btn-group">
+                <button class="btn-primary" onclick="nextQuiz()">→ NÄCHSTE</button>
+                <button class="btn-secondary" onclick="startQuiz()">🔄 NEUES SPIEL</button>
             </div>
-
-            <div class="game-container">
-                <h2 style="color: #FF6B6B; margin-bottom: 2rem; font-size: 1.8rem; font-family: 'Orbitron', sans-serif;">🧩 LOGIK-RÄTSEL</h2>
-                <p style="color: #000; margin-bottom: 2rem; font-size: 1.1rem; font-weight: 700;">Löse Programmier-Rätsel! Was gibt dieser Code aus?</p>
-                <div style="background: #f5f5f5; border-radius: 20px; padding: 2rem; margin-bottom: 2rem; border: 3px solid #FFD93D;">
-                    <div id="puzzleCode" style="color: #000; font-size: 1.2rem; font-weight: 700; margin-bottom: 2rem; font-family: 'Courier New', monospace; background: #1e1e1e; color: #4ECDC4; padding: 1.5rem; border-radius: 15px;"></div>
-                    <div id="puzzleOptions" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;"></div>
-                    <p id="puzzleMessage" style="color: #000; font-size: 1.1rem; font-weight: 700; text-align: center;"></p>
-                </div>
-                <div style="display: flex; gap: 1rem; justify-content: center;">
-                    <button class="btn-primary" onclick="nextPuzzle()">→ NÄCHSTES RÄTSEL</button>
-                    <button class="btn-secondary" onclick="startPuzzles()">🔄 NEUES SPIEL</button>
-                </div>
-                <p id="puzzleScore" style="color: #000; margin-top: 2rem; font-size: 1.2rem; font-weight: 900; text-align: center;">Punkte: 0/0</p>
-            </div>
+            
+            <div style="color: #000; font-size: 1.2rem; font-weight: 900; margin-top: 2rem;">Punkte: <span id="quizScore">0</span>/10</div>
         </div>
     </div>
 
     <!-- Challenges Mode -->
     <div id="challengesScreen" class="screen">
-        <div class="screen-content container">
-            <button class="back-button" onclick="backToMode()">← ZURÜCK</button>
-            <h1 style="color: white; font-size: 2.2rem; margin-bottom: 1.5rem; font-family: 'Orbitron', sans-serif;">🎯 AUFGABEN LÖSEN</h1>
-            
-            <div class="editor-section">
-                <div class="panel">
-                    <h2>📝 AUFGABE</h2>
-                    <div style="font-size: 1.3rem; font-weight: 900; margin-bottom: 1rem; color: #000;" id="challengeTitle">Aufgabe</div>
-                    <div style="color: #000; margin-bottom: 1.5rem; line-height: 1.8; font-size: 1.1rem; font-weight: 700;" id="challengeDescription">Beschreibung</div>
-                    <div id="hintContainer" style="display: none; background: linear-gradient(135deg, #FFE66D 0%, #FFD93D 100%); border-left: 6px solid #FF6B6B; padding: 1.5rem; margin-bottom: 1.5rem; border-radius: 15px; font-size: 1rem; font-weight: 700; color: #000;">
-                        <strong>💡 TIPP:</strong>
-                        <div id="hintText" style="margin-top: 0.8rem;"></div>
-                    </div>
-                    <div style="background: linear-gradient(135deg, #95E1D3 0%, #7FE5E0 100%); border-left: 6px solid #4ECDC4; padding: 1.5rem; border-radius: 15px; font-size: 1rem; font-weight: 700;">
-                        <strong style="display: block; margin-bottom: 0.8rem; color: #000;">✓ ERWARTETE AUSGABE:</strong>
-                        <div id="expectedOutput" style="font-family: 'Courier New', monospace; background: white; padding: 1rem; border-radius: 10px; font-weight: 700; font-size: 1rem; color: #000;"></div>
-                    </div>
+        <button class="back-btn" onclick="backHome()">← ZURÜCK</button>
+        <div class="header">
+            <div class="title">🎯 AUFGABEN</div>
+            <div class="subtitle">Repariere den Code!</div>
+        </div>
+        
+        <div class="editor-container">
+            <div class="panel">
+                <div class="panel-title">📝 AUFGABE</div>
+                <div id="challengeTitle" style="color: #FF1493; font-size: 1.3rem; font-weight: 900; margin-bottom: 1rem;"></div>
+                <div id="challengeDesc" style="color: #000; font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem;"></div>
+                <div id="hintBox" style="background: #FFD700; color: #000; padding: 1rem; border-radius: 15px; margin-bottom: 1.5rem; display: none; font-weight: 700;">
+                    💡 <span id="hintText"></span>
                 </div>
-
-                <div class="panel">
-                    <h2>💻 CODE REPARIEREN</h2>
-                    <textarea class="code-editor" id="challengeCodeEditor" placeholder="Der Code wird hier angezeigt..." style="color: #000;"></textarea>
-                    <div class="editor-buttons">
-                        <button class="btn-primary" onclick="runChallenge()">▶ CODE TESTEN</button>
-                        <button class="btn-secondary" onclick="showHint()">💡 TIPP</button>
-                        <button class="btn-secondary" onclick="resetChallenge()">↻ ZURÜCKSETZEN</button>
-                    </div>
+                <textarea id="challengeCode" style="min-height: 200px;"></textarea>
+                <div class="btn-group">
+                    <button class="btn-primary" onclick="runChallenge()">▶ TESTEN</button>
+                    <button class="btn-secondary" onclick="showHint()">💡 TIPP</button>
                 </div>
             </div>
-
-            <div class="panel" style="margin-top: 2rem;">
-                <h2>📤 AUSGABE</h2>
-                <div class="output-container" id="challengeOutput">
-                    <div class="output-line">Hier wird die Ausgabe angezeigt...</div>
-                </div>
+            
+            <div class="panel">
+                <div class="panel-title">📤 AUSGABE</div>
+                <div id="challengeOutput" class="output">Hier wird die Ausgabe angezeigt...</div>
             </div>
         </div>
     </div>
@@ -278,245 +475,170 @@
         <div class="modal-content">
             <div class="modal-icon">🎉</div>
             <div class="modal-title">GLÜCKWUNSCH!</div>
-            <div class="modal-message" id="successMessage"></div>
-            <div class="modal-buttons">
-                <button class="btn-primary" onclick="closeModal()">✓ OK</button>
-            </div>
+            <div class="modal-text" id="successText"></div>
+            <button class="btn-primary" onclick="closeModal()">✓ OK</button>
         </div>
     </div>
 
     <script>
-        function createParticles() {
-            const container = document.getElementById('particlesContainer');
-            for (let i = 0; i < 30; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 20 + 's';
-                particle.style.animationDuration = (Math.random() * 20 + 20) + 's';
-                container.appendChild(particle);
-            }
-        }
-        createParticles();
-
         const challenges = [
-            { title: 'Hallo Welt!', description: 'Schreib "Hallo"', hint: 'console.log("Hallo")', expectedOutput: 'Hallo', testCode: (o) => o.includes('Hallo'), brokenCode: 'console.log(Hallo);' },
-            { title: 'Plus rechnen', description: 'Berechne 3 + 2', hint: 'console.log(3 + 2)', expectedOutput: '5', testCode: (o) => o.includes('5'), brokenCode: 'console.log(3 2);' },
-            { title: 'Mal rechnen', description: 'Berechne 4 * 5', hint: 'console.log(4 * 5)', expectedOutput: '20', testCode: (o) => o.includes('20'), brokenCode: 'console.log(4 + 5);' },
-            { title: 'Variable', description: 'Speichere "Max"', hint: 'let x = "Max"; console.log(x);', expectedOutput: 'Max', testCode: (o) => o.includes('Max'), brokenCode: 'let x = "Max"\nconsole.log(x);' },
-            { title: 'Wenn-Bedingung', description: 'Wenn 5 > 3, schreib "Ja"', hint: 'if (5 > 3) { console.log("Ja"); }', expectedOutput: 'Ja', testCode: (o) => o.includes('Ja'), brokenCode: 'if (5 < 3) { console.log("Ja"); }' },
-            { title: 'Schleife', description: 'Schreib "Hi" 3 mal', hint: 'for (let i = 0; i < 3; i++) { console.log("Hi"); }', expectedOutput: 'Hi\nHi\nHi', testCode: (o) => (o.match(/Hi/g) || []).length === 3, brokenCode: 'for (let i = 0; i < 3;) { console.log("Hi"); }' },
-            { title: 'Array', description: 'Gib a[0] aus', hint: 'let a = ["A", "B"]; console.log(a[0]);', expectedOutput: 'A', testCode: (o) => o.includes('A'), brokenCode: 'let a = ["A", "B"]; console.log(a[1]);' },
-            { title: 'Funktion', description: 'Schreib function f() { return 10; }', hint: 'function f() { return 10; } console.log(f());', expectedOutput: '10', testCode: (o) => o.includes('10'), brokenCode: 'function f() { 10; } console.log(f());' },
-            { title: 'Objekt', description: 'Gib obj.name aus', hint: 'let obj = {name: "Tom"}; console.log(obj.name);', expectedOutput: 'Tom', testCode: (o) => o.includes('Tom'), brokenCode: 'let obj = {name: "Tom"}; console.log(obj);' },
-            { title: 'Zählen', description: 'Zähle 1 bis 5', hint: 'for (let i = 1; i <= 5; i++) { console.log(i); }', expectedOutput: '1\n2\n3\n4\n5', testCode: (o) => (o.match(/[1-5]/g) || []).length >= 5, brokenCode: 'for (let i = 1; i < 5; i++) { console.log(i); }' }
+            { title: 'Hallo Welt', desc: 'Schreib "Hallo"', hint: 'console.log("Hallo")', code: 'console.log(Hallo);', test: (o) => o.includes('Hallo') },
+            { title: 'Plus rechnen', desc: 'Berechne 3 + 2', hint: 'console.log(3 + 2)', code: 'console.log(3 2);', test: (o) => o.includes('5') },
+            { title: 'Mal rechnen', desc: 'Berechne 4 * 5', hint: 'console.log(4 * 5)', code: 'console.log(4 + 5);', test: (o) => o.includes('20') },
+            { title: 'Variable', desc: 'Speichere "Max"', hint: 'let x = "Max"; console.log(x);', code: 'let x = "Max"\nconsole.log(x);', test: (o) => o.includes('Max') },
+            { title: 'Wenn-Bedingung', desc: 'Wenn 5 > 3, schreib "Ja"', hint: 'if (5 > 3) { console.log("Ja"); }', code: 'if (5 < 3) { console.log("Ja"); }', test: (o) => o.includes('Ja') },
+            { title: 'Schleife', desc: 'Schreib "Hi" 3 mal', hint: 'for (let i = 0; i < 3; i++) { console.log("Hi"); }', code: 'for (let i = 0; i < 3;) { console.log("Hi"); }', test: (o) => (o.match(/Hi/g) || []).length === 3 },
+            { title: 'Array', desc: 'Gib a[0] aus', hint: 'let a = ["A", "B"]; console.log(a[0]);', code: 'let a = ["A", "B"]; console.log(a[1]);', test: (o) => o.includes('A') },
+            { title: 'Funktion', desc: 'Schreib function f() { return 10; }', hint: 'function f() { return 10; } console.log(f());', code: 'function f() { 10; } console.log(f());', test: (o) => o.includes('10') },
+            { title: 'Objekt', desc: 'Gib obj.name aus', hint: 'let obj = {name: "Tom"}; console.log(obj.name);', code: 'let obj = {name: "Tom"}; console.log(obj);', test: (o) => o.includes('Tom') },
+            { title: 'Zählen', desc: 'Zähle 1 bis 5', hint: 'for (let i = 1; i <= 5; i++) { console.log(i); }', code: 'for (let i = 1; i < 5; i++) { console.log(i); }', test: (o) => (o.match(/[1-5]/g) || []).length >= 5 }
         ];
-
-        let currentMode = null;
-        let currentChallengeIdx = 0;
-        let quizIdx = 0;
-        let quizScore = 0;
-        let puzzleIdx = 0;
-        let puzzleScore = 0;
 
         const quizzes = [
-            { question: 'let x = 5;\nconsole.log(x + 3);', options: ['5', '8', '53', 'Error'], answer: 1 },
-            { question: 'let arr = [1, 2, 3];\nconsole.log(arr[0]);', options: ['1', '2', '3', 'undefined'], answer: 0 },
-            { question: 'for (let i = 0; i < 3; i++) {}\nconsole.log(i);', options: ['0', '3', 'undefined', 'Error'], answer: 1 },
-            { question: 'function f() { return 10; }\nconsole.log(f());', options: ['10', 'undefined', 'f', 'Error'], answer: 0 },
-            { question: 'let x = "5";\nconsole.log(x + 3);', options: ['8', '53', '5', 'Error'], answer: 1 },
-            { question: 'if (5 > 3) { console.log("Ja"); }', options: ['Ja', 'undefined', 'Error', 'false'], answer: 0 },
-            { question: 'let obj = {name: "Tom"};\nconsole.log(obj.age);', options: ['Tom', 'undefined', 'Error', 'null'], answer: 1 },
-            { question: '[1, 2, 3].length', options: ['3', '2', '1', 'undefined'], answer: 0 },
-            { question: 'true && false', options: ['true', 'false', 'undefined', 'Error'], answer: 1 },
-            { question: '"Hello".length', options: ['5', '4', 'undefined', 'Error'], answer: 0 }
+            { q: 'let x = 5;\nconsole.log(x + 3);', opts: ['5', '8', '53', 'Error'], ans: 1 },
+            { q: 'let arr = [1, 2, 3];\nconsole.log(arr[0]);', opts: ['1', '2', '3', 'undefined'], ans: 0 },
+            { q: 'for (let i = 0; i < 3; i++) {}\nconsole.log(i);', opts: ['0', '3', 'undefined', 'Error'], ans: 1 },
+            { q: 'function f() { return 10; }\nconsole.log(f());', opts: ['10', 'undefined', 'f', 'Error'], ans: 0 },
+            { q: 'let x = "5";\nconsole.log(x + 3);', opts: ['8', '53', '5', 'Error'], ans: 1 },
+            { q: 'if (5 > 3) { console.log("Ja"); }', opts: ['Ja', 'undefined', 'Error', 'false'], ans: 0 },
+            { q: 'let obj = {name: "Tom"};\nconsole.log(obj.age);', opts: ['Tom', 'undefined', 'Error', 'null'], ans: 1 },
+            { q: '[1, 2, 3].length', opts: ['3', '2', '1', 'undefined'], ans: 0 },
+            { q: 'true && false', opts: ['true', 'false', 'undefined', 'Error'], ans: 1 },
+            { q: '"Hello".length', opts: ['5', '4', 'undefined', 'Error'], ans: 0 }
         ];
 
-        const puzzles = [
-            { code: 'let x = 0;\nfor (let i = 1; i <= 3; i++) {\n  x += i;\n}\nconsole.log(x);', options: ['6', '3', '1', '0'], answer: 0 },
-            { code: 'let arr = [1, 2, 3, 4];\nlet sum = 0;\nfor (let n of arr) {\n  sum += n;\n}\nconsole.log(sum);', options: ['10', '4', '1234', '0'], answer: 0 },
-            { code: 'function double(x) {\n  return x * 2;\n}\nconsole.log(double(5));', options: ['10', '5', '25', '2'], answer: 0 },
-            { code: 'let x = 5;\nif (x > 3 && x < 10) {\n  console.log("Ja");\n}', options: ['Ja', 'undefined', 'Error', 'false'], answer: 0 },
-            { code: 'let str = "Code";\nconsole.log(str.toUpperCase());', options: ['CODE', 'code', 'Code', 'Error'], answer: 0 },
-            { code: 'let nums = [1, 2, 3];\nnums.push(4);\nconsole.log(nums.length);', options: ['4', '3', '2', 'Error'], answer: 0 },
-            { code: 'let x = 10;\nlet y = x;\ny = 20;\nconsole.log(x);', options: ['10', '20', 'undefined', 'Error'], answer: 0 },
-            { code: 'let obj = {a: 1, b: 2};\nconsole.log(Object.keys(obj));', options: ['["a","b"]', '[1,2]', 'Error', 'undefined'], answer: 0 },
-            { code: '[1, 2, 3].map(x => x * 2)', options: ['[2,4,6]', '[1,2,3]', '6', 'Error'], answer: 0 },
-            { code: 'let x = null;\nconsole.log(typeof x);', options: ['object', 'null', 'undefined', 'Error'], answer: 0 }
-        ];
+        let currentChallenge = 0;
+        let currentQuiz = 0;
+        let quizScore = 0;
 
-        function selectMode(mode) {
-            currentMode = mode;
-            document.getElementById('modeScreen').classList.remove('active');
+        function goToMode(mode) {
+            document.getElementById('homeScreen').classList.remove('active');
             document.getElementById(mode + 'Screen').classList.add('active');
-            if (mode === 'challenges') loadChallenge(0);
-            if (mode === 'games') {
-                startQuiz();
-                startPuzzles();
-            }
+            if (mode === 'quiz') startQuiz();
+            if (mode === 'challenges') loadChallenge();
         }
 
-        function backToMode() {
-            document.getElementById(currentMode + 'Screen').classList.remove('active');
-            document.getElementById('modeScreen').classList.add('active');
+        function backHome() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('homeScreen').classList.add('active');
         }
 
-
-
-        // HTML Mode
         function runHTML() {
-            const code = document.getElementById('htmlCodeEditor').value;
+            const code = document.getElementById('htmlCode').value;
             const preview = document.getElementById('htmlPreview');
             try {
                 preview.innerHTML = code;
-                preview.style.display = 'block';
-                document.getElementById('htmlPreviewMessage').style.display = 'none';
-            } catch (error) {
-                alert('❌ Fehler: ' + error.message);
+            } catch (e) {
+                preview.innerHTML = '<div style="color: red; font-weight: 900;">Fehler: ' + e.message + '</div>';
             }
         }
+
         function clearHTML() {
-            document.getElementById('htmlCodeEditor').value = '';
-            document.getElementById('htmlPreview').style.display = 'none';
-            document.getElementById('htmlPreviewMessage').style.display = 'block';
+            document.getElementById('htmlCode').value = '';
+            document.getElementById('htmlPreview').innerHTML = 'Klick VORSCHAU um deine Webseite zu sehen!';
         }
 
-        // Free Coding
-        function runFreeCode() {
-            const code = document.getElementById('freeCodeEditor').value;
+        function runJS() {
+            const code = document.getElementById('jsCode').value;
             const output = [];
-            const originalLog = console.log;
-            console.log = function(...args) { output.push(args.join(' ')); };
+            const log = console.log;
+            console.log = (...args) => output.push(args.join(' '));
             try {
                 eval(code);
-                console.log = originalLog;
-                displayOutput(output, 'freeOutput', 'success');
-            } catch (error) {
-                console.log = originalLog;
-                displayOutput([`❌ FEHLER: ${error.message}`], 'freeOutput', 'error');
+                console.log = log;
+                document.getElementById('jsOutput').innerHTML = output.map(o => '<div class="output-line output-success">' + o + '</div>').join('');
+            } catch (e) {
+                console.log = log;
+                document.getElementById('jsOutput').innerHTML = '<div class="output-line output-error">FEHLER: ' + e.message + '</div>';
             }
         }
-        function clearFreeCode() {
-            document.getElementById('freeCodeEditor').value = '';
-            document.getElementById('freeOutput').innerHTML = '<div class="output-line">Hier wird die Ausgabe angezeigt...</div>';
+
+        function clearJS() {
+            document.getElementById('jsCode').value = '';
+            document.getElementById('jsOutput').innerHTML = 'Hier wird die Ausgabe angezeigt...';
         }
 
-        // Games Mode - Code Quiz
         function startQuiz() {
-            quizIdx = 0;
+            currentQuiz = 0;
             quizScore = 0;
             loadQuiz();
         }
+
         function loadQuiz() {
-            if (quizIdx >= quizzes.length) {
-                document.getElementById('quizMessage').textContent = `🎉 Spiel vorbei! Du hast ${quizScore}/${quizzes.length} Punkte!`;
+            if (currentQuiz >= quizzes.length) {
+                document.getElementById('quizQuestion').textContent = 'Spiel vorbei!';
+                document.getElementById('quizOptions').innerHTML = '';
+                document.getElementById('quizMessage').textContent = 'Du hast ' + quizScore + '/' + quizzes.length + ' Punkte!';
                 return;
             }
-            const q = quizzes[quizIdx];
-            document.getElementById('quizQuestion').textContent = q.question;
-            document.getElementById('quizOptions').innerHTML = q.options.map((opt, idx) => `
-                <button class="btn-secondary" onclick="answerQuiz(${idx})" style="padding: 1.5rem; font-size: 1.1rem;">${opt}</button>
-            `).join('');
+            const q = quizzes[currentQuiz];
+            document.getElementById('quizQuestion').textContent = q.q;
+            document.getElementById('quizOptions').innerHTML = q.opts.map((o, i) => '<button class="game-tile" onclick="answerQuiz(' + i + ')">' + o + '</button>').join('');
             document.getElementById('quizMessage').textContent = '';
-            document.getElementById('quizScore').textContent = `Punkte: ${quizScore}/${quizzes.length}`;
+            document.getElementById('quizScore').textContent = quizScore;
         }
+
         function answerQuiz(idx) {
-            const q = quizzes[quizIdx];
-            if (idx === q.answer) {
+            const q = quizzes[currentQuiz];
+            if (idx === q.ans) {
                 quizScore++;
                 document.getElementById('quizMessage').textContent = '✅ RICHTIG!';
             } else {
-                document.getElementById('quizMessage').textContent = `❌ FALSCH! Richtig war: ${q.options[q.answer]}`;
+                document.getElementById('quizMessage').textContent = '❌ FALSCH! Richtig: ' + q.opts[q.ans];
             }
-            document.querySelectorAll('#quizOptions button').forEach(btn => btn.disabled = true);
+            document.querySelectorAll('#quizOptions button').forEach(b => b.disabled = true);
         }
+
         function nextQuiz() {
-            quizIdx++;
+            currentQuiz++;
             loadQuiz();
         }
 
-        // Games Mode - Logic Puzzles
-        function startPuzzles() {
-            puzzleIdx = 0;
-            puzzleScore = 0;
-            loadPuzzle();
-        }
-        function loadPuzzle() {
-            if (puzzleIdx >= puzzles.length) {
-                document.getElementById('puzzleMessage').textContent = `🎉 Spiel vorbei! Du hast ${puzzleScore}/${puzzles.length} Punkte!`;
-                return;
-            }
-            const p = puzzles[puzzleIdx];
-            document.getElementById('puzzleCode').textContent = p.code;
-            document.getElementById('puzzleOptions').innerHTML = p.options.map((opt, idx) => `
-                <button class="btn-secondary" onclick="answerPuzzle(${idx})" style="padding: 1.5rem; font-size: 1.1rem;">${opt}</button>
-            `).join('');
-            document.getElementById('puzzleMessage').textContent = '';
-            document.getElementById('puzzleScore').textContent = `Punkte: ${puzzleScore}/${puzzles.length}`;
-        }
-        function answerPuzzle(idx) {
-            const p = puzzles[puzzleIdx];
-            if (idx === p.answer) {
-                puzzleScore++;
-                document.getElementById('puzzleMessage').textContent = '✅ RICHTIG!';
-            } else {
-                document.getElementById('puzzleMessage').textContent = `❌ FALSCH! Richtig war: ${p.options[p.answer]}`;
-            }
-            document.querySelectorAll('#puzzleOptions button').forEach(btn => btn.disabled = true);
-        }
-        function nextPuzzle() {
-            puzzleIdx++;
-            loadPuzzle();
+        function loadChallenge() {
+            const c = challenges[currentChallenge];
+            document.getElementById('challengeTitle').textContent = c.title;
+            document.getElementById('challengeDesc').textContent = c.desc;
+            document.getElementById('challengeCode').value = c.code;
+            document.getElementById('hintBox').style.display = 'none';
+            document.getElementById('hintText').textContent = c.hint;
         }
 
-        // Challenges
-        let memoryCards = [];
-        function loadChallenge(idx) {
-            currentChallengeIdx = idx;
-            const c = challenges[idx];
-            document.getElementById('challengeTitle').textContent = c.title;
-            document.getElementById('challengeDescription').textContent = c.description;
-            document.getElementById('expectedOutput').textContent = c.expectedOutput;
-            document.getElementById('challengeCodeEditor').value = c.brokenCode;
-            document.getElementById('hintContainer').style.display = 'none';
+        function showHint() {
+            document.getElementById('hintBox').style.display = 'block';
         }
+
         function runChallenge() {
-            const code = document.getElementById('challengeCodeEditor').value;
-            const c = challenges[currentChallengeIdx];
+            const c = challenges[currentChallenge];
+            const code = document.getElementById('challengeCode').value;
             const output = [];
-            const originalLog = console.log;
-            console.log = function(...args) { output.push(args.join(' ')); };
+            const log = console.log;
+            console.log = (...args) => output.push(args.join(' '));
             try {
                 eval(code);
-                console.log = originalLog;
-                displayOutput(output, 'challengeOutput', 'success');
-                if (c.testCode(output.join('\n'))) {
-                    document.getElementById('successMessage').textContent = '🎊 +100 PUNKTE!';
+                console.log = log;
+                const result = output.join('\n');
+                document.getElementById('challengeOutput').innerHTML = '<div class="output-line output-success">' + result + '</div>';
+                if (c.test(result)) {
+                    document.getElementById('successText').textContent = '+100 PUNKTE!';
                     document.getElementById('successModal').classList.add('active');
+                    currentChallenge++;
+                    if (currentChallenge >= challenges.length) currentChallenge = 0;
                 } else {
-                    displayOutput(['❌ FALSCH!'], 'challengeOutput', 'error');
+                    document.getElementById('challengeOutput').innerHTML = '<div class="output-line output-error">FALSCH!</div>';
                 }
-            } catch (error) {
-                console.log = originalLog;
-                displayOutput([`❌ FEHLER: ${error.message}`], 'challengeOutput', 'error');
+            } catch (e) {
+                console.log = log;
+                document.getElementById('challengeOutput').innerHTML = '<div class="output-line output-error">FEHLER: ' + e.message + '</div>';
             }
-        }
-        function showHint() {
-            document.getElementById('hintText').textContent = challenges[currentChallengeIdx].hint;
-            document.getElementById('hintContainer').style.display = 'block';
-        }
-        function resetChallenge() {
-            document.getElementById('challengeCodeEditor').value = challenges[currentChallengeIdx].brokenCode;
-        }
-
-        function displayOutput(lines, containerId, type = 'success') {
-            const container = document.getElementById(containerId);
-            container.innerHTML = lines.map(line => `<div class="output-line ${type === 'error' ? 'output-error' : 'output-success'}">${line}</div>`).join('');
         }
 
         function closeModal() {
             document.getElementById('successModal').classList.remove('active');
+            loadChallenge();
+        }
+
+        function openHelp() {
+            window.open('https://www.youtube.com/channel/UCB_FqulKFZJZmIwNlR6q1xg', '_blank');
         }
     </script>
 </body>
