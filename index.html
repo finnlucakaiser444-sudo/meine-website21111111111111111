@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>⚡ CODE QUEST - 100% KOSTENLOS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: 'Fredoka', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
             background-size: 400% 400%;
             animation: bgShift 15s ease infinite;
-            color: #000;
+            color: #1a1a1a;
             min-height: 100vh;
             overflow-x: hidden;
         }
@@ -35,53 +35,58 @@
         
         @keyframes slideDown { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
         
-        .title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 4rem;
-            font-weight: 900;
-            background: linear-gradient(45deg, #FF1493, #FFD700, #00CED1, #FF1493);
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradientShift 3s ease infinite;
-            margin-bottom: 1rem;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        .logo-container {
+            max-width: 500px;
+            margin: 0 auto 2rem;
+            animation: logoFloat 3s ease-in-out infinite;
+            background: white;
+            border-radius: 25px;
+            padding: 2rem;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
         }
         
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .logo-container img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
         
         .subtitle {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 800;
             color: #fff;
-            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             margin-bottom: 1rem;
+            letter-spacing: 0.5px;
         }
         
         .badge {
             display: inline-block;
             background: linear-gradient(135deg, #FFD700 0%, #FF1493 100%);
             color: #000;
-            padding: 1rem 2rem;
+            padding: 1rem 2.5rem;
             border-radius: 50px;
             font-weight: 900;
             font-size: 1.3rem;
             margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(255, 20, 147, 0.5);
+            box-shadow: 0 10px 40px rgba(255, 20, 147, 0.6);
             border: 3px solid #fff;
-            animation: bounce 2s ease-in-out infinite;
+            animation: pulse 2s ease-in-out infinite;
         }
         
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        @keyframes pulse { 
+            0%, 100% { transform: scale(1); box-shadow: 0 10px 40px rgba(255, 20, 147, 0.6); } 
+            50% { transform: scale(1.05); box-shadow: 0 15px 50px rgba(255, 20, 147, 0.8); } 
+        }
         
         .modes {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
             max-width: 1400px;
             width: 100%;
@@ -89,9 +94,10 @@
         }
         
         .mode-btn {
-            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
-            border: 4px solid #FFD700;
-            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 3px solid rgba(255, 215, 0, 0.8);
+            border-radius: 25px;
             padding: 2.5rem 2rem;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -108,18 +114,44 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
             transition: left 0.6s;
             pointer-events: none;
         }
         
         .mode-btn:hover::before { left: 100%; }
-        .mode-btn:hover { transform: translateY(-15px) scale(1.08); box-shadow: 0 25px 60px rgba(255, 20, 147, 0.4); border-color: #FF1493; }
+        .mode-btn:hover { 
+            transform: translateY(-15px) scale(1.05); 
+            box-shadow: 0 25px 60px rgba(255, 20, 147, 0.4); 
+            border-color: #FF1493; 
+        }
         
-        .mode-icon { font-size: 5rem; margin-bottom: 1rem; display: block; animation: iconBounce 2s ease-in-out infinite; }
-        @keyframes iconBounce { 0%, 100% { transform: scale(1) rotateZ(0deg); } 50% { transform: scale(1.2) rotateZ(10deg); } }
-        .mode-name { font-size: 1.4rem; font-weight: 900; color: #FF1493; margin-bottom: 0.5rem; font-family: 'Orbitron', sans-serif; }
-        .mode-desc { font-size: 0.95rem; color: #000; font-weight: 700; }
+        .mode-icon { 
+            font-size: 5rem; 
+            margin-bottom: 1rem; 
+            display: block; 
+            animation: iconFloat 2.5s ease-in-out infinite; 
+        }
+        
+        @keyframes iconFloat { 
+            0%, 100% { transform: translateY(0px) rotate(0deg); } 
+            50% { transform: translateY(-10px) rotate(5deg); } 
+        }
+        
+        .mode-name { 
+            font-size: 1.5rem; 
+            font-weight: 900; 
+            color: #FF1493; 
+            margin-bottom: 0.5rem; 
+            letter-spacing: 0.5px;
+        }
+        
+        .mode-desc { 
+            font-size: 1rem; 
+            color: #333; 
+            font-weight: 600; 
+            line-height: 1.5;
+        }
         
         .editor-container {
             display: grid;
@@ -131,11 +163,12 @@
         }
         
         .panel {
-            background: linear-gradient(135deg, #fff 0%, #f9f9f9 100%);
-            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
             padding: 2rem;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-            border: 4px solid #FFD700;
+            border: 2px solid rgba(255, 215, 0, 0.6);
         }
         
         .panel-title {
@@ -143,45 +176,51 @@
             font-weight: 900;
             color: #FF1493;
             margin-bottom: 1.5rem;
-            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.5px;
         }
         
         textarea {
             width: 100%;
             padding: 1.5rem;
-            border: 3px solid #FFD700;
-            border-radius: 15px;
-            font-family: 'Courier New', monospace;
-            font-size: 1.2rem;
-            font-weight: 600;
+            border: 2px solid rgba(255, 215, 0, 0.6);
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 500;
             line-height: 1.8;
             background: #1a1a1a;
-            color: #00ff00;
+            color: #00ff88;
             resize: vertical;
             min-height: 500px;
             box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.2);
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #FF1493;
         }
         
         textarea::placeholder { color: #666; }
         
         .output {
             background: #1a1a1a;
-            border-radius: 15px;
+            border-radius: 12px;
             padding: 1.5rem;
-            border: 3px solid #FFD700;
-            font-family: 'Courier New', monospace;
+            border: 2px solid rgba(255, 215, 0, 0.6);
+            font-family: 'JetBrains Mono', monospace;
             font-size: 1rem;
-            color: #00ff00;
+            color: #00ff88;
             min-height: 400px;
             overflow-y: auto;
-            font-weight: 600;
+            font-weight: 500;
             line-height: 1.8;
             box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
         }
         
         .output-line { margin-bottom: 0.8rem; }
         .output-error { color: #ff4444; font-weight: 900; }
-        .output-success { color: #00ff00; }
+        .output-success { color: #00ff88; }
         
         .btn-group {
             display: flex;
@@ -192,16 +231,16 @@
         
         button {
             flex: 1;
-            min-width: 120px;
+            min-width: 140px;
             padding: 1.2rem 2rem;
             border: none;
-            border-radius: 15px;
-            font-weight: 900;
+            border-radius: 12px;
+            font-weight: 800;
             cursor: pointer;
-            transition: all 0.4s;
+            transition: all 0.3s;
             font-size: 1rem;
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 1px;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
             position: relative;
             overflow: hidden;
         }
@@ -225,7 +264,10 @@
             box-shadow: 0 10px 30px rgba(255, 20, 147, 0.4);
         }
         
-        .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 15px 45px rgba(255, 20, 147, 0.6); }
+        .btn-primary:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 15px 45px rgba(255, 20, 147, 0.6); 
+        }
         
         .btn-secondary {
             background: linear-gradient(135deg, #00CED1 0%, #00BFFF 100%);
@@ -233,23 +275,29 @@
             box-shadow: 0 10px 30px rgba(0, 206, 209, 0.4);
         }
         
-        .btn-secondary:hover { transform: translateY(-4px); box-shadow: 0 15px 45px rgba(0, 206, 209, 0.6); }
+        .btn-secondary:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 15px 45px rgba(0, 206, 209, 0.6); 
+        }
         
         .back-btn {
             background: linear-gradient(135deg, #00CED1 0%, #00BFFF 100%);
             color: white;
             padding: 1rem 2rem;
             border: none;
-            border-radius: 15px;
-            font-weight: 900;
+            border-radius: 12px;
+            font-weight: 800;
             cursor: pointer;
             font-size: 1rem;
             margin-bottom: 2rem;
             box-shadow: 0 10px 30px rgba(0, 206, 209, 0.4);
-            transition: all 0.4s;
+            transition: all 0.3s;
         }
         
-        .back-btn:hover { transform: translateY(-4px); box-shadow: 0 15px 45px rgba(0, 206, 209, 0.6); }
+        .back-btn:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 15px 45px rgba(0, 206, 209, 0.6); 
+        }
         
         .game-grid {
             display: grid;
@@ -262,17 +310,20 @@
             background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%);
             color: white;
             padding: 2rem;
-            border-radius: 20px;
+            border-radius: 15px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 10px 30px rgba(255, 20, 147, 0.3);
-            font-weight: 900;
+            font-weight: 800;
             font-size: 1.1rem;
-            border: 3px solid #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
         
-        .game-tile:hover { transform: scale(1.1); box-shadow: 0 15px 45px rgba(255, 20, 147, 0.5); }
+        .game-tile:hover { 
+            transform: scale(1.08); 
+            box-shadow: 0 15px 45px rgba(255, 20, 147, 0.5); 
+        }
         
         .modal {
             display: none;
@@ -292,212 +343,289 @@
         
         .modal-content {
             background: linear-gradient(135deg, #fff 0%, #f5f5f5 100%);
-            border-radius: 30px;
+            border-radius: 25px;
             padding: 3rem;
             max-width: 600px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
-            border: 4px solid #FFD700;
-            animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 3px solid #FFD700;
+            animation: modalPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
         
-        @keyframes popIn { 0% { transform: scale(0.5) rotateZ(-10deg); opacity: 0; } 100% { transform: scale(1) rotateZ(0); opacity: 1; } }
+        @keyframes modalPop {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
         
-        .modal-icon { font-size: 5rem; margin-bottom: 1rem; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotateZ(0deg) scale(1); } 50% { transform: rotateZ(180deg) scale(1.1); } 100% { transform: rotateZ(360deg) scale(1); } }
-        .modal-title { font-size: 2rem; font-weight: 900; color: #FF1493; margin-bottom: 1rem; font-family: 'Orbitron', sans-serif; }
-        .modal-text { color: #000; font-size: 1.1rem; font-weight: 700; margin-bottom: 2rem; }
+        .modal-icon {
+            font-size: 6rem;
+            margin-bottom: 1rem;
+            animation: iconSpin 1s ease-in-out;
+        }
         
-        @media (max-width: 1024px) { .editor-container { grid-template-columns: 1fr; } }
-        @media (max-width: 768px) { .title { font-size: 2.5rem; } .modes { grid-template-columns: 1fr; } }
+        @keyframes iconSpin {
+            from { transform: rotate(0deg) scale(0); }
+            to { transform: rotate(360deg) scale(1); }
+        }
+        
+        .modal-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #FF1493;
+            margin-bottom: 1rem;
+        }
+        
+        .modal-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 2rem;
+        }
+        
+        .modal-btn {
+            background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%);
+            color: white;
+            padding: 1.2rem 3rem;
+            border: none;
+            border-radius: 15px;
+            font-weight: 900;
+            cursor: pointer;
+            font-size: 1.2rem;
+            box-shadow: 0 10px 30px rgba(255, 20, 147, 0.4);
+            transition: all 0.3s;
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 45px rgba(255, 20, 147, 0.6);
+        }
+        
+        .help-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #FFD700 0%, #FF1493 100%);
+            color: #000;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 20, 147, 0.5);
+            transition: all 0.3s;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+        }
+        
+        .help-btn:hover {
+            transform: scale(1.15) rotate(15deg);
+            box-shadow: 0 15px 45px rgba(255, 20, 147, 0.7);
+        }
+        
+        .hint-box {
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            font-weight: 700;
+            color: #000;
+        }
+        
+        .score-display {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #FFD700;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .editor-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .modes {
+                grid-template-columns: 1fr;
+            }
+            
+            .subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .badge {
+                font-size: 1rem;
+                padding: 0.8rem 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Home Screen -->
     <div id="homeScreen" class="screen active">
         <div class="header">
-            <div class="title">⚡ CODE QUEST ⚡</div>
-            <div class="subtitle">Lerne Programmieren spielerisch!</div>
-            <div class="badge">🎉 100% KOSTENLOS 🎉</div>
+            <div class="logo-container">
+                <img src="logo.png" alt="CODE QUEST">
+            </div>
+            <div class="subtitle">🚀 Lerne Programmieren - Spielerisch & Kostenlos! 🚀</div>
+            <div class="badge">✨ 100% GRATIS - KEINE ANMELDUNG ✨</div>
         </div>
         
         <div class="modes">
-            <button class="mode-btn" onclick="goToMode('html')">
+            <div class="mode-btn" onclick="goToMode('html')">
                 <span class="mode-icon">🌐</span>
-                <span class="mode-name">HTML & CSS</span>
-                <span class="mode-desc">Erstelle Webseiten</span>
-            </button>
+                <div class="mode-name">HTML EDITOR</div>
+                <div class="mode-desc">Erstelle deine eigene Webseite mit HTML!</div>
+            </div>
             
-            <button class="mode-btn" onclick="goToMode('js')">
-                <span class="mode-icon">⚙️</span>
-                <span class="mode-name">JavaScript</span>
-                <span class="mode-desc">Code schreiben</span>
-            </button>
+            <div class="mode-btn" onclick="goToMode('js')">
+                <span class="mode-icon">⚡</span>
+                <div class="mode-name">JAVASCRIPT EDITOR</div>
+                <div class="mode-desc">Programmiere mit JavaScript und sieh sofort das Ergebnis!</div>
+            </div>
             
-            <button class="mode-btn" onclick="goToMode('quiz')">
-                <span class="mode-icon">🧠</span>
-                <span class="mode-name">Code Quiz</span>
-                <span class="mode-desc">Wissen testen</span>
-            </button>
+            <div class="mode-btn" onclick="goToMode('quiz')">
+                <span class="mode-icon">🎯</span>
+                <div class="mode-name">CODE QUIZ</div>
+                <div class="mode-desc">Teste dein Wissen mit spannenden Coding-Fragen!</div>
+            </div>
             
-            <button class="mode-btn" onclick="goToMode('challenges')">
+            <div class="mode-btn" onclick="goToMode('challenges')">
                 <span class="mode-icon">🏆</span>
-                <span class="mode-name">Aufgaben</span>
-                <span class="mode-desc">10 spannende Level</span>
-            </button>
-            
-            <button class="mode-btn" onclick="openHelp()" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);">
-                <span class="mode-icon">📚</span>
-                <span class="mode-name">Hilfe & Tutorials</span>
-                <span class="mode-desc">YouTube Tutorials ansehen</span>
-            </button>
+                <div class="mode-name">CODE CHALLENGES</div>
+                <div class="mode-desc">Löse Programmier-Aufgaben und sammle Punkte!</div>
+            </div>
         </div>
     </div>
 
-    <!-- HTML Mode -->
     <div id="htmlScreen" class="screen">
         <button class="back-btn" onclick="backHome()">← ZURÜCK</button>
         <div class="header">
-            <div class="title">🌐 HTML & CSS</div>
-            <div class="subtitle">Erstelle deine erste Webseite!</div>
+            <div class="panel-title">🌐 HTML EDITOR</div>
         </div>
-        
         <div class="editor-container">
             <div class="panel">
-                <div class="panel-title">💻 CODE</div>
-                <textarea id="htmlCode" placeholder="Schreib HTML & CSS..."><!DOCTYPE html>
-<html>
-<head>
-    <style>
-        body { background: #FF1493; color: white; }
-        h1 { text-align: center; }
-    </style>
-</head>
-<body>
-    <h1>🎉 Hallo Welt!</h1>
-</body>
-</html></textarea>
+                <div class="panel-title">📝 HTML CODE</div>
+                <textarea id="htmlCode" placeholder="Schreibe hier deinen HTML Code...
+Beispiel:
+<h1>Hallo Welt!</h1>
+<p>Das ist meine erste Webseite!</p>
+<button>Klick mich!</button>"></textarea>
                 <div class="btn-group">
-                    <button class="btn-primary" onclick="runHTML()">▶ VORSCHAU</button>
+                    <button class="btn-primary" onclick="runHTML()">▶️ VORSCHAU</button>
                     <button class="btn-secondary" onclick="clearHTML()">🗑️ LÖSCHEN</button>
                 </div>
             </div>
-            
             <div class="panel">
-                <div class="panel-title">👁️ VORSCHAU</div>
-                <div id="htmlPreview" class="output" style="background: white; color: #000; min-height: 500px; border: 3px solid #FFD700;">Klick VORSCHAU um deine Webseite zu sehen!</div>
+                <div class="panel-title">👀 VORSCHAU</div>
+                <div id="htmlPreview" class="output">Klick VORSCHAU um deine Webseite zu sehen!</div>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript Mode -->
     <div id="jsScreen" class="screen">
         <button class="back-btn" onclick="backHome()">← ZURÜCK</button>
         <div class="header">
-            <div class="title">✍️ JAVASCRIPT</div>
-            <div class="subtitle">Schreib deinen Code!</div>
+            <div class="panel-title">⚡ JAVASCRIPT EDITOR</div>
         </div>
-        
         <div class="editor-container">
             <div class="panel">
-                <div class="panel-title">💻 CODE</div>
-                <textarea id="jsCode" placeholder="Schreib JavaScript...">console.log('Hallo Welt!');</textarea>
+                <div class="panel-title">📝 JAVASCRIPT CODE</div>
+                <textarea id="jsCode" placeholder="Schreibe hier deinen JavaScript Code...
+Beispiel:
+console.log('Hallo Welt!');
+let zahl = 5 + 3;
+console.log('5 + 3 = ' + zahl);"></textarea>
                 <div class="btn-group">
-                    <button class="btn-primary" onclick="runJS()">▶ AUSFÜHREN</button>
+                    <button class="btn-primary" onclick="runJS()">▶️ AUSFÜHREN</button>
                     <button class="btn-secondary" onclick="clearJS()">🗑️ LÖSCHEN</button>
                 </div>
             </div>
-            
             <div class="panel">
-                <div class="panel-title">📤 AUSGABE</div>
+                <div class="panel-title">📊 AUSGABE</div>
                 <div id="jsOutput" class="output">Hier wird die Ausgabe angezeigt...</div>
             </div>
         </div>
     </div>
 
-    <!-- Quiz Mode -->
     <div id="quizScreen" class="screen">
         <button class="back-btn" onclick="backHome()">← ZURÜCK</button>
         <div class="header">
-            <div class="title">💻 CODE QUIZ</div>
-            <div class="subtitle">Teste dein Programmier-Wissen!</div>
+            <div class="panel-title">🎯 CODE QUIZ</div>
+            <div class="score-display">⭐ PUNKTE: <span id="quizScore">0</span></div>
         </div>
-        
-        <div class="panel" style="max-width: 800px; width: 100%;">
-            <div id="quizQuestion" style="background: #1a1a1a; color: #00ff00; padding: 2rem; border-radius: 15px; margin-bottom: 2rem; font-family: 'Courier New', monospace; font-weight: 700; font-size: 1.1rem; border: 3px solid #FFD700;"></div>
-            
+        <div class="panel" style="max-width: 900px; width: 100%;">
+            <div class="panel-title" id="quizQuestion">Was gibt dieser Code aus?</div>
             <div id="quizOptions" class="game-grid"></div>
-            
-            <div id="quizMessage" style="color: #FF1493; font-size: 1.2rem; font-weight: 900; margin-bottom: 2rem;"></div>
-            
-            <div class="btn-group">
-                <button class="btn-primary" onclick="nextQuiz()">→ NÄCHSTE</button>
-                <button class="btn-secondary" onclick="startQuiz()">🔄 NEUES SPIEL</button>
-            </div>
-            
-            <div style="color: #000; font-size: 1.2rem; font-weight: 900; margin-top: 2rem;">Punkte: <span id="quizScore">0</span>/10</div>
+            <div class="panel-title" id="quizMessage" style="margin-top: 2rem;"></div>
+            <button class="btn-primary" onclick="nextQuiz()" style="width: 100%; margin-top: 2rem;">➡️ NÄCHSTE FRAGE</button>
         </div>
     </div>
 
-    <!-- Challenges Mode -->
     <div id="challengesScreen" class="screen">
         <button class="back-btn" onclick="backHome()">← ZURÜCK</button>
         <div class="header">
-            <div class="title">🎯 AUFGABEN</div>
-            <div class="subtitle">Repariere den Code!</div>
+            <div class="panel-title">🏆 CODE CHALLENGES</div>
         </div>
-        
         <div class="editor-container">
             <div class="panel">
-                <div class="panel-title">📝 AUFGABE</div>
-                <div id="challengeTitle" style="color: #FF1493; font-size: 1.3rem; font-weight: 900; margin-bottom: 1rem;"></div>
-                <div id="challengeDesc" style="color: #000; font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem;"></div>
-                <div id="hintBox" style="background: #FFD700; color: #000; padding: 1rem; border-radius: 15px; margin-bottom: 1.5rem; display: none; font-weight: 700;">
-                    💡 <span id="hintText"></span>
-                </div>
-                <textarea id="challengeCode" style="min-height: 200px;"></textarea>
+                <div class="panel-title" id="challengeTitle">Challenge</div>
+                <div class="panel-title" id="challengeDesc" style="font-size: 1.1rem; font-weight: 700; color: #000;"></div>
+                <textarea id="challengeCode"></textarea>
                 <div class="btn-group">
-                    <button class="btn-primary" onclick="runChallenge()">▶ TESTEN</button>
-                    <button class="btn-secondary" onclick="showHint()">💡 TIPP</button>
+                    <button class="btn-primary" onclick="runChallenge()">✅ LÖSUNG PRÜFEN</button>
+                    <button class="btn-secondary" onclick="showHint()">💡 HINWEIS</button>
+                </div>
+                <div id="hintBox" class="hint-box" style="display: none;">
+                    <strong>💡 HINWEIS:</strong> <span id="hintText"></span>
                 </div>
             </div>
-            
             <div class="panel">
-                <div class="panel-title">📤 AUSGABE</div>
+                <div class="panel-title">📊 AUSGABE</div>
                 <div id="challengeOutput" class="output">Hier wird die Ausgabe angezeigt...</div>
             </div>
         </div>
     </div>
 
-    <!-- Success Modal -->
     <div id="successModal" class="modal">
         <div class="modal-content">
             <div class="modal-icon">🎉</div>
-            <div class="modal-title">GLÜCKWUNSCH!</div>
-            <div class="modal-text" id="successText"></div>
-            <button class="btn-primary" onclick="closeModal()">✓ OK</button>
+            <div class="modal-title">GESCHAFFT!</div>
+            <div class="modal-text" id="successText">+100 PUNKTE!</div>
+            <button class="modal-btn" onclick="closeModal()">WEITER</button>
         </div>
     </div>
 
+    <button class="help-btn" onclick="openHelp()">❓</button>
+
     <script>
         const challenges = [
-            { title: 'Hallo Welt', desc: 'Schreib "Hallo"', hint: 'console.log("Hallo")', code: 'console.log(Hallo);', test: (o) => o.includes('Hallo') },
-            { title: 'Plus rechnen', desc: 'Berechne 3 + 2', hint: 'console.log(3 + 2)', code: 'console.log(3 2);', test: (o) => o.includes('5') },
-            { title: 'Mal rechnen', desc: 'Berechne 4 * 5', hint: 'console.log(4 * 5)', code: 'console.log(4 + 5);', test: (o) => o.includes('20') },
-            { title: 'Variable', desc: 'Speichere "Max"', hint: 'let x = "Max"; console.log(x);', code: 'let x = "Max"\nconsole.log(x);', test: (o) => o.includes('Max') },
-            { title: 'Wenn-Bedingung', desc: 'Wenn 5 > 3, schreib "Ja"', hint: 'if (5 > 3) { console.log("Ja"); }', code: 'if (5 < 3) { console.log("Ja"); }', test: (o) => o.includes('Ja') },
-            { title: 'Schleife', desc: 'Schreib "Hi" 3 mal', hint: 'for (let i = 0; i < 3; i++) { console.log("Hi"); }', code: 'for (let i = 0; i < 3;) { console.log("Hi"); }', test: (o) => (o.match(/Hi/g) || []).length === 3 },
-            { title: 'Array', desc: 'Gib a[0] aus', hint: 'let a = ["A", "B"]; console.log(a[0]);', code: 'let a = ["A", "B"]; console.log(a[1]);', test: (o) => o.includes('A') },
-            { title: 'Funktion', desc: 'Schreib function f() { return 10; }', hint: 'function f() { return 10; } console.log(f());', code: 'function f() { 10; } console.log(f());', test: (o) => o.includes('10') },
-            { title: 'Objekt', desc: 'Gib obj.name aus', hint: 'let obj = {name: "Tom"}; console.log(obj.name);', code: 'let obj = {name: "Tom"}; console.log(obj);', test: (o) => o.includes('Tom') },
-            { title: 'Zählen', desc: 'Zähle 1 bis 5', hint: 'for (let i = 1; i <= 5; i++) { console.log(i); }', code: 'for (let i = 1; i < 5; i++) { console.log(i); }', test: (o) => (o.match(/[1-5]/g) || []).length >= 5 }
+            { title: '🎯 Challenge 1', desc: 'Gib "Hallo Welt!" aus', code: '// Schreibe hier deinen Code\n', hint: 'Nutze console.log()', test: r => r.includes('Hallo Welt!') },
+            { title: '🎯 Challenge 2', desc: 'Rechne 10 + 5 und gib das Ergebnis aus', code: '// Schreibe hier deinen Code\n', hint: 'let ergebnis = 10 + 5; console.log(ergebnis);', test: r => r.includes('15') },
+            { title: '🎯 Challenge 3', desc: 'Erstelle eine Variable "name" mit deinem Namen und gib sie aus', code: '// Schreibe hier deinen Code\n', hint: 'let name = "Dein Name"; console.log(name);', test: r => r.length > 0 },
+            { title: '🎯 Challenge 4', desc: 'Gib die Zahlen 1 bis 5 aus (mit einer Schleife)', code: '// Schreibe hier deinen Code\n', hint: 'for (let i = 1; i <= 5; i++) { console.log(i); }', test: r => r.includes('1') && r.includes('5') }
         ];
 
         const quizzes = [
-            { q: 'let x = 5;\nconsole.log(x + 3);', opts: ['5', '8', '53', 'Error'], ans: 1 },
-            { q: 'let arr = [1, 2, 3];\nconsole.log(arr[0]);', opts: ['1', '2', '3', 'undefined'], ans: 0 },
-            { q: 'for (let i = 0; i < 3; i++) {}\nconsole.log(i);', opts: ['0', '3', 'undefined', 'Error'], ans: 1 },
+            { q: 'console.log(5 + 3);', opts: ['8', '53', 'undefined', 'Error'], ans: 0 },
+            { q: 'let x = 10;\nconsole.log(x * 2);', opts: ['20', '10', '102', 'Error'], ans: 0 },
+            { q: 'console.log("Hallo" + " " + "Welt");', opts: ['Hallo Welt', 'HalloWelt', 'Error', 'undefined'], ans: 0 },
+            { q: 'let y = 5;\ny = y + 1;\nconsole.log(y);', opts: ['5', '6', '51', 'Error'], ans: 1 },
+            { q: 'console.log(10 > 5);', opts: ['true', 'false', '10', 'Error'], ans: 0 },
+            { q: 'let name = "Max";\nconsole.log(name);', opts: ['Max', 'name', 'undefined', 'Error'], ans: 0 },
+            { q: 'console.log(3 * 4);', opts: ['12', '34', '7', 'Error'], ans: 0 },
+            { q: 'let a = 2;\nlet b = 3;\nconsole.log(a + b);', opts: ['5', '23', 'undefined', 'Error'], ans: 0 },
+            { q: 'console.log(typeof 42);', opts: ['number', 'string', 'undefined', 'Error'], ans: 0 },
+            { q: 'console.log(true || false);', opts: ['true', 'false', 'undefined', 'Error'], ans: 0 },
+            { q: 'let arr = [1, 2, 3];\nconsole.log(arr[0]);', opts: ['1', '0', 'undefined', 'Error'], ans: 0 },
+            { q: 'console.log("Test".toUpperCase());', opts: ['TEST', 'test', 'Test', 'Error'], ans: 0 },
+            { q: 'let z;\nconsole.log(z);', opts: ['undefined', 'null', '0', 'Error'], ans: 0 },
+            { q: 'console.log(10 % 3);', opts: ['1', '3', '0', 'Error'], ans: 0 },
+            { q: 'for (let i = 0; i < 3; i++) {}\nconsole.log(i);', opts: ['0', '3', 'undefined', 'Error'], ans: 3 },
             { q: 'function f() { return 10; }\nconsole.log(f());', opts: ['10', 'undefined', 'f', 'Error'], ans: 0 },
             { q: 'let x = "5";\nconsole.log(x + 3);', opts: ['8', '53', '5', 'Error'], ans: 1 },
             { q: 'if (5 > 3) { console.log("Ja"); }', opts: ['Ja', 'undefined', 'Error', 'false'], ans: 0 },
